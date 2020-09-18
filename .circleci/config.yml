@@ -25,20 +25,19 @@ jobs:
       - deploy-via-git:
         app-name: $HEROKU_APP_NAME_PROD
 
-
 workflows:
   heroku_deploy:
     jobs:
       - test-and-lint
       - deploy-stg:
-        requires:
-          - test-and-lint
-        filters:
-          branches:
-            only: staging
+          requires:
+            - test-and-lint
+          filters:
+            branches:
+              only: staging
       - deploy-prod:
-        requires:
-          - test-and-lint
-        filters:
-          branches:
-            only: master
+          requires:
+            - test-and-lint
+          filters:
+            branches:
+              only: master
