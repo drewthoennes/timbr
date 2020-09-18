@@ -14,9 +14,9 @@
     "lint-fix": "eslint src/**/*.js --fix",
     "test-b": "mocha test/backend/**/*.js",
     "test-bu": "mocha test/backend/unit",
-    "test-bi": "mocha test/backend/integration --timeout 60000",
+    "test-bi": "mocha test/backend/integration --timeout 15000",
     "test-f": "mocha test/frontend/**/*.js",
-    "test": "npm run test-b; npm run test-f"
+    "test": "mocha test/*/**/*.js"
   },
   "license": "MIT",
   "_moduleAliases": {
