@@ -1,0 +1,44 @@
+version: 2.1
+
+orbs:
+  heroku: circleci/heroku@1.2.2
+
+jobs:
+  test-and-lint:
+    executor: heroku/default
+    steps:
+      - heroku/install
+      - run:
+        command: npm run test
+      - run:
+        command: npm run lint
+
+  deploy-stg:
+    executor: heroku/default
+    steps:
+      - deploy-via-git:
+        app-name: $HEROKU_APP_NAME_STG
+
+  deploy-prod:
+    executor: heroku/default
+    steps:
+      - deploy-via-git:
+        app-name: $HEROKU_APP_NAME_PROD
+
+
+workflows:
+  heroku_deploy:
+    jobs:
+      - test-and-lint
+      - deploy-stg:
+        requires:
+          - test-and-lint
+        filters:
+          branches:
+            only: staging
+      - deploy-prod:
+        requires:
+          - test-and-lint
+        filters:
+          branches:
+            only: master

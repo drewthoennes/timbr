@@ -10,13 +10,13 @@
     "start-dev": "npm run build-dev; node server.js",
     "start": "npm run build; node server.js",
     "clean": "rm dist/*",
-    "lint": "eslint src/**/*.js",
+    "lint": "eslint src/**/*.js --max-warnings 0",
     "lint-fix": "eslint src/**/*.js --fix",
-    "test-b": "mocha test/backend",
+    "test-b": "mocha test/backend/**/*.js",
     "test-bu": "mocha test/backend/unit",
     "test-bi": "mocha test/backend/integration --timeout 60000",
-    "test-f": "mocha test/frontend",
-    "test": "npm run test-b; npm run test-f;"
+    "test-f": "mocha test/frontend/**/*.js",
+    "test": "npm run test-b; npm run test-f"
   },
   "license": "MIT",
   "_moduleAliases": {

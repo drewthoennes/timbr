@@ -1,6 +1,6 @@
-require('module-alias/register');
 const express = require('express');
 const bodyParser = require('body-parser');
+const apiRoutes = require('../../../src/backend/routes');
 
 let app;
 let session;
@@ -19,7 +19,7 @@ const createApp = () => {
     }
   });
 
-  app.use(require('@/src/backend/routes')());
+  app.use(apiRoutes());
 
   return app;
 };
@@ -27,6 +27,12 @@ const createApp = () => {
 const createSession = () => {
   if (app) {
     session = app.listen(42014); // Needs to listen on an unused port
+  }
+};
+
+const killSession = () => {
+  if (session) {
+    return session.close();
   }
 };
 
@@ -44,12 +50,6 @@ const getNewApp = () => {
   createSession();
 
   return app;
-};
-
-const killSession = () => {
-  if (session) {
-    return session.close();
-  }
 };
 
 module.exports = {

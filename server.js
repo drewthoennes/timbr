@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-require('module-alias/register');
 const express = require('express');
 const bodyParser = require('body-parser');
 const chalk = require('chalk');
