@@ -4,6 +4,12 @@ import { withRouter } from 'react-router-dom';
 import firebase from 'firebase';
 import map from '../../store/map';
 import './styles.scss';
+import {
+  useSession,
+  signin,
+  signout
+} from 'next-auth/client'
+
 
 firebase.initializeApp({
   apiKey: "AIzaSyAKPviI0W3v3WuBBxMeZblLcr_t7Y63VAs",
@@ -20,12 +26,14 @@ firebase.initializeApp({
 class LoginPage extends React.Component {
   constructor() {
     super();
+    
 
 
 
     this.state = {};
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -86,6 +94,12 @@ class LoginPage extends React.Component {
     
 
 <<<<<<< HEAD
+=======
+
+
+  render() {
+
+>>>>>>> inital google signin
     return (
       <div id="login-page">
         <p>hi bitch</p>
@@ -141,10 +155,13 @@ class LoginPage extends React.Component {
 };
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 
 export default connect(map)(withRouter(LoginPage));
 =======
+=======
+>>>>>>> inital google signin
 // export default connect(map)(withRouter(LoginPage));
 
 export default function Page() 
@@ -162,6 +179,7 @@ export default function Page()
     </>}
   </>
 };
+<<<<<<< HEAD
 >>>>>>> inital google signin
 =======
   }
@@ -173,3 +191,5 @@ export default function Page()
 
 export default connect(map)(withRouter(LoginPage));
 >>>>>>> google auth complete with firebase
+=======
+>>>>>>> inital google signin
