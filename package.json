@@ -67,6 +67,8 @@
     "jquery": "^3.5.1",
     "jsonwebtoken": "^8.5.1",
     "module-alias": "^2.2.2",
+    "next": "^9.5.0",
+    "next-auth": "^3.1.0",
     "pg": "^8.3.3",
     "popper.js": "^1.16.1",
     "react": "^16.13.1",
@@ -74,6 +76,7 @@
     "react-modal": "^3.11.2",
     "react-redux": "^7.2.1",
     "react-router-dom": "^5.2.0",
-    "redux": "^4.0.5"
+    "redux": "^4.0.5",
+    "sqlite3": "^4.2.0"
   }
 }
