@@ -4,6 +4,12 @@ import { withRouter } from 'react-router-dom';
 import firebase from 'firebase';
 import map from '../../store/map';
 import './styles.scss';
+import {
+  useSession,
+  signin,
+  signout
+} from 'next-auth/client'
+
 
 firebase.initializeApp({
   apiKey: "AIzaSyAKPviI0W3v3WuBBxMeZblLcr_t7Y63VAs",
@@ -14,11 +20,13 @@ firebase.initializeApp({
 class LoginPage extends React.Component {
   constructor() {
     super();
+    
 
 
     this.state = {};
   }
 
+<<<<<<< HEAD
   state = {
     auth: false,
   }
@@ -26,6 +34,16 @@ class LoginPage extends React.Component {
   componentDidMount() {
     this.unregisterAuthObserver = firebase.auth().onAuthStateChanged(
       (user) => this.setState({ auth: !!user })
+=======
+
+
+  render() {
+
+    return (
+      <div id="login-page">
+        <p>hi bitch</p>
+      </div>
+>>>>>>> inital google signin
     );
   }
 
@@ -75,6 +93,26 @@ class LoginPage extends React.Component {
 
 };
 
+<<<<<<< HEAD
 
 
 export default connect(map)(withRouter(LoginPage));
+=======
+// export default connect(map)(withRouter(LoginPage));
+
+export default function Page() 
+{
+  const [ session, loading ] = useSession()
+
+  return <>
+    {!session && <>
+      Not signed in <br/>
+      <button onClick={signin}>Sign in</button>
+    </>}
+    {session && <>
+      Signed in as {session.user.email} <br/>
+      <button onClick={signout}>Sign out</button>
+    </>}
+  </>
+};
+>>>>>>> inital google signin
