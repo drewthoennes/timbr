@@ -14,8 +14,10 @@ class RegisterPage extends React.Component {
   render() {
     return (
       <div id="register-page">
-        <title>timbr register page</title>
+        <p>timbr register page</p>
       </div>
     );
   }
 }
+
+export default connect(map)(withRouter(RegisterPage));
