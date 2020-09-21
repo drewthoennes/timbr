@@ -5,41 +5,54 @@ orbs:
   node: circleci/node@4.0.0
 
 jobs:
-  test-and-lint:
+  test:
     executor: node/default
     steps:
       - checkout
       - node/install-packages
       - run:
           command: npm run test
+
+  lint:
+    executor: node/default
+    steps:
+      - checkout
+      - node/install-packages
       - run:
           command: npm run lint
 
   deploy-stg:
     executor: heroku/default
     steps:
+      - checkout
+      - heroku/install
       - heroku/deploy-via-git:
           app-name: $HEROKU_APP_NAME_STG
 
   deploy-prod:
     executor: heroku/default
     steps:
+      - checkout
+      - heroku/install
       - heroku/deploy-via-git:
           app-name: $HEROKU_APP_NAME_PROD
 
 workflows:
   heroku_deploy:
     jobs:
-      - test-and-lint
+      - test
+      - lint
       - deploy-stg:
           requires:
-            - test-and-lint
+            - test
+            - lint
           filters:
             branches:
               only: staging
       - deploy-prod:
           requires:
-            - test-and-lint
+            - test
+            - lint
           filters:
             branches:
               only: master
