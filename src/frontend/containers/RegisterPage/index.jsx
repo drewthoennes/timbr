@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import './styles.scss';
 import axios from 'axios';
-import passwordHash from 'password-hash';
 import map from '../../store/map';
 import history from '../../router/history';
 
@@ -20,7 +19,7 @@ class RegisterPage extends React.Component {
   handleRegister() {
     const credentials = {
       email: document.getElementById('email').value,
-      password: passwordHash.generate(document.getElementById('password').value),
+      password: btoa(document.getElementById('password').value),
     };
 
     axios
@@ -34,6 +33,7 @@ class RegisterPage extends React.Component {
   render() {
     return (
       <div id="register-page">
+        <h1>timbr Register Page!</h1>
         <form id="register-form" onSubmit={this.handleRegister}>
           <input
             id="email"

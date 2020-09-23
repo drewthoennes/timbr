@@ -1,20 +1,55 @@
+/* eslint no-console: ["error", { allow: ["log"] }] */
+/* eslint class-methods-use-this: ["error", { "exceptMethods": ["handleLogin"] }] */
+
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import axios from 'axios';
 import map from '../../store/map';
 import './styles.scss';
+import history from '../../router/history';
 
 class LoginPage extends React.Component {
   constructor() {
     super();
 
-    this.state = {};
+    this.handleLogin = this.handleLogin.bind(this);
+  }
+
+  handleLogin() {
+    const credentials = {
+      email: document.getElementById('email').value,
+      password: btoa(document.getElementById('password').value),
+    };
+
+    axios
+      .post('/api/login', credentials)
+      .catch((err) => console.log(err))
+      .then((res) => console.log(res.data));
+
+    history.push('/');
+    localStorage.setItem('currentUser', document.getElementById('email').value);
   }
 
   render() {
     return (
       <div id="login-page">
-        <p>timbr login page</p>
+        <h1>timbr Login Page!</h1>
+        <form id="register-form" onSubmit={this.handleLogin}>
+          <input
+            id="email"
+            type="text"
+            placeholder="Email"
+          />
+
+          <input
+            id="password"
+            type="password"
+            placeholder="Password"
+          />
+
+          <button type="submit">Login</button>
+        </form>
       </div>
     );
   }
