@@ -1,11 +1,14 @@
+/* eslint no-console: ["error", { allow: ["log"] }] */
+/* eslint class-methods-use-this: ["error", { "exceptMethods": ["handleRegister"] }] */
+
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter, Redirect } from 'react-router-dom';
-import map from '../../store/map';
+import { withRouter } from 'react-router-dom';
 import './styles.scss';
 import axios from 'axios';
 import passwordHash from 'password-hash';
-import history from '../../router/history'
+import map from '../../store/map';
+import history from '../../router/history';
 
 class RegisterPage extends React.Component {
   constructor() {
@@ -25,7 +28,7 @@ class RegisterPage extends React.Component {
       .catch((err) => console.log(err))
       .then((res) => console.log(res.data));
 
-      history.push('/login');
+    history.push('/login');
   }
 
   render() {
