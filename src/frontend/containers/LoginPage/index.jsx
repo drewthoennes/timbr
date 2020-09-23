@@ -11,17 +11,21 @@ firebase.initializeApp({
 });
 
 
+<<<<<<< HEAD
 firebase.initializeApp({
   apiKey: "AIzaSyAKPviI0W3v3WuBBxMeZblLcr_t7Y63VAs",
   authDomain: "timbr-cs407.firebaseapp.com",
 });
 
 
+=======
+>>>>>>> 354f416927979786ced9277a1e8c902044bb4926
 class LoginPage extends React.Component {
   constructor() {
     super();
 
 
+<<<<<<< HEAD
 
     this.state = {};
   }
@@ -30,6 +34,11 @@ class LoginPage extends React.Component {
 <<<<<<< HEAD
 =======
 >>>>>>> google auth complete with firebase
+=======
+    this.state = {};
+  }
+
+>>>>>>> 354f416927979786ced9277a1e8c902044bb4926
   state = {
     auth: false,
   }
@@ -37,6 +46,7 @@ class LoginPage extends React.Component {
   componentDidMount() {
     this.unregisterAuthObserver = firebase.auth().onAuthStateChanged(
       (user) => this.setState({ auth: !!user })
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 =======
@@ -91,6 +101,8 @@ class LoginPage extends React.Component {
         <p>hi bitch</p>
       </div>
 >>>>>>> inital google signin
+=======
+>>>>>>> 354f416927979786ced9277a1e8c902044bb4926
     );
   }
 
@@ -141,6 +153,7 @@ class LoginPage extends React.Component {
 };
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 
 export default connect(map)(withRouter(LoginPage));
@@ -173,3 +186,8 @@ export default function Page()
 
 export default connect(map)(withRouter(LoginPage));
 >>>>>>> google auth complete with firebase
+=======
+
+
+export default connect(map)(withRouter(LoginPage));
+>>>>>>> 354f416927979786ced9277a1e8c902044bb4926
