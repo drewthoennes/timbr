@@ -9,11 +9,14 @@ import './styles.scss';
 =======
 =======
 
+<<<<<<< HEAD
 firebase.initializeApp({
   apiKey: "AIzaSyAKPviI0W3v3WuBBxMeZblLcr_t7Y63VAs",
   authDomain: "timbr-cs407.firebaseapp.com",
 });
 >>>>>>> google auth complete with firebase
+=======
+>>>>>>> changes
 
 firebase.initializeApp({
   apiKey: "AIzaSyAKPviI0W3v3WuBBxMeZblLcr_t7Y63VAs",
@@ -31,12 +34,17 @@ class LoginPage extends React.Component {
     super();
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 >>>>>>> google auth complete with firebase
 =======
 
 >>>>>>> google auth complete with firebase
+=======
+    
+
+>>>>>>> changes
 
     this.state = {};
   }
@@ -48,6 +56,7 @@ class LoginPage extends React.Component {
   componentDidMount() {
     this.unregisterAuthObserver = firebase.auth().onAuthStateChanged(
       (user) => this.setState({ auth: !!user })
+<<<<<<< HEAD
     );
   }
 
@@ -114,6 +123,8 @@ class LoginPage extends React.Component {
         <button onClick={this.signOut.bind(this)}>SIGN OUT</button>
 
       </div>
+=======
+>>>>>>> changes
     );
 
 
@@ -148,6 +159,7 @@ class LoginPage extends React.Component {
 
 };
 
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -158,6 +170,11 @@ export default connect(map)(withRouter(LoginPage));
 export default connect(map)(withRouter(LoginPage));
 >>>>>>> google auth complete with firebase
 =======
+=======
+>>>>>>> changes
 
 export default connect(map)(withRouter(LoginPage));
+<<<<<<< HEAD
 >>>>>>> google auth complete with firebase
+=======
+>>>>>>> changes
