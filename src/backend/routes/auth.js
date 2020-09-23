@@ -9,5 +9,5 @@ module.exports = (router) => {
   router.post('/api/login', (req, res) => {
     firebase.auth().signInWithEmailAndPassword(req.body.email, req.body.password);
     res.send('User logged in!');
-  });  
+  });
 };
