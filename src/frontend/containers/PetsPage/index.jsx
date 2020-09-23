@@ -18,6 +18,6 @@ class PetsPage extends React.Component {
       </div>
     );
   }
-};
+}
 
 export default connect(map)(withRouter(PetsPage));

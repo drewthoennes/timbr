@@ -10,8 +10,8 @@
     "start-dev": "npm run build-dev; node server.js",
     "start": "npm run build; node server.js",
     "clean": "rm dist/*",
-    "lint": "eslint src/**/*.js --max-warnings 0",
-    "lint-fix": "eslint src/**/*.js --fix",
+    "lint": "eslint \"src/**/*.{js,jsx}\" --max-warnings 0",
+    "lint-fix": "eslint \"src/**/*.{js,jsx}\" --fix",
     "test-b": "mocha test/backend/**/*.js",
     "test-bu": "mocha test/backend/unit",
     "test-bi": "mocha test/backend/integration --timeout 15000",
@@ -69,13 +69,12 @@
     "jsonwebtoken": "^8.5.1",
     "module-alias": "^2.2.2",
     "password-hash": "^1.2.2",
-    "pg": "^8.3.3",
     "popper.js": "^1.16.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-modal": "^3.11.2",
     "react-redux": "^7.2.1",
-    "react-router-dom": "^5.2.0",
+    "react-router-dom": "^4.3.0",
     "redux": "^4.0.5"
   }
 }

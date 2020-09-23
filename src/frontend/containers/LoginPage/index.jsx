@@ -18,6 +18,6 @@ class LoginPage extends React.Component {
       </div>
     );
   }
-};
+}
 
 export default connect(map)(withRouter(LoginPage));

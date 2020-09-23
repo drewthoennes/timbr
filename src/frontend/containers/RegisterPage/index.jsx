@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter, Redirect } from 'react-router-dom';
 import map from '../../store/map';
 import './styles.scss';
-import axios from 'axios'
+import axios from 'axios';
 import passwordHash from 'password-hash';
 
 class RegisterPage extends React.Component {
@@ -13,40 +13,43 @@ class RegisterPage extends React.Component {
     this.state = {
       isRedirect: false,
     };
-    this.handleRegister = this.handleRegister.bind(this)
+    this.handleRegister = this.handleRegister.bind(this);
   }
 
   handleRegister() {
-
     const credentials = {
-      email: document.getElementById("email").value,
-      password: passwordHash.generate(document.getElementById("password").value),
+      email: document.getElementById('email').value,
+      password: passwordHash.generate(document.getElementById('password').value),
     };
 
     axios
       .post('/api/register', credentials)
-      .catch(err => console.log(err))
-      .then(res => console.log(res.data))
+      .catch((err) => console.log(err))
+      .then((res) => console.log(res.data));
 
-      this.setState({
-        isRedirect: true,
-      });
+    this.setState({
+      isRedirect: true,
+    });
   }
 
   render() {
     if (this.state.isRedirect) {
-      return <Redirect to = "/login" />
+      return <Redirect to="/login" />;
     }
     return (
       <div id="register-page">
-        <form id="register-form" onSubmit = {this.handleRegister}>
-          <input id="email"
+        <form id="register-form" onSubmit={this.handleRegister}>
+          <input
+            id="email"
             type="text"
-            placeholder="Email" />
+            placeholder="Email"
+          />
 
-          <input id="password"
+          <input
+            id="password"
             type="password"
-            placeholder="Password" />
+            placeholder="Password"
+          />
 
           <button type="submit">Register</button>
         </form>
