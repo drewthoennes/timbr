@@ -4,11 +4,11 @@ import { withRouter } from 'react-router-dom';
 import firebase from 'firebase';
 import map from '../../store/map';
 import './styles.scss';
-import {
-  useSession,
-  signin,
-  signout
-} from 'next-auth/client'
+
+firebase.initializeApp({
+  apiKey: "AIzaSyAKPviI0W3v3WuBBxMeZblLcr_t7Y63VAs",
+  authDomain: "timbr-cs407.firebaseapp.com",
+});
 
 
 firebase.initializeApp({
@@ -26,7 +26,7 @@ firebase.initializeApp({
 class LoginPage extends React.Component {
   constructor() {
     super();
-    
+
 
 
 
@@ -36,6 +36,9 @@ class LoginPage extends React.Component {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> google auth complete with firebase
 =======
 >>>>>>> google auth complete with firebase
   state = {
@@ -46,8 +49,11 @@ class LoginPage extends React.Component {
     this.unregisterAuthObserver = firebase.auth().onAuthStateChanged(
       (user) => this.setState({ auth: !!user })
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
+=======
+>>>>>>> google auth complete with firebase
     );
   }
 
@@ -71,6 +77,9 @@ class LoginPage extends React.Component {
     });
   }
 
+<<<<<<< HEAD
+>>>>>>> google auth complete with firebase
+=======
 >>>>>>> google auth complete with firebase
 
 
@@ -93,6 +102,7 @@ class LoginPage extends React.Component {
       );
     
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 
@@ -193,3 +203,13 @@ export default connect(map)(withRouter(LoginPage));
 >>>>>>> google auth complete with firebase
 =======
 >>>>>>> inital google signin
+=======
+  }
+
+
+};
+
+
+
+export default connect(map)(withRouter(LoginPage));
+>>>>>>> google auth complete with firebase

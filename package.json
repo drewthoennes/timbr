@@ -74,6 +74,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "npm": "^6.14.8",
 =======
 >>>>>>> inital google signin
@@ -82,6 +83,9 @@
 >>>>>>> google auth complete with firebase
 =======
 >>>>>>> inital google signin
+=======
+    "npm": "^6.14.8",
+>>>>>>> google auth complete with firebase
     "pg": "^8.3.3",
     "popper.js": "^1.16.1",
     "react": "^16.13.1",
