@@ -35,7 +35,7 @@ class RegisterPage extends React.Component {
 
   render() {
     if (this.state.isRedirect) {
-      return <Redirect to = "/" />
+      return <Redirect to = "/login" />
     }
     return (
       <div id="register-page">
