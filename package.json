@@ -69,20 +69,7 @@
     "jquery": "^3.5.1",
     "jsonwebtoken": "^8.5.1",
     "module-alias": "^2.2.2",
-    "next": "^9.5.0",
-    "next-auth": "^3.1.0",
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     "npm": "^6.14.8",
-=======
->>>>>>> inital google signin
-=======
-    "npm": "^6.14.8",
->>>>>>> google auth complete with firebase
-=======
-    "npm": "^6.14.8",
->>>>>>> 354f416927979786ced9277a1e8c902044bb4926
     "pg": "^8.3.3",
     "popper.js": "^1.16.1",
     "react": "^16.13.1",

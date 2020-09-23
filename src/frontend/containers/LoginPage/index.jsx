@@ -5,7 +5,6 @@ import firebase from 'firebase';
 import map from '../../store/map';
 import './styles.scss';
 
-
 firebase.initializeApp({
   apiKey: "AIzaSyAKPviI0W3v3WuBBxMeZblLcr_t7Y63VAs",
   authDomain: "timbr-cs407.firebaseapp.com",
@@ -15,11 +14,9 @@ firebase.initializeApp({
 class LoginPage extends React.Component {
   constructor() {
     super();
-    
-
-
     this.state = {};
   }
+
 
   state = {
     auth: false,
@@ -30,6 +27,8 @@ class LoginPage extends React.Component {
       (user) => this.setState({ auth: !!user })
     );
   }
+
+
 
   signIn = (event) => {
     console.log(event);
@@ -76,7 +75,6 @@ class LoginPage extends React.Component {
 
 
 };
-
 
 
 export default connect(map)(withRouter(LoginPage));
