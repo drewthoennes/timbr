@@ -69,31 +69,7 @@
     "jquery": "^3.5.1",
     "jsonwebtoken": "^8.5.1",
     "module-alias": "^2.2.2",
-<<<<<<< HEAD
-    "next": "^9.5.0",
-    "next-auth": "^3.1.0",
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     "npm": "^6.14.8",
-=======
->>>>>>> inital google signin
-=======
-    "npm": "^6.14.8",
->>>>>>> google auth complete with firebase
-=======
->>>>>>> inital google signin
-=======
-    "npm": "^6.14.8",
->>>>>>> google auth complete with firebase
-=======
-    "npm": "^6.14.8",
->>>>>>> google auth complete with firebase
-=======
-    "npm": "^6.14.8",
->>>>>>> removing  weird errors
     "pg": "^8.3.3",
     "popper.js": "^1.16.1",
     "react": "^16.13.1",
