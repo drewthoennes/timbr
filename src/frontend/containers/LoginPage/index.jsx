@@ -6,6 +6,7 @@ import map from '../../store/map';
 import './styles.scss';
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 firebase.initializeApp({
   apiKey: "AIzaSyAKPviI0W3v3WuBBxMeZblLcr_t7Y63VAs",
   authDomain: "timbr-cs407.firebaseapp.com",
@@ -22,6 +23,8 @@ firebase.initializeApp({
 
 
 <<<<<<< HEAD
+=======
+>>>>>>> removing  weird errors
 firebase.initializeApp({
   apiKey: "AIzaSyAKPviI0W3v3WuBBxMeZblLcr_t7Y63VAs",
   authDomain: "timbr-cs407.firebaseapp.com",
@@ -35,6 +38,7 @@ firebase.initializeApp({
 class LoginPage extends React.Component {
   constructor() {
     super();
+<<<<<<< HEAD
     
 
 <<<<<<< HEAD
@@ -63,6 +67,12 @@ class LoginPage extends React.Component {
 >>>>>>> google auth complete with firebase
 =======
 >>>>>>> changes
+=======
+    this.state = {};
+  }
+
+
+>>>>>>> removing  weird errors
   state = {
     auth: false,
   }
@@ -166,6 +176,8 @@ class LoginPage extends React.Component {
 >>>>>>> changes
     );
   }
+
+
 
   signIn = (event) => {
     console.log(event);
@@ -275,6 +287,10 @@ export default connect(map)(withRouter(LoginPage));
 >>>>>>> google auth complete with firebase
 =======
 
+<<<<<<< HEAD
 
 export default connect(map)(withRouter(LoginPage));
 >>>>>>> changes
+=======
+export default connect(map)(withRouter(LoginPage));
+>>>>>>> removing  weird errors
