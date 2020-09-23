@@ -5,14 +5,12 @@ import map from '../../store/map';
 import './styles.scss';
 import axios from 'axios';
 import passwordHash from 'password-hash';
+import history from '../../router/history'
 
 class RegisterPage extends React.Component {
   constructor() {
     super();
 
-    this.state = {
-      isRedirect: false,
-    };
     this.handleRegister = this.handleRegister.bind(this);
   }
 
@@ -27,15 +25,10 @@ class RegisterPage extends React.Component {
       .catch((err) => console.log(err))
       .then((res) => console.log(res.data));
 
-    this.setState({
-      isRedirect: true,
-    });
+      history.push('/login');
   }
 
   render() {
-    if (this.state.isRedirect) {
-      return <Redirect to="/login" />;
-    }
     return (
       <div id="register-page">
         <form id="register-form" onSubmit={this.handleRegister}>
