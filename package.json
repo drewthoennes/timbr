@@ -73,6 +73,9 @@
 =======
     "next": "^9.5.0",
     "next-auth": "^3.1.0",
+<<<<<<< HEAD
+>>>>>>> google auth complete with firebase
+=======
 >>>>>>> google auth complete with firebase
     "npm": "^6.14.8",
     "pg": "^8.3.3",

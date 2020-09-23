@@ -5,7 +5,15 @@ import firebase from 'firebase';
 import map from '../../store/map';
 import './styles.scss';
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+
+firebase.initializeApp({
+  apiKey: "AIzaSyAKPviI0W3v3WuBBxMeZblLcr_t7Y63VAs",
+  authDomain: "timbr-cs407.firebaseapp.com",
+});
+>>>>>>> google auth complete with firebase
 
 firebase.initializeApp({
   apiKey: "AIzaSyAKPviI0W3v3WuBBxMeZblLcr_t7Y63VAs",
@@ -22,6 +30,10 @@ class LoginPage extends React.Component {
   constructor() {
     super();
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> google auth complete with firebase
 =======
 
 >>>>>>> google auth complete with firebase
@@ -40,8 +52,11 @@ class LoginPage extends React.Component {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> google auth complete with firebase
 =======
 >>>>>>> google auth complete with firebase
   signIn = (event) => {
@@ -55,6 +70,7 @@ class LoginPage extends React.Component {
   };
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 
   signOut = () => {
@@ -62,12 +78,17 @@ class LoginPage extends React.Component {
       // Sign-out successful.
     }).catch(function (error) {
 =======
+=======
+>>>>>>> google auth complete with firebase
   
 
   signOut = () => {
     firebase.auth().signOut().then(function() {
       // Sign-out successful.
     }).catch(function(error) {
+<<<<<<< HEAD
+>>>>>>> google auth complete with firebase
+=======
 >>>>>>> google auth complete with firebase
       // An error happened.
     });
@@ -83,6 +104,7 @@ class LoginPage extends React.Component {
           <button onClick={this.signIn.bind(this)}>SIGN IN</button>
         </div>
       );
+<<<<<<< HEAD
 <<<<<<< HEAD
 
     }
@@ -108,6 +130,19 @@ class LoginPage extends React.Component {
     
 
 >>>>>>> google auth complete with firebase
+=======
+
+    }
+      return (
+        <div>
+          <h1>Click below to sign-out</h1>
+          <button onClick={this.signOut.bind(this)}>SIGN OUT</button>
+
+        </div>
+      );
+    
+
+>>>>>>> google auth complete with firebase
   }
 
 
@@ -115,8 +150,13 @@ class LoginPage extends React.Component {
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 export default connect(map)(withRouter(LoginPage));
 
+=======
+
+export default connect(map)(withRouter(LoginPage));
+>>>>>>> google auth complete with firebase
 =======
 
 export default connect(map)(withRouter(LoginPage));
