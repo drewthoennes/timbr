@@ -26,6 +26,11 @@ class LoginPage extends React.Component {
     );
   }
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 4392b6eca9d03f1dbbaab50a826844be7bd8adbd
   signIn = (event) => {
     console.log(event);
     event.preventDefault();
@@ -35,6 +40,12 @@ class LoginPage extends React.Component {
         var user = result.user;
       })
   };
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> 4392b6eca9d03f1dbbaab50a826844be7bd8adbd
   signOut = () => {
     firebase.auth().signOut().then(function () {
       // Sign-out successful.
@@ -53,6 +64,10 @@ class LoginPage extends React.Component {
           <button onClick={this.signIn.bind(this)}>SIGN IN</button>
         </div>
       );
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4392b6eca9d03f1dbbaab50a826844be7bd8adbd
     }
     return (
       <div>
@@ -61,6 +76,18 @@ class LoginPage extends React.Component {
 
       </div>
     );
+
+
   }
+<<<<<<< HEAD
 }
 export default connect(map)(withRouter(LoginPage));
+=======
+
+
+};
+
+
+export default connect(map)(withRouter(LoginPage));
+
+>>>>>>> 4392b6eca9d03f1dbbaab50a826844be7bd8adbd
