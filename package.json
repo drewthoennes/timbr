@@ -75,6 +75,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "npm": "^6.14.8",
 =======
 >>>>>>> inital google signin
@@ -83,6 +84,9 @@
 >>>>>>> google auth complete with firebase
 =======
 >>>>>>> inital google signin
+=======
+    "npm": "^6.14.8",
+>>>>>>> google auth complete with firebase
 =======
     "npm": "^6.14.8",
 >>>>>>> google auth complete with firebase
