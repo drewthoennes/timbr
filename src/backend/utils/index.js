@@ -1,1 +1,1 @@
-require('./firebaseConfig.js')
+require('./firebaseConfig.js');

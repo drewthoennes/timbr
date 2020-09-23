@@ -11,6 +11,9 @@ class RegisterPage extends React.Component {
   constructor() {
     super();
 
+    this.state = {
+      isRedirect: false,
+    };
     this.handleRegister = this.handleRegister.bind(this)
   }
 
@@ -24,11 +27,10 @@ class RegisterPage extends React.Component {
 
     axios
       .post('/api/register', credentials)
+      .catch(err => console.log(err))
       .then(res => console.log(res.data))
-      .catch(err => console.error(err))
 
-      history.push('/login')
-
+      history.push('/login');
   }
 
   render() {
