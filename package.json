@@ -72,9 +72,13 @@
     "next": "^9.5.0",
     "next-auth": "^3.1.0",
 <<<<<<< HEAD
+<<<<<<< HEAD
     "npm": "^6.14.8",
 =======
 >>>>>>> inital google signin
+=======
+    "npm": "^6.14.8",
+>>>>>>> google auth complete with firebase
     "pg": "^8.3.3",
     "popper.js": "^1.16.1",
     "react": "^16.13.1",
