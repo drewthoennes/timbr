@@ -5,12 +5,15 @@ import firebase from 'firebase';
 import map from '../../store/map';
 import './styles.scss';
 
+<<<<<<< HEAD
 firebase.initializeApp({
   apiKey: "AIzaSyAKPviI0W3v3WuBBxMeZblLcr_t7Y63VAs",
   authDomain: "timbr-cs407.firebaseapp.com",
 });
 <<<<<<< HEAD
 
+=======
+>>>>>>> changes
 
 firebase.initializeApp({
   apiKey: "AIzaSyAKPviI0W3v3WuBBxMeZblLcr_t7Y63VAs",
@@ -18,6 +21,7 @@ firebase.initializeApp({
 });
 
 
+<<<<<<< HEAD
 firebase.initializeApp({
   apiKey: "AIzaSyAKPviI0W3v3WuBBxMeZblLcr_t7Y63VAs",
   authDomain: "timbr-cs407.firebaseapp.com",
@@ -26,15 +30,21 @@ firebase.initializeApp({
 >>>>>>> google auth complete with firebase
 
 
+=======
+>>>>>>> changes
 class LoginPage extends React.Component {
   constructor() {
     super();
+    
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 
 
 =======
 >>>>>>> google auth complete with firebase
+=======
+>>>>>>> changes
 
     this.state = {};
   }
@@ -44,12 +54,15 @@ class LoginPage extends React.Component {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> google auth complete with firebase
 =======
 >>>>>>> google auth complete with firebase
 =======
 >>>>>>> google auth complete with firebase
+=======
+>>>>>>> changes
   state = {
     auth: false,
   }
@@ -57,6 +70,7 @@ class LoginPage extends React.Component {
   componentDidMount() {
     this.unregisterAuthObserver = firebase.auth().onAuthStateChanged(
       (user) => this.setState({ auth: !!user })
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -148,6 +162,8 @@ class LoginPage extends React.Component {
         <p>hi bitch</p>
       </div>
 >>>>>>> inital google signin
+=======
+>>>>>>> changes
     );
   }
 
@@ -197,6 +213,7 @@ class LoginPage extends React.Component {
 
 };
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 
@@ -256,3 +273,8 @@ export default connect(map)(withRouter(LoginPage));
 
 export default connect(map)(withRouter(LoginPage));
 >>>>>>> google auth complete with firebase
+=======
+
+
+export default connect(map)(withRouter(LoginPage));
+>>>>>>> changes
