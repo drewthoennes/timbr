@@ -4,25 +4,6 @@ import { withRouter } from 'react-router-dom';
 import firebase from 'firebase';
 import map from '../../store/map';
 import './styles.scss';
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
-
-<<<<<<< HEAD
-firebase.initializeApp({
-  apiKey: "AIzaSyAKPviI0W3v3WuBBxMeZblLcr_t7Y63VAs",
-  authDomain: "timbr-cs407.firebaseapp.com",
-});
->>>>>>> google auth complete with firebase
-=======
->>>>>>> changes
-
-firebase.initializeApp({
-  apiKey: "AIzaSyAKPviI0W3v3WuBBxMeZblLcr_t7Y63VAs",
-  authDomain: "timbr-cs407.firebaseapp.com",
-});
->>>>>>> google auth complete with firebase
 
 firebase.initializeApp({
   apiKey: "AIzaSyAKPviI0W3v3WuBBxMeZblLcr_t7Y63VAs",
@@ -32,20 +13,6 @@ firebase.initializeApp({
 class LoginPage extends React.Component {
   constructor() {
     super();
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> google auth complete with firebase
-=======
-
->>>>>>> google auth complete with firebase
-=======
-    
-
->>>>>>> changes
-
     this.state = {};
   }
 
@@ -56,18 +23,9 @@ class LoginPage extends React.Component {
   componentDidMount() {
     this.unregisterAuthObserver = firebase.auth().onAuthStateChanged(
       (user) => this.setState({ auth: !!user })
-<<<<<<< HEAD
     );
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-
-=======
->>>>>>> google auth complete with firebase
-=======
->>>>>>> google auth complete with firebase
   signIn = (event) => {
     console.log(event);
     event.preventDefault();
@@ -77,28 +35,10 @@ class LoginPage extends React.Component {
         var user = result.user;
       })
   };
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-
   signOut = () => {
     firebase.auth().signOut().then(function () {
       // Sign-out successful.
     }).catch(function (error) {
-=======
-=======
->>>>>>> google auth complete with firebase
-  
-
-  signOut = () => {
-    firebase.auth().signOut().then(function() {
-      // Sign-out successful.
-    }).catch(function(error) {
-<<<<<<< HEAD
->>>>>>> google auth complete with firebase
-=======
->>>>>>> google auth complete with firebase
       // An error happened.
     });
   }
@@ -113,9 +53,6 @@ class LoginPage extends React.Component {
           <button onClick={this.signIn.bind(this)}>SIGN IN</button>
         </div>
       );
-<<<<<<< HEAD
-<<<<<<< HEAD
-
     }
     return (
       <div>
@@ -123,58 +60,7 @@ class LoginPage extends React.Component {
         <button onClick={this.signOut.bind(this)}>SIGN OUT</button>
 
       </div>
-=======
->>>>>>> changes
     );
-
-
-=======
-
-    }
-      return (
-        <div>
-          <h1>Click below to sign-out</h1>
-          <button onClick={this.signOut.bind(this)}>SIGN OUT</button>
-
-        </div>
-      );
-    
-
->>>>>>> google auth complete with firebase
-=======
-
-    }
-      return (
-        <div>
-          <h1>Click below to sign-out</h1>
-          <button onClick={this.signOut.bind(this)}>SIGN OUT</button>
-
-        </div>
-      );
-    
-
->>>>>>> google auth complete with firebase
   }
-
-
-};
-
-<<<<<<< HEAD
-
-<<<<<<< HEAD
-<<<<<<< HEAD
+}
 export default connect(map)(withRouter(LoginPage));
-
-=======
-
-export default connect(map)(withRouter(LoginPage));
->>>>>>> google auth complete with firebase
-=======
-=======
->>>>>>> changes
-
-export default connect(map)(withRouter(LoginPage));
-<<<<<<< HEAD
->>>>>>> google auth complete with firebase
-=======
->>>>>>> changes
