@@ -17,16 +17,21 @@ class RegisterPage extends React.Component {
   }
 
   handleRegister() {
+    /* This method handles registration of a new user by sending the user credentials to the
+        corresponding endpoint and redirecting to the login page. */
+    // TODO: Validate credentials.
     const credentials = {
       email: document.getElementById('email').value,
       password: btoa(document.getElementById('password').value),
     };
 
+    // TODO: Handle errors returned by firebase.
     axios
       .post('/api/register', credentials)
       .catch((err) => console.log(err))
       .then((res) => console.log(res.data));
 
+    // TODO: Make sure the redirection occurs only when registration was successful.
     history.push('/login');
   }
 

@@ -1,3 +1,4 @@
+// Initialising firebase
 const firebaseImport = require('firebase/app');
 
 firebaseImport.initializeApp({

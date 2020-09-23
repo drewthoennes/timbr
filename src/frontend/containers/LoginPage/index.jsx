@@ -17,16 +17,21 @@ class LoginPage extends React.Component {
   }
 
   handleLogin() {
+    /* This method handles login by sending user credentials to the corresponding endpoint,
+        setting the current user's email and redirecting to the home page. */
+    // TODO: Validate credentials.
     const credentials = {
       email: document.getElementById('email').value,
       password: btoa(document.getElementById('password').value),
     };
 
+    // TODO: Handle errors returned by firebase.
     axios
       .post('/api/login', credentials)
       .catch((err) => console.log(err))
       .then((res) => console.log(res.data));
 
+    // TODO: Make sure the next two lines happen only if login was successful.
     history.push('/');
     localStorage.setItem('currentUser', document.getElementById('email').value);
   }
