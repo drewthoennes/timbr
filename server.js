@@ -8,7 +8,7 @@ const firebase_import = require('firebase/app')
 
 require('dotenv').config();
 
-const app = express(); 
+const app = express();
 const server = Server(app);
 
 // Announce environment
@@ -41,9 +41,10 @@ app.use((err, req, res, next) => {
   }
 });
 
+
 // Set up firebase
 const firebase = firebase_import.initializeApp({
-  apiKey: 'AIzaSyAKPviI0W3v3WuBBxMeZblLcr_t7Y63VAs',
+  apiKey: process.env.FIREBASE_KEY,
   authDomain: "timbr-cs407.firebaseapp.com",
   databaseURL: "https://timbr-cs407.firebaseio.com",
   projectId: "timbr-cs407",
