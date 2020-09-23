@@ -13,7 +13,6 @@ firebase.initializeApp({
 class LoginPage extends React.Component {
   constructor() {
     super();
-
     this.state = {};
   }
 
