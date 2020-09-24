@@ -26,12 +26,7 @@ class LoginPage extends React.Component {
     );
   }
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 4392b6eca9d03f1dbbaab50a826844be7bd8adbd
-  signIn = (event) => {
+  signInGoogle = (event) => {
     console.log(event);
     event.preventDefault();
     const prv = new firebase.auth.GoogleAuthProvider();
@@ -40,12 +35,29 @@ class LoginPage extends React.Component {
         var user = result.user;
       })
   };
-<<<<<<< HEAD
-=======
+
+  signInFacebook = () => {
+
+    var provider = new firebase.auth.FacebookAuthProvider();
+    firebase.auth().signInWithPopup(provider).then(function(result) {
+      // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+      var token = result.credential.accessToken;
+      // The signed-in user info.
+      var user = result.user;
+      // ...
+    }).catch(function(error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      // The email of the user's account used.
+      var email = error.email;
+      // The firebase.auth.AuthCredential type that was used.
+      var credential = error.credential;
+      // ...
+    });
+  }
 
 
-
->>>>>>> 4392b6eca9d03f1dbbaab50a826844be7bd8adbd
   signOut = () => {
     firebase.auth().signOut().then(function () {
       // Sign-out successful.
@@ -61,13 +73,10 @@ class LoginPage extends React.Component {
       return (
         <div>
           <h1>Click below to sign-in</h1>
-          <button onClick={this.signIn.bind(this)}>SIGN IN</button>
+          <button onClick={this.signInGoogle.bind(this)}>SIGN IN WITH GOOGLE</button>
+          <button onClick={this.signInFacebook.bind(this)}>SIGN IN WITH FACEBOOK</button>
         </div>
       );
-<<<<<<< HEAD
-=======
-
->>>>>>> 4392b6eca9d03f1dbbaab50a826844be7bd8adbd
     }
     return (
       <div>
@@ -79,15 +88,5 @@ class LoginPage extends React.Component {
 
 
   }
-<<<<<<< HEAD
 }
 export default connect(map)(withRouter(LoginPage));
-=======
-
-
-};
-
-
-export default connect(map)(withRouter(LoginPage));
-
->>>>>>> 4392b6eca9d03f1dbbaab50a826844be7bd8adbd
