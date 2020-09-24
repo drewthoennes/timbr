@@ -85,11 +85,6 @@ class LoginPage extends React.Component {
 
       </div>
     );
-<<<<<<< HEAD
-=======
-  }
-}
->>>>>>> origin/staging
 
 
   }
