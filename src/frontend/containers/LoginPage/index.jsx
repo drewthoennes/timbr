@@ -36,7 +36,7 @@ function signInFacebook() {
     // The signed-in user info.
     // const { user } = result;
     // ...
-  // }).catch((error) => {
+    // }).catch((error) => {
   }).catch(() => {
     // Handle Errors here.
     // const errorCode = error.code;
@@ -101,21 +101,21 @@ class LoginPage extends React.Component {
           <h1>Click below to sign-in</h1>
 
           <h1>timbr Login Page!</h1>
-        <form id="register-form" onSubmit={this.handleLogin}>
-          <input
-            id="email"
-            type="text"
-            placeholder="Email"
-          />
+          <form id="register-form" onSubmit={this.handleLogin}>
+            <input
+              id="email"
+              type="text"
+              placeholder="Email"
+            />
 
-          <input
-            id="password"
-            type="password"
-            placeholder="Password"
-          />
+            <input
+              id="password"
+              type="password"
+              placeholder="Password"
+            />
 
-          <button type="submit">Login</button>
-        </form>
+            <button type="submit">Login</button>
+          </form>
 
           <button type="button" onClick={signInGoogle}>SIGN IN WITH GOOGLE</button>
           <button type="button" onClick={signInFacebook}>SIGN IN WITH FACEBOOK</button>
@@ -126,7 +126,7 @@ class LoginPage extends React.Component {
       <div>
         <h1>Click below to sign-out</h1>
         <button type="button" onClick={signOut}>SIGN OUT</button>
-        
+
       </div>
     );
   }
