@@ -26,7 +26,7 @@ class LoginPage extends React.Component {
     );
   }
 
-  signInGoogle = (event) => {
+  signInGoogle (event)  {
     console.log(event);
     event.preventDefault();
     const prv = new firebase.auth.GoogleAuthProvider();
@@ -36,9 +36,12 @@ class LoginPage extends React.Component {
       })
   };
 
-  signInFacebook = () => {
+  signInFacebook (e) {
 
-    var provider = new firebase.auth.FacebookAuthProvider();
+    console.log(e);
+    e.preventDefault();
+
+    const provider = new firebase.auth.FacebookAuthProvider();
     firebase.auth().signInWithPopup(provider).then(function(result) {
       // This gives you a Facebook Access Token. You can use it to access the Facebook API.
       var token = result.credential.accessToken;
@@ -58,7 +61,7 @@ class LoginPage extends React.Component {
   }
 
 
-  signOut = () => {
+  signOut ()  {
     firebase.auth().signOut().then(function () {
       // Sign-out successful.
     }).catch(function (error) {
