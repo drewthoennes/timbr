@@ -14,7 +14,12 @@ class PetsPage extends React.Component {
   render() {
     return (
       <div id="pets-page">
-        <p>timbr pets page</p>
+        <h1>timbr Pets Page</h1>
+        <p>
+          Current user:
+          {localStorage.getItem('currentUser')}
+        </p>
+
       </div>
     );
   }
