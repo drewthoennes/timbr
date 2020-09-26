@@ -1,4 +1,4 @@
-/* eslint no-console: ["error", { allow: ["log"] }] */
+/* eslint no-console: ["error", { allow: ["log", "err"] }] */
 /* eslint class-methods-use-this: ["error", { "exceptMethods": ["handleRegister"] }] */
 /* eslint-disable react/destructuring-assignment */
 
@@ -16,9 +16,19 @@ class RegisterPage extends React.Component {
     super();
 
     this.handleRegister = this.handleRegister.bind(this);
+
+    this.state = {
+      error: '',
+    };
   }
 
-  handleRegister() {
+  errorMessage() {
+    const { error } = this.state.error;
+    return error;
+  }
+
+  handleRegister(e) {
+    e.preventDefault();
     /* This method handles registration of a new user by sending the user credentials to the
         corresponding function and redirecting to the login page. */
     // TODO: Validate credentials.
@@ -36,7 +46,12 @@ class RegisterPage extends React.Component {
     return (
       <div id="register-page">
         <h1>timbr Register Page!</h1>
-        <form id="register-form" onSubmit={this.handleRegister}>
+        <p>{this.errorMessage}</p>
+        <form
+          id="register-form"
+          onSubmit={this.handleRegister}
+        >
+
           <input
             id="email"
             type="text"
