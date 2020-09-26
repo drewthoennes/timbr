@@ -1,13 +1,14 @@
 /* eslint no-console: ["error", { allow: ["log"] }] */
 /* eslint class-methods-use-this: ["error", { "exceptMethods": ["handleRegister"] }] */
+/* eslint-disable react/destructuring-assignment */
 
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import './styles.scss';
-import axios from 'axios';
 import map from '../../store/map';
 import history from '../../router/history';
+import authentication from '../../store/actions/auth';
 
 class RegisterPage extends React.Component {
   constructor() {
@@ -18,20 +19,15 @@ class RegisterPage extends React.Component {
 
   handleRegister() {
     /* This method handles registration of a new user by sending the user credentials to the
-        corresponding endpoint and redirecting to the login page. */
+        corresponding function and redirecting to the login page. */
     // TODO: Validate credentials.
     const credentials = {
       email: document.getElementById('email').value,
       password: btoa(document.getElementById('password').value),
     };
 
-    // TODO: Handle errors returned by firebase.
-    axios
-      .post('/api/register', credentials)
-      .catch((err) => console.log(err))
-      .then((res) => console.log(res.data));
-
-    // TODO: Make sure the redirection occurs only when registration was successful.
+    // TODO: Handle errors returned by firebase, redirect only if registration successful.
+    authentication('register', credentials);
     history.push('/login');
   }
 

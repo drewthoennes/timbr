@@ -15,10 +15,6 @@ class PetsPage extends React.Component {
     return (
       <div id="pets-page">
         <h1>timbr Pets Page</h1>
-        <p>
-          Current user:
-          {localStorage.getItem('currentUser')}
-        </p>
 
       </div>
     );
