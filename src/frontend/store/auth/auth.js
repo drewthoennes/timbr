@@ -3,42 +3,6 @@
 import { firebase, facebookAuthProvider, googleAuthProvider } from '../firebase/firebase';
 import AuthOptions from './const';
 
-/* This function uses firebase auth to sign in a user using Google. */
-function loginWithGoogle() {
-  // TODO: Firebase auth error handling.
-  firebase.auth.signInWithPopup(googleAuthProvider)
-    .then((() => {
-      console.log('User logged in with Google!');
-    }))
-    .catch(((error) => {
-      console.error(error.message);
-    }));
-}
-
-/* This function uses Firebase auth to sign in a user using Facebook. */
-function loginWithFacebook() {
-  // TODO: Firebase auth error handling.
-  firebase.auth().signInWithPopup(facebookAuthProvider)
-    .then((() => {
-      console.log('User logged in with Facebook!');
-    }))
-    .catch(((error) => {
-      console.error(error.message);
-    }));
-}
-
-/* This function uses firebase auth to log out a user */
-function logout() {
-  // TODO: Firebase auth error handling.
-  firebase.auth().signOut()
-    .then((() => {
-      console.log('User signed out!');
-    }))
-    .catch(((error) => {
-      console.error(error.message);
-    }));
-}
-
 /* This method uses firebase auth to create a new user. */
 function registerWithTimbr(credentials) {
   // TODO: Firebase auth error handling.
@@ -57,6 +21,42 @@ function loginWithTimbr(credentials) {
   firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password)
     .then((() => {
       console.log('User signed in!');
+    }))
+    .catch(((error) => {
+      console.error(error.message);
+    }));
+}
+
+/* This function uses Firebase auth to sign in a user using Facebook. */
+function loginWithFacebook() {
+  // TODO: Firebase auth error handling.
+  firebase.auth().signInWithPopup(facebookAuthProvider)
+    .then((() => {
+      console.log('User logged in with Facebook!');
+    }))
+    .catch(((error) => {
+      console.error(error.message);
+    }));
+}
+
+/* This function uses firebase auth to sign in a user using Google. */
+function loginWithGoogle() {
+  // TODO: Firebase auth error handling.
+  firebase.auth.signInWithPopup(googleAuthProvider)
+    .then((() => {
+      console.log('User logged in with Google!');
+    }))
+    .catch(((error) => {
+      console.error(error.message);
+    }));
+}
+
+/* This function uses firebase auth to log out a user */
+function logout() {
+  // TODO: Firebase auth error handling.
+  firebase.auth().signOut()
+    .then((() => {
+      console.log('User signed out!');
     }))
     .catch(((error) => {
       console.error(error.message);

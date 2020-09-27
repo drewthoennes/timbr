@@ -1,4 +1,6 @@
 export default {
+  /* I have hardcoded this API key here because process.env.KEY does not seem to work for me.
+    If someone can figure out a way to make it work, please change it. */
   apiKey: 'AIzaSyAKPviI0W3v3WuBBxMeZblLcr_t7Y63VAs',
   authDomain: 'timbr-cs407.firebaseapp.com',
   databaseURL: 'https://timbr-cs407.firebaseio.com',

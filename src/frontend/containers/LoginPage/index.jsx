@@ -69,19 +69,19 @@ class LoginPage extends React.Component {
         </form>
 
         <button
-          id="Google"
-          type="button"
-          onClick={() => this.handleAuth(AuthOptions.LOGIN_WITH_GOOGLE)}
-        >
-          SIGN IN WITH GOOGLE
-        </button>
-
-        <button
           id="Facebook"
           type="button"
           onClick={() => this.handleAuth(AuthOptions.LOGIN_WITH_FACEBOOK)}
         >
           SIGN IN WITH FACEBOOK
+        </button>
+
+        <button
+          id="Google"
+          type="button"
+          onClick={() => this.handleAuth(AuthOptions.LOGIN_WITH_GOOGLE)}
+        >
+          SIGN IN WITH GOOGLE
         </button>
       </div>
     );
