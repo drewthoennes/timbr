@@ -9,8 +9,8 @@ import firebase from 'firebase';
 import map from '../../store/map';
 import './styles.scss';
 import history from '../../router/history';
-import authentication from '../../store/auth/auth';
-import AuthOptions from '../../store/auth/const';
+import authentication from '../../store/reducers/auth';
+import AuthOptions from '../../store/const';
 
 class LoginPage extends React.Component {
   constructor() {
@@ -44,10 +44,10 @@ class LoginPage extends React.Component {
   }
 
   render() {
-    // Redirect to home page if the user is already signed in.
-    const { auth } = this.state;
+    // TODO: Redirect to home page if the user is already signed in.
+    const { auth } = this.state.auth;
     if (auth) {
-      history.push('/');
+      // redirect to home page, will add this once sign out is integrated.
     }
     return (
       <div id="login-page">

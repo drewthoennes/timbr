@@ -8,8 +8,8 @@ import { withRouter } from 'react-router-dom';
 import './styles.scss';
 import map from '../../store/map';
 import history from '../../router/history';
-import authentication from '../../store/auth/auth';
-import AuthOptions from '../../store/auth/const';
+import authentication from '../../store/reducers/auth';
+import AuthOptions from '../../store/const';
 
 class RegisterPage extends React.Component {
   constructor() {

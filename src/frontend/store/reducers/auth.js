@@ -1,7 +1,7 @@
 /* eslint no-console: ["error", { allow: ["log", "error"] }] */
 
 import { firebase, facebookAuthProvider, googleAuthProvider } from '../firebase/firebase';
-import AuthOptions from './const';
+import AuthOptions from '../const';
 
 /* This method uses firebase auth to create a new user. */
 function registerWithTimbr(credentials) {
