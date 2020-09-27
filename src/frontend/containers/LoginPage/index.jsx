@@ -1,25 +1,37 @@
 /* eslint no-console: ["error", { allow: ["log"] }] */
-/* eslint class-methods-use-this: ["error", { "exceptMethods": ["handleLogin"] }] */
+/* eslint class-methods-use-this: ["error", { "exceptMethods": ["handleAuth"] }] */
 /* eslint-disable react/destructuring-assignment */
 
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import firebase from 'firebase';
 import map from '../../store/map';
 import './styles.scss';
 import history from '../../router/history';
-import authentication from '../../store/actions/auth';
+import authentication from '../../store/auth/auth';
+import AuthOptions from '../../store/auth/const';
 
 class LoginPage extends React.Component {
   constructor() {
     super();
-
-    this.handleLogin = this.handleLogin.bind(this);
+    this.state = {
+      auth: false,
+    };
   }
 
-  handleLogin() {
+  /* Changes the state if auth state changed. */
+  componentDidMount() {
+    this.unregisterAuthObserver = firebase.auth().onAuthStateChanged(
+      (user) => this.setState({ auth: !!user }),
+    );
+    this.handleAuth = this.handleAuth.bind(this);
+  }
+
+  handleAuth(option) {
     /* This method handles login by sending user credentials to the corresponding function
         and redirecting to the home page. */
+
     // TODO: Validate credentials.
     const credentials = {
       email: document.getElementById('email').value,
@@ -27,15 +39,20 @@ class LoginPage extends React.Component {
     };
 
     // TODO: Handle errors returned by firebase, redirect only if login successful.
-    authentication('login', credentials);
+    authentication(option, credentials);
     history.push('/');
   }
 
   render() {
+    // Redirect to home page if the user is already signed in.
+    const { auth } = this.state;
+    if (auth) {
+      history.push('/');
+    }
     return (
       <div id="login-page">
         <h1>timbr Login Page!</h1>
-        <form id="login-form" onSubmit={this.handleLogin}>
+        <form id="login-form" onSubmit={() => this.handleAuth(AuthOptions.LOGIN_WITH_TIMBR)}>
           <input
             id="email"
             type="text"
@@ -50,9 +67,24 @@ class LoginPage extends React.Component {
 
           <button type="submit">Login</button>
         </form>
+
+        <button
+          id="Google"
+          type="button"
+          onClick={() => this.handleAuth(AuthOptions.LOGIN_WITH_GOOGLE)}
+        >
+          SIGN IN WITH GOOGLE
+        </button>
+
+        <button
+          id="Facebook"
+          type="button"
+          onClick={() => this.handleAuth(AuthOptions.LOGIN_WITH_FACEBOOK)}
+        >
+          SIGN IN WITH FACEBOOK
+        </button>
       </div>
     );
   }
 }
-
 export default connect(map)(withRouter(LoginPage));

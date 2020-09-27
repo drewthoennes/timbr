@@ -1,5 +1,4 @@
-import firebase from 'firebase/app';
-import 'firebase/auth';
+import firebase from 'firebase';
 import config from './firebase.config';
 
 /* Initialising firebase */
@@ -7,5 +6,10 @@ import config from './firebase.config';
 firebase.initializeApp(config);
 
 // add providers and database here
+const database = firebase.database();
+const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
+const facebookAuthProvider = new firebase.auth.FacebookAuthProvider();
 
-export { firebase as default };
+export {
+  firebase, googleAuthProvider, facebookAuthProvider, database as default,
+};
