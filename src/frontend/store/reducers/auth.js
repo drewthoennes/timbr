@@ -42,7 +42,7 @@ function loginWithFacebook() {
 /* This function uses firebase auth to sign in a user using Google. */
 function loginWithGoogle() {
   // TODO: Firebase auth error handling.
-  firebase.auth.signInWithPopup(googleAuthProvider)
+  firebase.auth().signInWithPopup(googleAuthProvider)
     .then((() => {
       console.log('User logged in with Google!');
     }))
