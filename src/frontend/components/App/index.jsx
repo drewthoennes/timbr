@@ -8,7 +8,7 @@ const App = () => (
     <Navbar bg="dark" variant="dark">
       <Navbar.Brand href="/">timbr</Navbar.Brand>
       <Nav className="mr-auto">
-        <Nav.Link href="/my-plants">My Plants</Nav.Link>
+        <Nav.Link href="/myplants">My Plants</Nav.Link>
       </Nav>
     </Navbar>
     <Router />

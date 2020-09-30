@@ -25,12 +25,14 @@ class MyPlantsPage extends React.Component {
     for (let i in this.state.plants) {
       // <Card.Img variant="top" src="holder.js/100px180" />
       plantCards.push((
-        <Card key={i} className="plant-card">
-          <Card.Body>
-            <Card.Title>Plant {parseInt(i) + 1}</Card.Title>
-            <Card.Text>Plant Type Here</Card.Text>
-          </Card.Body>
-        </Card>
+        <a className="plant-link" href={`/myplants/${i}`}>
+          <Card key={i} className="plant-card">
+            <Card.Body>
+              <Card.Title>Plant {i}</Card.Title>
+              <Card.Text>Plant Type Here</Card.Text>
+            </Card.Body>
+          </Card>
+        </a>
       ))
     }
     return (
