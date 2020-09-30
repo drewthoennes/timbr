@@ -5,14 +5,7 @@ import AuthOptions from '../const';
 
 /* This method uses firebase auth to create a new user. */
 function registerWithTimbr(credentials) {
-  // TODO: Firebase auth error handling.
-  firebase.auth().createUserWithEmailAndPassword(credentials.email, credentials.password)
-    .then((() => {
-      console.log('User created!');
-    }))
-    .catch(((error) => {
-      console.error(error.message);
-    }));
+  return firebase.auth().createUserWithEmailAndPassword(credentials.email, credentials.password);
 }
 
 /* This method uses firebase auth to sign in a user. */
@@ -68,8 +61,7 @@ function logout() {
 export default function authentication(option, credentials) {
   switch (option) {
     case AuthOptions.REGISTER_WITH_TIMBR:
-      registerWithTimbr(credentials);
-      break;
+      return registerWithTimbr(credentials);
     case AuthOptions.LOGIN_WITH_TIMBR:
       loginWithTimbr(credentials);
       break;
@@ -85,4 +77,5 @@ export default function authentication(option, credentials) {
     default:
       console.error('Invalid Option.');
   }
+  return null;
 }

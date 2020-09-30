@@ -16,37 +16,32 @@ class RegisterPage extends React.Component {
     super();
 
     this.handleRegister = this.handleRegister.bind(this);
-
-    this.state = {
-      error: '',
-    };
-  }
-
-  errorMessage() {
-    const { error } = this.state.error;
-    return error;
   }
 
   handleRegister(e) {
     e.preventDefault();
     /* This method handles registration of a new user by sending the user credentials to the
         corresponding function and redirecting to the login page. */
-    // TODO: Validate credentials.
     const credentials = {
       email: document.getElementById('email').value,
       password: btoa(document.getElementById('password').value),
     };
 
-    // TODO: Handle errors returned by firebase, redirect only if registration successful.
-    authentication(AuthOptions.REGISTER_WITH_TIMBR, credentials);
-    history.push('/login');
+    authentication(AuthOptions.REGISTER_WITH_TIMBR, credentials)
+      .then(() => {
+        console.log('User created!');
+        // This redirection not working!
+        history.push('/login');
+      })
+      .catch((error) => {
+        document.getElementById('error').innerHTML = error.message;
+      });
   }
 
   render() {
     return (
       <div id="register-page">
         <h1>timbr Register Page!</h1>
-        <p>{this.errorMessage}</p>
         <form
           id="register-form"
           onSubmit={this.handleRegister}
@@ -66,6 +61,7 @@ class RegisterPage extends React.Component {
 
           <button type="submit">Register</button>
         </form>
+        <p id="error"> </p>
       </div>
     );
   }
