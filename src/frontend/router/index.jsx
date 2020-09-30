@@ -9,12 +9,12 @@ import history from './history';
 
 import LoginPage from '../containers/LoginPage';
 import RegisterPage from '../containers/RegisterPage';
-import PetsPage from '../containers/PetsPage';
+import MyPlantsPage from '../containers/MyPlantsPage';
 
 const router = () => (
   <Router history={history}>
     <Switch>
-      <Route exact path="/" render={() => <PetsPage />} />
+      <Route exact path="/my-plants" render={() => <MyPlantsPage />} />
       <Route path="/login" render={() => <LoginPage />} />
       <Route path="/register" render={() => <RegisterPage />} />
       <Route path="*" render={() => <Redirect to="/" />} />
