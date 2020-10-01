@@ -1,8 +1,6 @@
 /* eslint no-console: ["error", { allow: ["log", "error"] }] */
 
-import {
-  firebase, facebookAuthProvider, googleAuthProvider,
-} from '../firebase/firebase';
+import { firebase, facebookAuthProvider, googleAuthProvider } from '../firebase/firebase';
 import AuthOptions from '../const';
 
 /* This method adds the current user to the database, if not already added. */
@@ -105,5 +103,4 @@ export default function authentication(option, credentials) {
     default:
       console.error('Invalid Option.');
   }
-  return null;
 }
