@@ -27,15 +27,8 @@ class RegisterPage extends React.Component {
       password: btoa(document.getElementById('password').value),
     };
 
-    authentication(AuthOptions.REGISTER_WITH_TIMBR, credentials)
-      .then(() => {
-        console.log('User created!');
-        // This redirection not working!
-        history.push('/login');
-      })
-      .catch((error) => {
-        document.getElementById('error').innerHTML = error.message;
-      });
+    authentication(AuthOptions.REGISTER_WITH_TIMBR, credentials);
+    history.push('/login');
   }
 
   render() {
