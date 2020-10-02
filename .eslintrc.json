@@ -18,5 +18,7 @@
     "plugins": [
         "react"
     ],
-    "rules": {}
+    "rules": {
+        "react/forbid-prop-types": [0, {}]
+    }
 }

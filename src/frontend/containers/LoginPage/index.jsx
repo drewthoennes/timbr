@@ -9,8 +9,8 @@ import firebase from 'firebase';
 import map from '../../store/map';
 import './styles.scss';
 import history from '../../router/history';
-import authentication from '../../store/reducers/auth';
-import AuthOptions from '../../store/const';
+import accountActions from '../../store/actions/account';
+import constants from '../../store/const';
 
 class LoginPage extends React.Component {
   constructor() {
@@ -39,7 +39,21 @@ class LoginPage extends React.Component {
     };
 
     // TODO: Handle errors returned by firebase, redirect only if login successful.
-    authentication(option, credentials);
+
+    switch (option) {
+      case constants.LOGIN_WITH_TIMBR:
+        accountActions.loginWithTimbr(credentials);
+        break;
+      case constants.LOGIN_WITH_GOOGLE:
+        accountActions.loginWithGoogle();
+        break;
+      case constants.LOGIN_WITH_FACEBOOK:
+        accountActions.loginWithFacebook();
+        break;
+      default:
+        break;
+    }
+
     history.push('/');
   }
 
@@ -52,7 +66,7 @@ class LoginPage extends React.Component {
     return (
       <div id="login-page">
         <h1>timbr Login Page!</h1>
-        <form id="login-form" onSubmit={() => this.handleAuth(AuthOptions.LOGIN_WITH_TIMBR)}>
+        <form id="login-form" onSubmit={() => this.handleAuth(constants.LOGIN_WITH_TIMBR)}>
           <input
             id="email"
             type="text"
@@ -71,7 +85,7 @@ class LoginPage extends React.Component {
         <button
           id="Facebook"
           type="button"
-          onClick={() => this.handleAuth(AuthOptions.LOGIN_WITH_FACEBOOK)}
+          onClick={() => this.handleAuth(constants.LOGIN_WITH_FACEBOOK)}
         >
           SIGN IN WITH FACEBOOK
         </button>
@@ -79,7 +93,7 @@ class LoginPage extends React.Component {
         <button
           id="Google"
           type="button"
-          onClick={() => this.handleAuth(AuthOptions.LOGIN_WITH_GOOGLE)}
+          onClick={() => this.handleAuth(constants.LOGIN_WITH_GOOGLE)}
         >
           SIGN IN WITH GOOGLE
         </button>

@@ -8,8 +8,7 @@ import { withRouter } from 'react-router-dom';
 import './styles.scss';
 import map from '../../store/map';
 import history from '../../router/history';
-import authentication from '../../store/reducers/auth';
-import AuthOptions from '../../store/const';
+import accountActions from '../../store/actions/account';
 
 class RegisterPage extends React.Component {
   constructor() {
@@ -28,7 +27,7 @@ class RegisterPage extends React.Component {
     };
 
     // TODO: Handle errors returned by firebase, redirect only if registration successful.
-    authentication(AuthOptions.REGISTER_WITH_TIMBR, credentials);
+    accountActions.registerWithTimbr(credentials);
     history.push('/login');
   }
 
