@@ -5,18 +5,21 @@ import constants from '../const';
 
 /* This method adds the current user to the database, if not already added. */
 function addToDatabase() {
-  const currUser = firebase.auth().currentUser;
-  if (currUser) {
-    firebase.database().ref(`users/${currUser.uid}`).once('value', (user) => {
-      if (!user.exists()) {
-        firebase.database().ref(`users/${currUser.uid}`).set({
-          /* We can store something else other than the email,
-            possibly the username. */
-          email: currUser.email,
-        });
-      }
-    });
+  const { uid, email } = firebase.auth().currentUser;
+
+  if (!uid) {
+    return Promise.resolve();
   }
+
+  return firebase.database().ref(`users/${uid}`).once('value', (user) => {
+    if (!user.exists()) {
+      firebase.database().ref(`users/${uid}`).set({
+        /* We can store something else other than the email,
+          possibly the username. */
+        email,
+      });
+    }
+  });
 }
 
 /* This method uses firebase auth to create a new user. */

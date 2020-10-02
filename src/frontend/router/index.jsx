@@ -5,11 +5,13 @@ import {
   Router,
   Redirect,
 } from 'react-router-dom';
-import history from './history';
+import { createBrowserHistory } from 'history';
 
 import LoginPage from '../containers/LoginPage';
 import RegisterPage from '../containers/RegisterPage';
 import PetsPage from '../containers/PetsPage';
+
+const history = createBrowserHistory();
 
 const router = () => (
   <Router history={history}>

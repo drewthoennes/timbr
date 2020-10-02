@@ -5,32 +5,30 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import firebase from 'firebase';
+import PropTypes from 'prop-types';
 import map from '../../store/map';
 import './styles.scss';
-import history from '../../router/history';
 import accountActions from '../../store/actions/account';
 import constants from '../../store/const';
 
 class LoginPage extends React.Component {
   constructor() {
     super();
-    this.state = {
-      auth: false,
-    };
-  }
 
-  /* Changes the state if auth state changed. */
-  componentDidMount() {
-    this.unregisterAuthObserver = firebase.auth().onAuthStateChanged(
-      (user) => this.setState({ auth: !!user }),
-    );
     this.handleAuth = this.handleAuth.bind(this);
   }
 
-  handleAuth(option) {
-    /* This method handles login by sending user credentials to the corresponding function
-        and redirecting to the home page. */
+  componentDidUpdate() {
+    const { store: { account: { uid } }, history } = this.props;
+    if (uid) {
+      history.push('/');
+    }
+  }
+
+  /* This method handles login by sending user credentials to the corresponding function
+    and redirecting to the home page. */
+  async handleAuth(option) {
+    const { history } = this.props;
 
     // TODO: Validate credentials.
     const credentials = {
@@ -40,29 +38,27 @@ class LoginPage extends React.Component {
 
     // TODO: Handle errors returned by firebase, redirect only if login successful.
 
+    let loginMethod;
+
     switch (option) {
       case constants.LOGIN_WITH_TIMBR:
-        accountActions.loginWithTimbr(credentials);
+        loginMethod = () => accountActions.loginWithTimbr(credentials);
         break;
       case constants.LOGIN_WITH_GOOGLE:
-        accountActions.loginWithGoogle();
+        loginMethod = accountActions.loginWithGoogle;
         break;
       case constants.LOGIN_WITH_FACEBOOK:
-        accountActions.loginWithFacebook();
+        loginMethod = accountActions.loginWithFacebook;
         break;
       default:
         break;
     }
 
+    await loginMethod();
     history.push('/');
   }
 
   render() {
-    // TODO: Redirect to home page if the user is already signed in.
-    const { auth } = this.state.auth;
-    if (auth) {
-      // redirect to home page, will add this once sign out is integrated.
-    }
     return (
       <div id="login-page">
         <h1>timbr Login Page!</h1>
@@ -101,4 +97,14 @@ class LoginPage extends React.Component {
     );
   }
 }
+
+LoginPage.propTypes = {
+  history: PropTypes.object.isRequired,
+  store: PropTypes.shape({
+    account: PropTypes.shape({
+      uid: PropTypes.string,
+    }),
+  }).isRequired,
+};
+
 export default connect(map)(withRouter(LoginPage));
