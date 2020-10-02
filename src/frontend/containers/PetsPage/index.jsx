@@ -5,10 +5,11 @@ import PropTypes from 'prop-types';
 import map from '../../store/map';
 import './styles.scss';
 
+
 class PetsPage extends React.Component {
   constructor() {
     super();
-
+    
     this.state = {};
   }
 
