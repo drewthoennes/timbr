@@ -1,5 +1,5 @@
-/* eslint no-console: ["error", { allow: ["log", "err"] }] */
-/* eslint class-methods-use-this: ["error", { "exceptMethods": ["handleRegister"] }] */
+/* eslint-disable no-console */
+/* eslint-disable class-methods-use-this */
 /* eslint-disable react/destructuring-assignment */
 
 import React from 'react';
