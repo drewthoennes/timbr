@@ -7,7 +7,7 @@ import PetsPage from '../../src/frontend/containers/PetsPage';
 
 const mockStore = configureStore([]);
 
-describe('<AccountSettings/>', () => {
+describe('<PetsPage />', () => {
   it('Should render', () => {
     const store = mockStore({});
 

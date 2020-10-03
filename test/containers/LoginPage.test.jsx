@@ -7,7 +7,7 @@ import LoginPage from '../../src/frontend/containers/LoginPage';
 
 const mockStore = configureStore([]);
 
-describe('<AccountSettings/>', () => {
+describe('<LoginPage />', () => {
   it('Should render', () => {
     const store = mockStore({});
 

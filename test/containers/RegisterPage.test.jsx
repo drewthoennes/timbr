@@ -7,7 +7,7 @@ import RegisterPage from '../../src/frontend/containers/RegisterPage';
 
 const mockStore = configureStore([]);
 
-describe('<AccountSettings/>', () => {
+describe('<RegisterPage />', () => {
   it('Should render', () => {
     const store = mockStore({});
 

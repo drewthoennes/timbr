@@ -7,7 +7,7 @@ import App from '../../src/frontend/components/App';
 
 const mockStore = configureStore([]);
 
-describe('<AccountSettings/>', () => {
+describe('<App />', () => {
   it('Should render', () => {
     const store = mockStore({});
 
