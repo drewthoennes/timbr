@@ -24,7 +24,8 @@ class RegisterPage extends React.Component {
     }
   }
 
-  handleRegister() {
+  handleRegister(e) {
+    e.preventDefault();
     const { history } = this.props;
 
     /* This method handles registration of a new user by sending the user credentials to the
@@ -34,9 +35,14 @@ class RegisterPage extends React.Component {
       password: btoa(document.getElementById('password').value),
     };
 
-    // TODO: Handle errors returned by firebase, redirect only if registration successful.
-    accountActions.registerWithTimbr(credentials);
-    history.push('/login');
+    // Redirects to the login page if registration successful. Else, displays the error message.
+    accountActions.registerWithTimbr(credentials)
+      .then(() => {
+        history.push('/login');
+      })
+      .catch((error) => {
+        document.getElementById('error').innerHTML = error.message;
+      });
   }
 
   render() {
