@@ -1,5 +1,5 @@
-/* eslint no-console: ["error", { allow: ["log"] }] */
-/* eslint class-methods-use-this: ["error", { "exceptMethods": ["handleRegister"] }] */
+/* eslint-disable no-console */
+/* eslint-disable class-methods-use-this */
 /* eslint-disable react/destructuring-assignment */
 
 import React from 'react';
@@ -24,27 +24,36 @@ class RegisterPage extends React.Component {
     }
   }
 
-  handleRegister() {
+  handleRegister(e) {
+    e.preventDefault();
     const { history } = this.props;
 
     /* This method handles registration of a new user by sending the user credentials to the
         corresponding function and redirecting to the login page. */
-    // TODO: Validate credentials.
     const credentials = {
       email: document.getElementById('email').value,
       password: btoa(document.getElementById('password').value),
     };
 
-    // TODO: Handle errors returned by firebase, redirect only if registration successful.
-    accountActions.registerWithTimbr(credentials);
-    history.push('/login');
+    // Redirects to the login page if registration successful. Else, displays the error message.
+    accountActions.registerWithTimbr(credentials)
+      .then(() => {
+        history.push('/login');
+      })
+      .catch((error) => {
+        document.getElementById('error').innerHTML = error.message;
+      });
   }
 
   render() {
     return (
       <div id="register-page">
         <h1>timbr Register Page!</h1>
-        <form id="register-form" onSubmit={this.handleRegister}>
+        <form
+          id="register-form"
+          onSubmit={this.handleRegister}
+        >
+
           <input
             id="email"
             type="text"
@@ -59,6 +68,7 @@ class RegisterPage extends React.Component {
 
           <button type="submit">Register</button>
         </form>
+        <p id="error"> </p>
       </div>
     );
   }
