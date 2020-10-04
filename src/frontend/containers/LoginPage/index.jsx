@@ -90,7 +90,7 @@ class LoginPage extends React.Component {
           type="button"
           onClick={(e) => {
             e.preventDefault();
-            this.handleAuth(constants.LOGIN_WITH_TIMBR);
+            this.handleAuth(constants.LOGIN_WITH_FACEBOOK);
           }}
         >
 
@@ -102,7 +102,7 @@ class LoginPage extends React.Component {
           type="button"
           onClick={(e) => {
             e.preventDefault();
-            this.handleAuth(constants.LOGIN_WITH_TIMBR);
+            this.handleAuth(constants.LOGIN_WITH_GOOGLE);
           }}
         >
           SIGN IN WITH GOOGLE
