@@ -13,7 +13,7 @@ function addToDatabase() {
 
   return firebase.database().ref(`users/${uid}`).once('value', (user) => {
     if (!user.exists()) {
-      var username = email.substring(0, email.indexOf('@'));
+      const username = email.substring(0, email.indexOf('@'));
       firebase.database().ref(`users/${uid}`).set({
         /* We can store something else other than the email,
           possibly the username. */
@@ -58,6 +58,22 @@ function logout() {
   return firebase.auth().signOut();
 }
 
+function changeUsername(username) {
+  const { uid } = firebase.auth().currentUser;
+
+  if (!uid) {
+    return Promise.resolve();
+  }
+
+  return firebase.database().ref(`users/${uid}`).once('value', (user) => {
+    if (user.exists()) {
+      firebase.database().ref(`users/${uid}`).update({
+        username,
+      });
+    }
+  });
+}
+
 function setUID(uid) {
   store.dispatch({
     type: constants.SET_UID,
@@ -71,5 +87,6 @@ export default {
   loginWithFacebook,
   loginWithGoogle,
   logout,
+  changeUsername,
   setUID,
 };

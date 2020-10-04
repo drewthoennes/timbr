@@ -47,14 +47,15 @@ class PetsPage extends React.Component {
       <div id="pets-page">
         <h1>timbr Pets Page</h1>
         { petsJsx }
-        <button 
+        <button
           id="account"
           type="button"
-          onClick = {() => {
-            history.push('/account')
-          }}>
+          onClick={() => {
+            history.push('/account');
+          }}
+        >
           My account
-          </button>
+        </button>
         <button
           id="logout"
           type="button"
@@ -70,6 +71,9 @@ class PetsPage extends React.Component {
 PetsPage.propTypes = {
   history: PropTypes.object.isRequired,
   store: PropTypes.shape({
+    account: PropTypes.shape({
+      uid: PropTypes.string,
+    }),
     pets: PropTypes.object.isRequired,
   }).isRequired,
 };
