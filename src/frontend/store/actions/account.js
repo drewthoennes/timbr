@@ -53,13 +53,7 @@ function loginWithGoogle() {
 
 /* This function uses firebase auth to log out a user */
 function logout() {
-  return firebase.auth().signOut()
-    .then(() => {
-      console.log('User signed out!');
-    })
-    .catch(((error) => {
-      console.error(error.message);
-    }));
+  return firebase.auth().signOut();
 }
 
 function setUID(uid) {
