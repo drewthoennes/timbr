@@ -13,10 +13,12 @@ function addToDatabase() {
 
   return firebase.database().ref(`users/${uid}`).once('value', (user) => {
     if (!user.exists()) {
+      var username = email.substring(0, email.indexOf('@'));
       firebase.database().ref(`users/${uid}`).set({
         /* We can store something else other than the email,
           possibly the username. */
         email,
+        username,
       });
     }
   });
