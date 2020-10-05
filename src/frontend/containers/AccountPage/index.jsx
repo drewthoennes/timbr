@@ -64,7 +64,7 @@ class AccountPage extends React.Component {
         </button>
         <form id="account-settings">
           <p>
-            Current Username: 
+            Current Username:
             {' '}
             {this.state.username}
           </p>
