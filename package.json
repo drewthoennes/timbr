@@ -10,13 +10,13 @@
     "start-dev": "npm run build-dev; node server.js",
     "start": "npm run build; node server.js",
     "clean": "rm dist/*",
-    "lint": "eslint \"src/**/*.{js,jsx}\" --max-warnings 0",
-    "lint-fix": "eslint \"src/**/*.{js,jsx}\" --fix",
+    "lint": "eslint \"{server.js,{src,test}/**/*.{js,jsx}}\" --max-warnings 0",
+    "lint-fix": "eslint \"{server.js,{src,test}/**/*.{js,jsx}}\" --fix",
     "test-b": "mocha test/backend/**/*.js",
     "test-bu": "mocha test/backend/unit",
     "test-bi": "mocha test/backend/integration --timeout 15000",
     "test-f": "mocha test/frontend/**/*.js",
-    "test": "mocha test/*/**/*.js"
+    "test": "mocha test/**/*.js"
   },
   "license": "MIT",
   "_moduleAliases": {
@@ -65,11 +65,15 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "firebase": "^7.21.0",
+    "firebase-admin": "^9.2.0",
     "history": "^5.0.0",
     "install": "^0.13.0",
     "jquery": "^3.5.1",
     "jsonwebtoken": "^8.5.1",
     "module-alias": "^2.2.2",
+    "node-cron": "^2.0.3",
+    "nodemailer": "^6.4.11",
+    "nodemailer-mailgun-transport": "^2.0.0",
     "password-hash": "^1.2.2",
     "popper.js": "^1.16.1",
     "prop-types": "^15.7.2",
@@ -82,6 +86,6 @@
     "react-redux": "^7.1.0",
     "react-router-dom": "^4.3.1",
     "redux": "^4.0.1",
-    "sqlite3": "^4.2.0"
+    "twilio": "^3.49.4"
   }
 }
