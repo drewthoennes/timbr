@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 /* eslint class-methods-use-this: ["error", { "exceptMethods": ["changeUsername"] }] */
+/* eslint-disable react/destructuring-assignment */
 
 import React from 'react';
 import { connect } from 'react-redux';
@@ -14,19 +15,27 @@ class AccountPage extends React.Component {
     super();
 
     this.changeUsername = this.changeUsername.bind(this);
+    this.getUsername = this.getUsername.bind(this);
+    this.state = ({
+      username: 'timbr-user',
+    });
   }
 
-  componentDidUpdate() {
-    const { store: { account: { uid } }, history } = this.props;
-    if (!uid) {
-      history.push('/login');
-    }
+  componentDidMount() {
+    this.getUsername();
+  }
+
+  getUsername() {
+    const username = accountActions.getUsername();
+    this.setState({
+      username,
+    });
   }
 
   changeUsername() {
     const username = document.getElementById('username').value;
-
     accountActions.changeUsername(username);
+    this.getUsername();
   }
 
   render() {
@@ -44,6 +53,10 @@ class AccountPage extends React.Component {
           Home
         </button>
         <form id="account-settings">
+          <p>
+            Current username:
+            {this.state.username}
+          </p>
           <input
             id="username"
             type="text"
@@ -51,7 +64,7 @@ class AccountPage extends React.Component {
           />
           <button
             id="change-username"
-            type="button"
+            type="submit"
             onClick={this.changeUsername}
           >
             Change Username

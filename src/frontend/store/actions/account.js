@@ -58,9 +58,9 @@ function logout() {
   return firebase.auth().signOut();
 }
 
+/* This function changes the username of the current username. */
 function changeUsername(username) {
   const { uid } = firebase.auth().currentUser;
-
   if (!uid) {
     return Promise.resolve();
   }
@@ -72,6 +72,20 @@ function changeUsername(username) {
       });
     }
   });
+}
+
+/* This function is used to get the username of the current user. */
+function getUsername() {
+  let username = '';
+  if (firebase.auth().currentUser) {
+    const { uid } = firebase.auth().currentUser;
+    firebase.database().ref().child('users').child(uid)
+      .child('username')
+      .on('value', (user) => {
+        username = user.val();
+      });
+  }
+  return username;
 }
 
 function setUID(uid) {
@@ -88,5 +102,6 @@ export default {
   loginWithGoogle,
   logout,
   changeUsername,
+  getUsername,
   setUID,
 };
