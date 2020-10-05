@@ -4,7 +4,7 @@ const nodemailer = require('nodemailer');
 const Twilio = require('twilio');
 // set up firebase admin
 const admin = require('firebase-admin');
-
+/* eslint-disable-next-line import/no-unresolved */
 const serviceAccount = require('../../../serviceAccount.json');
 
 admin.initializeApp({
