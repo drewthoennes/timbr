@@ -15,27 +15,37 @@ class AccountPage extends React.Component {
     super();
 
     this.changeUsername = this.changeUsername.bind(this);
-    this.getUsername = this.getUsername.bind(this);
-    this.state = ({
+    this.getCurrentUsername = this.getCurrentUsername.bind(this);
+    this.state = {
       username: 'timbr-user',
-    });
+    };
   }
 
   componentDidMount() {
-    this.getUsername();
+    this.getCurrentUsername();
   }
 
-  getUsername() {
-    const username = accountActions.getUsername();
-    this.setState({
-      username,
-    });
+  componentDidUpdate(prevProps) {
+    /* Changes username when uid changes. */
+    if (prevProps.store && this.props.store
+        && this.props.store.account.uid !== prevProps.store.account.uid) {
+      this.getCurrentUsername();
+    }
+  }
+
+  /* Calls the function to get current username and sets the state. */
+  getCurrentUsername() {
+    accountActions.getUsername(
+      (user) => { this.setState({ username: user.val() }); }, this.props.store,
+    );
   }
 
   changeUsername() {
     const username = document.getElementById('username').value;
     accountActions.changeUsername(username);
-    this.getUsername();
+    /* Changes the username in the state. */
+    this.getCurrentUsername();
+    document.getElementById('username').value = '';
   }
 
   render() {
@@ -54,7 +64,7 @@ class AccountPage extends React.Component {
         </button>
         <form id="account-settings">
           <p>
-            Current username:
+            Current Username:
             {this.state.username}
           </p>
           <input
@@ -64,7 +74,7 @@ class AccountPage extends React.Component {
           />
           <button
             id="change-username"
-            type="submit"
+            type="button"
             onClick={this.changeUsername}
           >
             Change Username

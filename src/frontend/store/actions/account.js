@@ -60,12 +60,12 @@ function logout() {
 
 /* This function changes the username of the current username. */
 function changeUsername(username) {
-  const { uid } = firebase.auth().currentUser;
+  const { account: { uid } } = store.getState();
   if (!uid) {
-    return Promise.resolve();
+    return;
   }
 
-  return firebase.database().ref(`users/${uid}`).once('value', (user) => {
+  firebase.database().ref(`users/${uid}`).once('value', (user) => {
     if (user.exists()) {
       firebase.database().ref(`users/${uid}`).update({
         username,
@@ -75,17 +75,14 @@ function changeUsername(username) {
 }
 
 /* This function is used to get the username of the current user. */
-function getUsername() {
-  let username = '';
-  if (firebase.auth().currentUser) {
-    const { uid } = firebase.auth().currentUser;
-    firebase.database().ref().child('users').child(uid)
-      .child('username')
-      .on('value', (user) => {
-        username = user.val();
-      });
+function getUsername(cb, myStore) {
+  const { account: { uid } } = myStore;
+  if (!uid) {
+    return;
   }
-  return username;
+  firebase.database().ref().child('users').child(uid)
+    .child('username')
+    .on('value', cb);
 }
 
 function setUID(uid) {

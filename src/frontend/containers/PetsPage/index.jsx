@@ -54,7 +54,7 @@ class PetsPage extends React.Component {
             history.push('/account');
           }}
         >
-          My account
+          My Account
         </button>
         <button
           id="logout"
