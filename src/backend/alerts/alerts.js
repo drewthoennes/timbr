@@ -62,7 +62,7 @@ plantsRef.once('value', (snapshot0) => {
         reminders.forEach((r) => {
           const textBody = `Hello from timbr,\nThis is a friendly reminder to ${r} ${plantName} 🌱`;
 
-          if (process.envSEND_EMAILS === 'true') {
+          if (process.env.SEND_EMAILS === 'true') {
             sendNotificationEmail(userEmail, textBody); // send email notification
           }
 
