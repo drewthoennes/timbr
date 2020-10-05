@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const nodemailer = require('nodemailer');
 // const cron = require('node-cron');
 const Twilio = require('twilio');
