@@ -25,8 +25,8 @@ class MyPlantsPage extends React.Component {
     for (let i in this.state.plants) {
       // <Card.Img variant="top" src="holder.js/100px180" />
       plantCards.push((
-        <a className="plant-link" href={`/myplants/${i}`}>
-          <Card key={i} className="plant-card">
+        <a key={i} className="plant-link" href={`/myplants/${i}`}>
+          <Card className="plant-card">
             <Card.Body>
               <Card.Title>Plant {i}</Card.Title>
               <Card.Text>Plant Type Here</Card.Text>

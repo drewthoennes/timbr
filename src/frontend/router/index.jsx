@@ -9,7 +9,8 @@ import { createBrowserHistory } from 'history';
 
 import LoginPage from '../containers/LoginPage';
 import RegisterPage from '../containers/RegisterPage';
-import PetsPage from '../containers/PlantProfilePage';
+import MyPlantsPage from '../containers/MyPlantsPage';
+import PlantProfilePage from '../containers/PlantProfilePage';
 import AccountPage from '../containers/AccountPage';
 
 const history = createBrowserHistory();
