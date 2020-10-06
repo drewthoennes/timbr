@@ -13,10 +13,12 @@ function addToDatabase() {
 
   return firebase.database().ref(`users/${uid}`).once('value', (user) => {
     if (!user.exists()) {
+      const username = email.substring(0, email.indexOf('@'));
       firebase.database().ref(`users/${uid}`).set({
         /* We can store something else other than the email,
           possibly the username. */
         email,
+        username,
       });
     }
   });
@@ -56,6 +58,33 @@ function logout() {
   return firebase.auth().signOut();
 }
 
+/* This function changes the username of the current username. */
+function changeUsername(username) {
+  const { account: { uid } } = store.getState();
+  if (!uid) {
+    return;
+  }
+
+  firebase.database().ref(`users/${uid}`).once('value', (user) => {
+    if (user.exists()) {
+      firebase.database().ref(`users/${uid}`).update({
+        username,
+      });
+    }
+  });
+}
+
+/* This function is used to get the username of the current user. */
+function getUsername(cb, myStore) {
+  const { account: { uid } } = myStore;
+  if (!uid) {
+    return;
+  }
+  firebase.database().ref().child('users').child(uid)
+    .child('username')
+    .on('value', cb);
+}
+
 function setUID(uid) {
   store.dispatch({
     type: constants.SET_UID,
@@ -69,5 +98,7 @@ export default {
   loginWithFacebook,
   loginWithGoogle,
   logout,
+  changeUsername,
+  getUsername,
   setUID,
 };
