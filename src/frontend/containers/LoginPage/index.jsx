@@ -5,54 +5,71 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import firebase from 'firebase';
+import PropTypes from 'prop-types';
 import map from '../../store/map';
 import './styles.scss';
-import history from '../../router/history';
-import authentication from '../../store/reducers/auth';
-import AuthOptions from '../../store/const';
+import accountActions from '../../store/actions/account';
+import constants from '../../store/const';
 
 class LoginPage extends React.Component {
   constructor() {
     super();
-    this.state = {
-      auth: false,
-    };
-  }
 
-  /* Changes the state if auth state changed. */
-  componentDidMount() {
-    this.unregisterAuthObserver = firebase.auth().onAuthStateChanged(
-      (user) => this.setState({ auth: !!user }),
-    );
     this.handleAuth = this.handleAuth.bind(this);
   }
 
-  handleAuth(option) {
-    /* This method handles login by sending user credentials to the corresponding function
-        and redirecting to the home page. */
+  componentDidUpdate() {
+    const { store: { account: { uid } }, history } = this.props;
+    if (uid) {
+      history.push('/');
+    }
+  }
 
-    // TODO: Validate credentials.
+  /* This method handles login by sending user credentials to the corresponding function
+    and redirecting to the home page. */
+  async handleAuth(option) {
+    const { history } = this.props;
+
     const credentials = {
       email: document.getElementById('email').value,
       password: btoa(document.getElementById('password').value),
     };
 
-    // TODO: Handle errors returned by firebase, redirect only if login successful.
-    authentication(option, credentials);
-    history.push('/');
+    try {
+      let loginMethod;
+
+      switch (option) {
+        case constants.LOGIN_WITH_TIMBR:
+          loginMethod = () => accountActions.loginWithTimbr(credentials);
+          break;
+        case constants.LOGIN_WITH_GOOGLE:
+          loginMethod = accountActions.loginWithGoogle;
+          break;
+        case constants.LOGIN_WITH_FACEBOOK:
+          loginMethod = accountActions.loginWithFacebook;
+          break;
+        default:
+          break;
+      }
+
+      await loginMethod();
+      history.push('/');
+    } catch (error) {
+      document.getElementById('error').innerHTML = error.message;
+    }
   }
 
   render() {
-    // TODO: Redirect to home page if the user is already signed in.
-    const { auth } = this.state.auth;
-    if (auth) {
-      // redirect to home page, will add this once sign out is integrated.
-    }
     return (
       <div id="login-page">
         <h1>timbr Login Page!</h1>
-        <form id="login-form" onSubmit={() => this.handleAuth(AuthOptions.LOGIN_WITH_TIMBR)}>
+        <form
+          id="login-form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            this.handleAuth(constants.LOGIN_WITH_TIMBR);
+          }}
+        >
           <input
             id="email"
             type="text"
@@ -71,20 +88,38 @@ class LoginPage extends React.Component {
         <button
           id="Facebook"
           type="button"
-          onClick={() => this.handleAuth(AuthOptions.LOGIN_WITH_FACEBOOK)}
+          onClick={(e) => {
+            e.preventDefault();
+            this.handleAuth(constants.LOGIN_WITH_FACEBOOK);
+          }}
         >
+
           SIGN IN WITH FACEBOOK
         </button>
 
         <button
           id="Google"
           type="button"
-          onClick={() => this.handleAuth(AuthOptions.LOGIN_WITH_GOOGLE)}
+          onClick={(e) => {
+            e.preventDefault();
+            this.handleAuth(constants.LOGIN_WITH_GOOGLE);
+          }}
         >
           SIGN IN WITH GOOGLE
         </button>
+        <p id="error" />
       </div>
     );
   }
 }
+
+LoginPage.propTypes = {
+  history: PropTypes.object.isRequired,
+  store: PropTypes.shape({
+    account: PropTypes.shape({
+      uid: PropTypes.string,
+    }),
+  }).isRequired,
+};
+
 export default connect(map)(withRouter(LoginPage));

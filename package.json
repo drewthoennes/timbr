@@ -10,13 +10,13 @@
     "start-dev": "npm run build-dev; node server.js",
     "start": "npm run build; node server.js",
     "clean": "rm dist/*",
-    "lint": "eslint src/**/*.js --max-warnings 0",
-    "lint-fix": "eslint src/**/*.js --fix",
+    "lint": "eslint \"{server.js,{src,test}/**/*.{js,jsx}}\" --max-warnings 0",
+    "lint-fix": "eslint \"{server.js,{src,test}/**/*.{js,jsx}}\" --fix",
     "test-b": "mocha test/backend/**/*.js",
     "test-bu": "mocha test/backend/unit",
     "test-bi": "mocha test/backend/integration --timeout 15000",
     "test-f": "mocha test/frontend/**/*.js",
-    "test": "mocha test/*/**/*.js"
+    "test": "mocha test/**/*.js"
   },
   "license": "MIT",
   "_moduleAliases": {
@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.11.6",
+    "@babel/plugin-transform-runtime": "^7.11.5",
     "@babel/preset-env": "^7.11.5",
     "@babel/preset-react": "^7.10.4",
     "babel-loader": "^8.1.0",
@@ -63,17 +64,26 @@
     "chalk": "^4.1.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "firebase": "^7.21.0",
+    "firebase-admin": "^9.2.0",
     "history": "^5.0.0",
     "jquery": "^3.5.1",
     "jsonwebtoken": "^8.5.1",
     "module-alias": "^2.2.2",
-    "pg": "^8.3.3",
+    "node-cron": "^2.0.3",
+    "nodemailer": "^6.4.11",
+    "nodemailer-mailgun-transport": "^2.0.0",
+    "password-hash": "^1.2.2",
     "popper.js": "^1.16.1",
+    "prop-types": "^15.7.2",
     "react": "^16.13.1",
+    "react-bootstrap": "^1.3.0",
     "react-dom": "^16.13.1",
     "react-modal": "^3.11.2",
-    "react-redux": "^7.2.1",
-    "react-router-dom": "^5.2.0",
-    "redux": "^4.0.5"
+    "react-popup": "^0.10.0",
+    "react-redux": "^7.1.0",
+    "react-router-dom": "^4.3.1",
+    "redux": "^4.0.1",
+    "twilio": "^3.49.4"
   }
 }

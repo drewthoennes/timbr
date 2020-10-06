@@ -32,7 +32,7 @@ const createSession = () => {
 
 const killSession = () => {
   if (session) {
-    return session.close();
+    session.close();
   }
 };
 

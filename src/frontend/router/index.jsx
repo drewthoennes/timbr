@@ -5,12 +5,14 @@ import {
   Router,
   Redirect,
 } from 'react-router-dom';
-import history from './history';
+import { createBrowserHistory } from 'history';
 
 import LoginPage from '../containers/LoginPage';
 import RegisterPage from '../containers/RegisterPage';
-import MyPlantsPage from '../containers/MyPlantsPage';
-import PlantProfilePage from '../containers/PlantProfilePage';
+import PetsPage from '../containers/PlantProfilePage';
+import AccountPage from '../containers/AccountPage';
+
+const history = createBrowserHistory();
 
 const router = () => (
   <Router history={history}>
@@ -19,6 +21,7 @@ const router = () => (
       <Route exact path="/myplants/:id" render={props => <PlantProfilePage {...props}/>} />
       <Route path="/login" render={() => <LoginPage />} />
       <Route path="/register" render={() => <RegisterPage />} />
+      <Route path="/account" render={() => <AccountPage />} />
       <Route path="*" render={() => <Redirect to="/" />} />
     </Switch>
   </Router>

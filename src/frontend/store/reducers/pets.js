@@ -2,17 +2,17 @@ import constants from '../const';
 
 // Make sure to add these to the map
 const initialState = {
-  uid: undefined,
+  pets: {},
 };
 
-const account = (state = initialState, action) => {
+const pets = (state = initialState, action) => {
   switch (action.type) {
-    case constants.SET_UID:
-      return { ...state, uid: action.uid };
+    case constants.SET_PETS:
+      return { ...state, pets: action.pets || {} };
 
     default:
       return state;
   }
 };
 
-export default account;
+export default pets;
