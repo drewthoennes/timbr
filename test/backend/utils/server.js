@@ -1,14 +1,9 @@
 const express = require('express');
-const nodemailer=require('nodemailer');
-const nodemailMailgun=require('nodemailer-mailgun-transport');
 const bodyParser = require('body-parser');
 const apiRoutes = require('../../../src/backend/routes');
 
 let app;
 let session;
-
-
-
 
 const createApp = () => {
   app = express();
@@ -29,11 +24,8 @@ const createApp = () => {
   return app;
 };
 
-
-
 const createSession = () => {
   if (app) {
-    
     session = app.listen(42014); // Needs to listen on an unused port
   }
 };
