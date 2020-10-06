@@ -13,10 +13,12 @@ function addToDatabase() {
 
   return firebase.database().ref(`users/${uid}`).once('value', (user) => {
     if (!user.exists()) {
+      const username = email.substring(0, email.indexOf('@'));
       firebase.database().ref(`users/${uid}`).set({
         /* We can store something else other than the email,
           possibly the username. */
         email,
+        username,
       });
     }
   });
@@ -24,65 +26,63 @@ function addToDatabase() {
 
 /* This method uses firebase auth to create a new user. */
 function registerWithTimbr(credentials) {
-  // TODO: Firebase auth error handling.
-  return firebase.auth().createUserWithEmailAndPassword(credentials.email, credentials.password)
-    .then(() => {
-      console.log('User created!');
-    })
-    .catch((error) => {
-      console.error(error.message);
-    });
+  return firebase.auth().createUserWithEmailAndPassword(credentials.email, credentials.password);
 }
 
 /* This method uses firebase auth to sign in a user. */
 function loginWithTimbr(credentials) {
-  // TODO: Firebase auth error handling.
   return firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password)
     .then(() => {
-      console.log('User signed in!');
       addToDatabase();
-    })
-    .catch((error) => {
-      console.error(error.message);
     });
 }
 
 /* This function uses Firebase auth to sign in a user using Facebook. */
 function loginWithFacebook() {
-  // TODO: Firebase auth error handling.
   return firebase.auth().signInWithPopup(facebookAuthProvider)
     .then(() => {
-      console.log('User logged in with Facebook!');
       addToDatabase();
-    })
-    .catch((error) => {
-      console.error(error.message);
     });
 }
 
 /* This function uses firebase auth to sign in a user using Google. */
 function loginWithGoogle() {
-  // TODO: Firebase auth error handling.
   return firebase.auth().signInWithPopup(googleAuthProvider)
     .then(() => {
-      console.log('User logged in with Google!');
       addToDatabase();
-    })
-    .catch((error) => {
-      console.error(error.message);
     });
 }
 
 /* This function uses firebase auth to log out a user */
 function logout() {
-  // TODO: Firebase auth error handling.
-  return firebase.auth().signOut()
-    .then(() => {
-      console.log('User signed out!');
-    })
-    .catch(((error) => {
-      console.error(error.message);
-    }));
+  return firebase.auth().signOut();
+}
+
+/* This function changes the username of the current username. */
+function changeUsername(username) {
+  const { account: { uid } } = store.getState();
+  if (!uid) {
+    return;
+  }
+
+  firebase.database().ref(`users/${uid}`).once('value', (user) => {
+    if (user.exists()) {
+      firebase.database().ref(`users/${uid}`).update({
+        username,
+      });
+    }
+  });
+}
+
+/* This function is used to get the username of the current user. */
+function getUsername(cb, myStore) {
+  const { account: { uid } } = myStore;
+  if (!uid) {
+    return;
+  }
+  firebase.database().ref().child('users').child(uid)
+    .child('username')
+    .on('value', cb);
 }
 
 function setUID(uid) {
@@ -98,5 +98,7 @@ export default {
   loginWithFacebook,
   loginWithGoogle,
   logout,
+  changeUsername,
+  getUsername,
   setUID,
 };

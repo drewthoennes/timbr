@@ -6,7 +6,6 @@ yarn-error.log*
 dist/
 data/
 .nyc_output/
-serviceAccount.json
 # Editor directories and files
 .idea
 .vscode

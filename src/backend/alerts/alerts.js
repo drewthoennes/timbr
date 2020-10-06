@@ -2,14 +2,21 @@
 const nodemailer = require('nodemailer');
 // const cron = require('node-cron');
 const Twilio = require('twilio');
-// set up firebase admin
 const admin = require('firebase-admin');
-/* eslint-disable-next-line import/no-unresolved */
-const serviceAccount = require('../../../serviceAccount.json');
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: 'https://timbr-cs407.firebaseio.com',
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_ID,
+    pass: process.env.EMAIL_PASS,
+  },
+});
+
+const mailOptions = (emailAddress, textContent) => ({
+  from: 'timbr.alerts@gmail.com', // from address
+  to: emailAddress, // to address from firebase
+  subject: 'timbr: Reminder 🌱',
+  text: textContent,
 });
 
 // set Text alerts
@@ -30,21 +37,8 @@ function sendNotificationText(userPhoneNumber, textContent) {
 
 // set up Email alerts
 function sendNotificationEmail(emailAddress, textContent) {
-  const mailOptions = {
-    from: 'timbr.alerts@gmail.com', // from address
-    to: emailAddress, // to address from firebase
-    subject: 'timbr: Reminder 🌱',
-    text: textContent,
-  };
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.EMAIL_ID,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
   // cron.schedule('*/10 * * * *', function() {
-  transporter.sendMail(mailOptions, (error, info) => {
+  transporter.sendMail(mailOptions(emailAddress, textContent), (error, info) => {
     if (error) {
       console.log(error);
     } else {
@@ -67,8 +61,14 @@ plantsRef.once('value', (snapshot0) => {
         const userPhoneNumber = '+13129521148';
         reminders.forEach((r) => {
           const textBody = `Hello from timbr,\nThis is a friendly reminder to ${r} ${plantName} 🌱`;
-          sendNotificationEmail(userEmail, textBody); // send email notification
-          sendNotificationText(userPhoneNumber, textBody);// send text notification
+
+          if (process.env.SEND_EMAILS === 'true') {
+            sendNotificationEmail(userEmail, textBody); // send email notification
+          }
+
+          if (process.env.SEND_TEXTS === 'true') {
+            sendNotificationText(userPhoneNumber, textBody);// send text notification
+          }
         });
       });
     });

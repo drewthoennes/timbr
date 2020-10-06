@@ -10,13 +10,13 @@
     "start-dev": "npm run build-dev; node server.js",
     "start": "npm run build; node server.js",
     "clean": "rm dist/*",
-    "lint": "eslint \"src/**/*.{js,jsx}\" --max-warnings 0",
-    "lint-fix": "eslint \"src/**/*.{js,jsx}\" --fix",
+    "lint": "eslint \"{server.js,{src,test}/**/*.{js,jsx}}\" --max-warnings 0",
+    "lint-fix": "eslint \"{server.js,{src,test}/**/*.{js,jsx}}\" --fix",
     "test-b": "mocha test/backend/**/*.js",
     "test-bu": "mocha test/backend/unit",
     "test-bi": "mocha test/backend/integration --timeout 15000",
     "test-f": "mocha test/frontend/**/*.js",
-    "test": "mocha test/*/**/*.js"
+    "test": "mocha test/**/*.js"
   },
   "license": "MIT",
   "_moduleAliases": {
@@ -86,7 +86,6 @@
     "react-redux": "^7.1.0",
     "react-router-dom": "^4.3.1",
     "redux": "^4.0.1",
-    "sqlite3": "^4.2.0",
     "twilio": "^3.49.4"
   }
 }

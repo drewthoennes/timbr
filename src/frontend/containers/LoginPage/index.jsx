@@ -30,39 +30,46 @@ class LoginPage extends React.Component {
   async handleAuth(option) {
     const { history } = this.props;
 
-    // TODO: Validate credentials.
     const credentials = {
       email: document.getElementById('email').value,
       password: btoa(document.getElementById('password').value),
     };
 
-    // TODO: Handle errors returned by firebase, redirect only if login successful.
+    try {
+      let loginMethod;
 
-    let loginMethod;
+      switch (option) {
+        case constants.LOGIN_WITH_TIMBR:
+          loginMethod = () => accountActions.loginWithTimbr(credentials);
+          break;
+        case constants.LOGIN_WITH_GOOGLE:
+          loginMethod = accountActions.loginWithGoogle;
+          break;
+        case constants.LOGIN_WITH_FACEBOOK:
+          loginMethod = accountActions.loginWithFacebook;
+          break;
+        default:
+          break;
+      }
 
-    switch (option) {
-      case constants.LOGIN_WITH_TIMBR:
-        loginMethod = () => accountActions.loginWithTimbr(credentials);
-        break;
-      case constants.LOGIN_WITH_GOOGLE:
-        loginMethod = accountActions.loginWithGoogle;
-        break;
-      case constants.LOGIN_WITH_FACEBOOK:
-        loginMethod = accountActions.loginWithFacebook;
-        break;
-      default:
-        break;
+      await loginMethod();
+      history.push('/');
+    } catch (error) {
+      document.getElementById('error').innerHTML = error.message;
     }
-
-    await loginMethod();
-    history.push('/');
   }
 
   render() {
     return (
       <div id="login-page">
         <h1>timbr Login Page!</h1>
-        <form id="login-form" onSubmit={() => this.handleAuth(constants.LOGIN_WITH_TIMBR)}>
+        <form
+          id="login-form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            this.handleAuth(constants.LOGIN_WITH_TIMBR);
+          }}
+        >
           <input
             id="email"
             type="text"
@@ -81,18 +88,26 @@ class LoginPage extends React.Component {
         <button
           id="Facebook"
           type="button"
-          onClick={() => this.handleAuth(constants.LOGIN_WITH_FACEBOOK)}
+          onClick={(e) => {
+            e.preventDefault();
+            this.handleAuth(constants.LOGIN_WITH_FACEBOOK);
+          }}
         >
+
           SIGN IN WITH FACEBOOK
         </button>
 
         <button
           id="Google"
           type="button"
-          onClick={() => this.handleAuth(constants.LOGIN_WITH_GOOGLE)}
+          onClick={(e) => {
+            e.preventDefault();
+            this.handleAuth(constants.LOGIN_WITH_GOOGLE);
+          }}
         >
           SIGN IN WITH GOOGLE
         </button>
+        <p id="error" />
       </div>
     );
   }
