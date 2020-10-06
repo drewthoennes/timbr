@@ -10,6 +10,7 @@ import { createBrowserHistory } from 'history';
 import LoginPage from '../containers/LoginPage';
 import RegisterPage from '../containers/RegisterPage';
 import MyPlantsPage from '../containers/MyPlantsPage';
+import NewPlantProfilePage from '../containers/NewPlantProfilePage';
 import PlantProfilePage from '../containers/PlantProfilePage';
 import AccountPage from '../containers/AccountPage';
 
@@ -19,6 +20,7 @@ const router = () => (
   <Router history={history}>
     <Switch>
       <Route exact path="/myplants" render={() => <MyPlantsPage />} />
+      <Route exact path="/myplants/new" render={() => <NewPlantProfilePage />} />
       <Route exact path="/myplants/:id" render={props => <PlantProfilePage {...props}/>} />
       <Route path="/login" render={() => <LoginPage />} />
       <Route path="/register" render={() => <RegisterPage />} />

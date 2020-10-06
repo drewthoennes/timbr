@@ -8,9 +8,9 @@ import map from '../../store/map';
 import './styles.scss';
 import accountActions from '../../store/actions/account';
 
-class PetsPage extends React.Component {
-  constructor() {
-    super();
+class PlantProfilePage extends React.Component {
+  constructor(props) {
+    super(props);
 
     this.state = {};
     this.handleLogout = this.handleLogout.bind(this);
@@ -38,15 +38,11 @@ class PetsPage extends React.Component {
 
   render() {
     const { store: { pets }, history } = this.props;
-
-    const petsJsx = Object.entries(pets).map(([id, pet]) => (
-      <p key={id}>{ pet.name }</p>
-    ));
-
+    const pet = pets[this.props.match.params.id];
+    console.log(pet);
     return (
-      <div id="pets-page">
-        <h1>timbr Pets Page</h1>
-        { petsJsx }
+      <div>
+        <h1>{pet?.name}</h1>
         <button
           id="account"
           type="button"
@@ -68,7 +64,7 @@ class PetsPage extends React.Component {
   }
 }
 
-PetsPage.propTypes = {
+PlantProfilePage.propTypes = {
   history: PropTypes.object.isRequired,
   store: PropTypes.shape({
     account: PropTypes.shape({
@@ -78,4 +74,4 @@ PetsPage.propTypes = {
   }).isRequired,
 };
 
-export default connect(map)(withRouter(PetsPage));
+export default connect(map)(withRouter(PlantProfilePage));
