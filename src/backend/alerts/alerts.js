@@ -71,11 +71,11 @@ cron.schedule('*/10 * * * *', () => {
           reminders.forEach((r) => {
             const textBody = `Hello from timbr,\nThis is a friendly reminder to ${r} ${plantName} 🌱`;
 
-            if (emailsOn === true) {
+            if (emailsOn === true && process.env.SEND_EMAILS === 'true') {
               sendNotificationEmail(userEmail, textBody); // send email notification
             }
 
-            if (textsOn === true) {
+            if (textsOn === true&& process.env.SEND_TEXTS === 'true') {
               sendNotificationText(userPhoneNumber, textBody);// send text notification
             }
           });
