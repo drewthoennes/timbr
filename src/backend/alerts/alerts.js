@@ -75,7 +75,7 @@ cron.schedule('*/10 * * * *', () => {
               sendNotificationEmail(userEmail, textBody); // send email notification
             }
 
-            if (textsOn === true&& process.env.SEND_TEXTS === 'true') {
+            if (textsOn === true && process.env.SEND_TEXTS === 'true') {
               sendNotificationText(userPhoneNumber, textBody);// send text notification
             }
           });
