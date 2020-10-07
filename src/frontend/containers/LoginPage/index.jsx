@@ -27,7 +27,7 @@ class LoginPage extends React.Component {
 
   /* This method handles login by sending user credentials to the corresponding function
     and redirecting to the home page. */
-  async handleAuth(option) {
+  handleAuth(option) {
     const { history } = this.props;
 
     const credentials = {
@@ -52,8 +52,7 @@ class LoginPage extends React.Component {
           break;
       }
 
-      await loginMethod();
-      history.push('/');
+      loginMethod().then(history.push('/'));
     } catch (error) {
       document.getElementById('error').innerHTML = error.message;
     }

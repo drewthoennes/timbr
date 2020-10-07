@@ -5,7 +5,7 @@ import constants from '../const';
 
 /* This method adds the current user to the database, if not already added. */
 function addToDatabase() {
-  const { uid, email } = firebase.auth().currentUser;
+  const { uid, email } = firebase.auth().currentUser || { uid: '', email: '' };
 
   if (!uid) {
     return Promise.resolve();
@@ -32,25 +32,19 @@ function registerWithTimbr(credentials) {
 /* This method uses firebase auth to sign in a user. */
 function loginWithTimbr(credentials) {
   return firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password)
-    .then(() => {
-      addToDatabase();
-    });
+    .then(addToDatabase());
 }
 
 /* This function uses Firebase auth to sign in a user using Facebook. */
 function loginWithFacebook() {
   return firebase.auth().signInWithPopup(facebookAuthProvider)
-    .then(() => {
-      addToDatabase();
-    });
+    .then(addToDatabase());
 }
 
 /* This function uses firebase auth to sign in a user using Google. */
 function loginWithGoogle() {
   return firebase.auth().signInWithPopup(googleAuthProvider)
-    .then(() => {
-      addToDatabase();
-    });
+    .then(addToDatabase());
 }
 
 /* This function uses firebase auth to log out a user */
@@ -62,10 +56,10 @@ function logout() {
 function changeUsername(username) {
   const { account: { uid } } = store.getState();
   if (!uid) {
-    return;
+    return Promise.resolve();
   }
 
-  firebase.database().ref(`users/${uid}`).once('value', (user) => {
+  return firebase.database().ref(`users/${uid}`).once('value', (user) => {
     if (user.exists()) {
       firebase.database().ref(`users/${uid}`).update({
         username,

@@ -13,7 +13,7 @@ function setPets(pets) {
 function createNewPet({ parent = '', type, name, ownedSince, birth, death } = { parent: '' }) {
   const uid = firebase.auth().currentUser?.uid;
 
-  firebase.database().ref(`/users/${uid}/pets`).push({
+  return firebase.database().ref(`/users/${uid}/pets`).push({
     parent,
     type,
     name,
