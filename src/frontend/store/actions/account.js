@@ -11,14 +11,21 @@ function addToDatabase() {
     return Promise.resolve();
   }
 
-  return firebase.database().ref(`users/${uid}`).once('value', (user) => {
+  let username = 'timbr-user-';
+
+  // check if the user exists in the database
+  firebase.database().ref(`users/${uid}`).once('value', (user) => {
     if (!user.exists()) {
-      const username = email.substring(0, email.indexOf('@'));
-      firebase.database().ref(`users/${uid}`).set({
-        /* We can store something else other than the email,
-          possibly the username. */
-        email,
-        username,
+      // get and increment the counter value and create the username
+      firebase.database().ref('counter').once('value', (counter) => {
+        username += counter.val();
+        updateCounter(counter.val());
+
+        // set the values in the database
+        firebase.database().ref(`users/${uid}`).set({
+          email,
+          username,
+        });
       });
     }
   });
@@ -83,6 +90,11 @@ function getUsername(cb, myStore) {
   firebase.database().ref().child('users').child(uid)
     .child('username')
     .on('value', cb);
+}
+
+/* Updates the counter value. */
+function updateCounter(currentCounter) {
+  firebase.database().ref().update({ counter: currentCounter + 1 });
 }
 
 function setUID(uid) {

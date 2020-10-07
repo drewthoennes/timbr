@@ -55,7 +55,9 @@ class LoginPage extends React.Component {
       await loginMethod();
       history.push('/');
     } catch (error) {
-      document.getElementById('error').innerHTML = error.message;
+      if (document.getElementById('error')) {
+        document.getElementById('error').innerHTML = error.message;
+      }
     }
   }
 
