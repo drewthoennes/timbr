@@ -6,34 +6,12 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import map from '../../store/map';
 import './styles.scss';
-import accountActions from '../../store/actions/account';
 
 class PlantProfilePage extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {};
-    this.handleLogout = this.handleLogout.bind(this);
-  }
-
-  componentDidUpdate() {
-    const { store: { account: { uid } }, history } = this.props;
-    if (!uid) {
-      history.push('/login');
-    }
-  }
-
-  handleLogout(e) {
-    e.preventDefault();
-
-    const { history } = this.props;
-    accountActions.logout()
-      .then(() => {
-        history.push('/login');
-      })
-      .catch((error) => {
-        console.log(`Error: ${error.message}`);
-      });
   }
 
   render() {
@@ -43,22 +21,6 @@ class PlantProfilePage extends React.Component {
     return (
       <div>
         <h1>{pet?.name}</h1>
-        <button
-          id="account"
-          type="button"
-          onClick={() => {
-            history.push('/account');
-          }}
-        >
-          My Account
-        </button>
-        <button
-          id="logout"
-          type="button"
-          onClick={this.handleLogout}
-        >
-          Logout
-        </button>
       </div>
     );
   }

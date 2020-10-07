@@ -16,13 +16,6 @@ class MyPlantsPage extends React.Component {
     this.handleLogout = this.handleLogout.bind(this);
   }
 
-  componentDidUpdate() {
-    const { store: { account: { uid } }, history } = this.props;
-    if (!uid) {
-      history.push('/login');
-    }
-  }
-
   handleLogout(e) {
     e.preventDefault();
 
