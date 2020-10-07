@@ -14,11 +14,13 @@ function addToDatabase() {
   return firebase.database().ref(`users/${uid}`).once('value', (user) => {
     if (!user.exists()) {
       const username = email.substring(0, email.indexOf('@'));
+      const textsOn = false;
+      const emailsOn = false;
       firebase.database().ref(`users/${uid}`).set({
-        /* We can store something else other than the email,
-          possibly the username. */
         email,
         username,
+        textsOn,        // Stores a boolean value if the user has text notifications on or off
+        emailsOn,       // Stores a boolean value if the user has email notifications on or off
       });
     }
   });
@@ -85,6 +87,60 @@ function getUsername(cb, myStore) {
     .on('value', cb);
 }
 
+/* This function changes the texts status of the current user. */
+function changeTextsOn(textsOn) {
+  const { account: { uid } } = store.getState();
+  if (!uid) {
+    return;
+  }
+
+  firebase.database().ref(`users/${uid}`).once('value', (user) => {
+    if (user.exists()) {
+      firebase.database().ref(`users/${uid}`).update({
+        textsOn,
+      });
+    }
+  });
+}
+
+/* This function is used to get the texts status of the current user. */
+function getTextsOn(cb, myStore) {
+  const { account: { uid } } = myStore;
+  if (!uid) {
+    return;
+  }
+  firebase.database().ref().child('users').child(uid)
+    .child('textsOn')
+    .on('value', cb);
+}
+
+/* This function changes the emails status of the current user. */
+function changeEmailsOn(emailsOn) {
+  const { account: { uid } } = store.getState();
+  if (!uid) {
+    return;
+  }
+
+  firebase.database().ref(`users/${uid}`).once('value', (user) => {
+    if (user.exists()) {
+      firebase.database().ref(`users/${uid}`).update({
+        emailsOn,
+      });
+    }
+  });
+}
+
+/* This function is used to get the texts status of the current user. */
+function getEmailsOn(cb, myStore) {
+  const { account: { uid } } = myStore;
+  if (!uid) {
+    return;
+  }
+  firebase.database().ref().child('users').child(uid)
+    .child('emailsOn')
+    .on('value', cb);
+}
+
 function setUID(uid) {
   store.dispatch({
     type: constants.SET_UID,
@@ -100,5 +156,9 @@ export default {
   logout,
   changeUsername,
   getUsername,
+  changeTextsOn,
+  getTextsOn,
+  changeEmailsOn,
+  getEmailsOn,
   setUID,
 };
