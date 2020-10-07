@@ -33,15 +33,17 @@ function addToDatabase() {
 
 /* This method uses firebase auth to create a new user. */
 function registerWithTimbr(credentials) {
-  return firebase.auth().createUserWithEmailAndPassword(credentials.email, credentials.password);
+  return firebase.auth().createUserWithEmailAndPassword(credentials.email, credentials.password)
+    .then(() => {
+      if(firebase.auth().currentUser) {
+        addToDatabase();
+      }
+    })
 }
 
 /* This method uses firebase auth to sign in a user. */
 function loginWithTimbr(credentials) {
-  return firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password)
-    .then(() => {
-      addToDatabase();
-    });
+  return firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password);
 }
 
 /* This function uses Firebase auth to sign in a user using Facebook. */
