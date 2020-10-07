@@ -19,10 +19,16 @@ class AccountPage extends React.Component {
     this.state = {
       username: 'timbr-user',
     };
+    this.mounted = false;
   }
 
   componentDidMount() {
+    this.mounted = true;
     this.getCurrentUsername();
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   componentDidUpdate(prevProps) {
@@ -36,7 +42,7 @@ class AccountPage extends React.Component {
   /* Calls the function to get current username and sets the state. */
   getCurrentUsername() {
     accountActions.getUsername(
-      (user) => { this.setState({ username: user.val() }); }, this.props.store,
+      (user) => { this.mounted && this.setState({ username: user.val() }); }, this.props.store,
     );
   }
 
