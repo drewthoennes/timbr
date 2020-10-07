@@ -46,9 +46,17 @@ class RegisterPage extends React.Component {
   }
 
   render() {
+    const { history } = this.props;
     return (
       <div id="register-page">
         <h1>timbr Register Page!</h1>
+        <button
+          type="button"
+          onClick={() => history.push('/login')}
+        >
+          Already a user? Go to login
+        </button>
+
         <form
           id="register-form"
           onSubmit={this.handleRegister}

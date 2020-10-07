@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 /* eslint class-methods-use-this: ["error", { "exceptMethods": ["changeUsername"] }] */
 /* eslint-disable react/destructuring-assignment */
+/* eslint-disable no-unused-expressions */
 
 import React from 'react';
 import { connect } from 'react-redux';
@@ -27,16 +28,16 @@ class AccountPage extends React.Component {
     this.getCurrentUsername();
   }
 
-  componentWillUnmount() {
-    this.mounted = false;
-  }
-
   componentDidUpdate(prevProps) {
     /* Changes username when uid changes. */
     if (prevProps.store && this.props.store
         && this.props.store.account.uid !== prevProps.store.account.uid) {
       this.getCurrentUsername();
     }
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   /* Calls the function to get current username and sets the state. */
@@ -48,6 +49,11 @@ class AccountPage extends React.Component {
 
   changeUsername() {
     const username = document.getElementById('username').value;
+    if (this.state.username === username) {
+      // no op if the current username and new username are the same
+      document.getElementById('username').value = '';
+      return;
+    }
     accountActions.changeUsername(username);
     /* Changes the username in the state. */
     this.getCurrentUsername();

@@ -3,6 +3,11 @@ import { firebase, facebookAuthProvider, googleAuthProvider } from '../../fireba
 import store from '../index';
 import constants from '../const';
 
+/* Updates the counter value. */
+function updateCounter(currentCounter) {
+  firebase.database().ref().update({ counter: currentCounter + 1 });
+}
+
 /* This method adds the current user to the database, if not already added. */
 function addToDatabase() {
   const { uid, email } = firebase.auth().currentUser;
@@ -14,7 +19,7 @@ function addToDatabase() {
   let username = 'timbr-user-';
 
   // check if the user exists in the database
-  firebase.database().ref(`users/${uid}`).once('value', (user) => {
+  return firebase.database().ref(`users/${uid}`).once('value', (user) => {
     if (!user.exists()) {
       // get and increment the counter value and create the username
       firebase.database().ref('counter').once('value', (counter) => {
@@ -35,10 +40,10 @@ function addToDatabase() {
 function registerWithTimbr(credentials) {
   return firebase.auth().createUserWithEmailAndPassword(credentials.email, credentials.password)
     .then(() => {
-      if(firebase.auth().currentUser) {
+      if (firebase.auth().currentUser) {
         addToDatabase();
       }
-    })
+    });
 }
 
 /* This method uses firebase auth to sign in a user. */
@@ -92,11 +97,6 @@ function getUsername(cb, myStore) {
   firebase.database().ref().child('users').child(uid)
     .child('username')
     .on('value', cb);
-}
-
-/* Updates the counter value. */
-function updateCounter(currentCounter) {
-  firebase.database().ref().update({ counter: currentCounter + 1 });
 }
 
 function setUID(uid) {
