@@ -19,8 +19,8 @@ function addToDatabase() {
       firebase.database().ref(`users/${uid}`).set({
         email,
         username,
-        textsOn,        // Stores a boolean value if the user has text notifications on or off
-        emailsOn,       // Stores a boolean value if the user has email notifications on or off
+        textsOn, // Stores a boolean value if the user has text notifications on or off
+        emailsOn, // Stores a boolean value if the user has email notifications on or off
       });
     }
   });

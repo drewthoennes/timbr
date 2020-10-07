@@ -24,7 +24,7 @@ function sendNotificationText(userPhoneNumber, textContent) {
   const accountSid = process.env.TWILIO_SID;
   const authToken = process.env.TWILIO_AUTHTOKEN;
   const client = new Twilio(accountSid, authToken);
-  //cron.schedule('*/1 * * * *', function() {
+  // cron.schedule('*/1 * * * *', function() {
   client.messages.create({
     body: textContent,
     to: userPhoneNumber, // Text this number
@@ -32,12 +32,12 @@ function sendNotificationText(userPhoneNumber, textContent) {
   })
     .then((message) => console.log(message.sid));
   // console.log('running a cron sms task every 10 minutes');
-  //});//cron task 2
+  // });//cron task 2
 }
 
 // set up Email alerts
 function sendNotificationEmail(emailAddress, textContent) {
-  //cron.schedule('*/1 * * * *', function() {
+  // cron.schedule('*/1 * * * *', function() {
   transporter.sendMail(mailOptions(emailAddress, textContent), (error, info) => {
     if (error) {
       console.log(error);
@@ -46,35 +46,31 @@ function sendNotificationEmail(emailAddress, textContent) {
     }
   });
   // console.log('running a cron email task every 10 minutes');
-  //});//cron task 2
+  // });//cron task 2
 }
 
 // Fetch the user's email and send an email to everyone registered on the database.
 const reminders = ['water', 'fertilize', 'rotate'];
 
 // Schedule for texts and emails every 10 minutes
-cron.schedule('*/10 * * * *', function () {
+cron.schedule('*/10 * * * *', () => {
   const plantsRef = admin.database().ref('/users/');
   plantsRef.once('value', (snapshot0) => {
     snapshot0.forEach((snapshot1) => {
-
       const userEmail = snapshot1.val().email;
 
       // Check to see status of texts and emails
-      const textsOn = snapshot1.val().textsOn;
-      const emailsOn = snapshot1.val().emailsOn;
-      
+      const { textsOn } = snapshot1.val();
+      const { emailsOn } = snapshot1.val();
+
       snapshot1.forEach((snapshot2) => {
-
         snapshot2.forEach((e) => {
-
           const plantName = e.val().name;
           const userPhoneNumber = '+17657759145';
 
           reminders.forEach((r) => {
-
             const textBody = `Hello from timbr,\nThis is a friendly reminder to ${r} ${plantName} 🌱`;
-            
+
             if (emailsOn === true) {
               sendNotificationEmail(userEmail, textBody); // send email notification
             }

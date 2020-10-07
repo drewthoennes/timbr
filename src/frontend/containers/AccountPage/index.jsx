@@ -2,15 +2,15 @@
 /* eslint class-methods-use-this: ["error", { "exceptMethods": ["changeUsername"] }] */
 /* eslint-disable react/destructuring-assignment */
 
-import "bootstrap/dist/css/bootstrap.min.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import Switch from 'react-switch';
 import map from '../../store/map';
 import './styles.scss';
 import accountActions from '../../store/actions/account';
-import Switch from 'react-switch';
 
 class AccountPage extends React.Component {
   constructor() {
@@ -37,15 +37,14 @@ class AccountPage extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    /* Changes username, text notifications status, and email notifications status when uid changes. */
-
+    /* Changes username, text notifications status,
+    and email notifications status when uid changes. */
     if (prevProps.store && this.props.store
       && this.props.store.account.uid !== prevProps.store.account.uid) {
       this.getCurrentUsername();
       this.getTextsOn();
       this.getEmailsOn();
     }
-    
   }
 
   /* Calls the function to get current username and sets the state. */
@@ -78,7 +77,7 @@ class AccountPage extends React.Component {
   }
 
   changeTextsOn(textsEvent) {
-    this.setState({ textsOn: textsEvent})
+    this.setState({ textsOn: textsEvent });
     const textsOn = textsEvent;
     accountActions.changeTextsOn(textsOn);
     /* Changes the text notifications status in the state. */
@@ -86,7 +85,7 @@ class AccountPage extends React.Component {
   }
 
   changeEmailsOn(emailsEvent) {
-    this.setState({ emailsOn: emailsEvent})
+    this.setState({ emailsOn: emailsEvent });
     const emailsOn = emailsEvent;
     accountActions.changeEmailsOn(emailsOn);
     /* Changes the email notifications status in the state. */
@@ -112,25 +111,22 @@ class AccountPage extends React.Component {
         <form id="account-settings">
 
           <label htmlFor="text-switch">
+            <input type="hidden" id="text-switch" />
             <span>Text Notifications </span>
             <Switch
               onChange={this.changeTextsOn}
               checked={this.state.textsOn}
-              id="text-switch"
             />
           </label>
-
-          <p></p>
-
+          <p>{'\n'}</p>
           <label htmlFor="email-switch">
+            <input type="hidden" id="email-switch" />
             <span>Email Notifications </span>
             <Switch
               onChange={this.changeEmailsOn}
               checked={this.state.emailsOn}
-              id="email-switch"
             />
           </label>
-
           <p>
             Current Username:
             {' '}
