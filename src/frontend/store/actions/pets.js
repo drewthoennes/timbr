@@ -9,11 +9,6 @@ export function setPets(pets) {
   });
 }
 
-export function getPetsByUser() {
-  const uid = firebase.auth().currentUser?.uid;
-  return firebase.database().ref(`/users/${uid}/pets`).once('value');
-}
-
 /* eslint-disable-next-line object-curly-newline */
 export function createNewPet({ parent = '', type = '', name, ownedSince, birth, death = null } = { parent: '' }) {
   const uid = firebase.auth().currentUser?.uid;
@@ -31,7 +26,6 @@ export function createNewPet({ parent = '', type = '', name, ownedSince, birth, 
 }
 
 export default {
-  getPetsByUser,
   setPets,
   createNewPet,
 };

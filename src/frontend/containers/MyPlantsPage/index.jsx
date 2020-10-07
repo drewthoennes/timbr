@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Button, Card } from 'react-bootstrap';
 import map from '../../store/map';
-import { getPetsByUser } from '../../store/actions/pets';
 import './styles.scss';
 import PropTypes from 'prop-types';
 import accountActions from '../../store/actions/account';
@@ -14,6 +13,13 @@ class MyPlantsPage extends React.Component {
 
     this.state = {};
     this.handleLogout = this.handleLogout.bind(this);
+  }
+
+  componentDidUpdate() {
+    const { store: { account: { uid } }, history } = this.props;
+    if (!uid) {
+      history.push('/login');
+    }
   }
 
   handleLogout(e) {
@@ -43,7 +49,27 @@ class MyPlantsPage extends React.Component {
     ));
     return (
       <div id="my-plants-page">
-        {plantCards}
+        <div className="container">
+          {plantCards}
+        </div>
+        <div className="container">
+          <button
+            id="account"
+            type="button"
+            onClick={() => {
+              history.push('/account');
+            }}
+          >
+            My Account
+          </button>
+          <button
+            id="logout"
+            type="button"
+            onClick={this.handleLogout}
+          >
+            Logout
+          </button>
+        </div>
       </div>
     );
   }
