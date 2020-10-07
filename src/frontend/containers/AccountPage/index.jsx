@@ -2,7 +2,6 @@
 /* eslint class-methods-use-this: ["error", { "exceptMethods": ["changeUsername"] }] */
 /* eslint-disable react/destructuring-assignment */
 
-import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
