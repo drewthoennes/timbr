@@ -78,24 +78,28 @@ function logout() {
 /* This function changes the username of the current username. */
 function changeUsername(username) {
   // checks if the username is taken by a different user
-  firebase.database().ref('/users').orderByChild('username').equalTo(username)
-    .once('value', (snapshot) => {
+  return firebase.database().ref('/users').orderByChild('username').equalTo(username)
+    .once('value')
+    .then((snapshot) => {
       if (snapshot.val()) {
         alert('Username Taken! Please select a different one.');
-      } else {
-        const { account: { uid } } = store.getState();
-        if (!uid) {
-          return;
+        return Promise.reject();
+      }
+
+      const { uid } = firebase.auth().currentUser || { uid: '' };
+      if (!uid) {
+        throw new Error('Provided username is already in use');
+      }
+
+      return firebase.database().ref(`users/${uid}`).once('value').then((user) => {
+        if (!user.exists()) {
+          throw new Error('Current user does not have an account');
         }
 
-        firebase.database().ref(`users/${uid}`).once('value', (user) => {
-          if (user.exists()) {
-            firebase.database().ref(`users/${uid}`).update({
-              username,
-            });
-          }
+        return firebase.database().ref(`users/${uid}`).update({
+          username,
         });
-      }
+      });
     });
 }
 

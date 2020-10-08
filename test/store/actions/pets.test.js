@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import petActions from '../../../src/frontend/store/actions/pets';
+import { createNewPet } from '../../../src/frontend/store/actions/pets';
 
 const mockPush = sinon.stub();
 
@@ -34,7 +34,7 @@ describe('Redux account actions should work', () => {
   it('Creating a new pet should work as expected', () => {
     mockPush.resolves();
 
-    const funcPromise = expect(petActions.createNewPet(pet))
+    const funcPromise = expect(createNewPet(pet))
       .resolves.toBe(undefined);
     const stubCallCountPromise = mockPush.callCount === 1 ? Promise.resolve() : Promise.reject();
 
