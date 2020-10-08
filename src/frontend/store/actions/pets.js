@@ -2,7 +2,7 @@ import { firebase } from '../../firebase/firebase';
 import store from '../index';
 import constants from '../const';
 
-function setPets(pets) {
+export function setPets(pets) {
   return store.dispatch({
     type: constants.SET_PETS,
     pets,
@@ -10,7 +10,7 @@ function setPets(pets) {
 }
 
 /* eslint-disable-next-line object-curly-newline */
-function createNewPet({ parent = '', type, name, ownedSince, birth, death } = { parent: '' }) {
+export function createNewPet({ parent = '', type = '', name, ownedSince, birth, death = null } = { parent: '' }) {
   const uid = firebase.auth().currentUser?.uid;
 
   return firebase.database().ref(`/users/${uid}/pets`).push({

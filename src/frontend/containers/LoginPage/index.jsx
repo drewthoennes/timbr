@@ -54,11 +54,14 @@ class LoginPage extends React.Component {
 
       loginMethod().then(history.push('/'));
     } catch (error) {
-      document.getElementById('error').innerHTML = error.message;
+      if (document.getElementById('error')) {
+        document.getElementById('error').innerHTML = error.message;
+      }
     }
   }
 
   render() {
+    const { history } = this.props;
     return (
       <div id="login-page">
         <h1>timbr Login Page!</h1>
@@ -92,8 +95,7 @@ class LoginPage extends React.Component {
             this.handleAuth(constants.LOGIN_WITH_FACEBOOK);
           }}
         >
-
-          SIGN IN WITH FACEBOOK
+          Sign in with Facebook
         </button>
 
         <button
@@ -104,9 +106,15 @@ class LoginPage extends React.Component {
             this.handleAuth(constants.LOGIN_WITH_GOOGLE);
           }}
         >
-          SIGN IN WITH GOOGLE
+          Sign in with Google
         </button>
         <p id="error" />
+        <button
+          type="button"
+          onClick={() => history.push('/register')}
+        >
+          Not a user? Register with timbr here.
+        </button>
       </div>
     );
   }

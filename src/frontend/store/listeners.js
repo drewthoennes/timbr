@@ -1,6 +1,6 @@
 import { firebase } from '../firebase/firebase';
 import accountActions from './actions/account';
-import petsActions from './actions/pets';
+import { setPets } from './actions/pets';
 
 firebase.auth().onAuthStateChanged((user) => {
   const uid = user?.uid;
@@ -10,7 +10,7 @@ firebase.auth().onAuthStateChanged((user) => {
     const petsRef = firebase.database().ref(`/users/${uid}/pets`);
 
     petsRef.on('value', (snapshot) => {
-      petsActions.setPets(snapshot.val());
+      setPets(snapshot.val());
     });
   }
 });
