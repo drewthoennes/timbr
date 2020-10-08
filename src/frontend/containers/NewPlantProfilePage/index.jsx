@@ -2,9 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Button, Form } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 import map from '../../store/map';
 import { createNewPet } from '../../store/actions/pets';
-import PropTypes from 'prop-types';
 import './styles.scss';
 
 class NewPlantProfilePage extends React.Component {
@@ -35,29 +35,33 @@ class NewPlantProfilePage extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     e.stopPropagation();
+    const { name, birth, ownedSince } = this.state;
     createNewPet({
-      name: this.state.name,
-      birth: new Date(this.state.birth ?? Date.now()),
-      ownedSince: new Date(this.state.ownedSince ?? Date.now())
-    }).then(snap => {
+      name,
+      birth: new Date(birth ?? Date.now()),
+      ownedSince: new Date(ownedSince ?? Date.now()),
+    }).then((snap) => {
       const { history } = this.props;
       history.push(`/myplants/${snap.key}`);
     });
   }
 
   render() {
+    const { name, birth, ownedSince } = this.state;
     return (
       <div id="new-plant-page" className="container col-md-6 col-sm-12">
         <h1>Create New Plant</h1>
         <Form onSubmit={this.handleSubmit}>
           <Form.Group controlId="name">
             <Form.Label>Plant's Name:</Form.Label>
-            <Form.Control required
+            <Form.Control
+              required
               name="name"
-              value={this.state.name}
+              value={name}
               onChange={this.handleChange}
               maxlength="40"
-              placeholder="Name"/>
+              placeholder="Name"
+            />
           </Form.Group>
 
           <Form.Group controlId="birth">
@@ -66,22 +70,22 @@ class NewPlantProfilePage extends React.Component {
               name="birth"
               type="date"
               min={new Date((new Date().getFullYear() - 50).toString()).toISOString().split('T')[0]}
-              max={(new Date(new Date().getTime()-86400000)).toISOString().split('T')[0]}
-              value={this.state.birth}
+              max={(new Date(new Date().getTime() - 86400000)).toISOString().split('T')[0]}
+              value={birth}
               onChange={this.handleChange}
-              />
+            />
           </Form.Group>
           <Form.Group controlId="ownedSince">
-          <Form.Label>I've owned this plant since:</Form.Label>
+            <Form.Label>I've owned this plant since:</Form.Label>
             <Form.Control
               name="ownedSince"
               type="date"
-              min={new Date(this.state.birth.length ?
-                this.state.birth : (new Date().getFullYear() - 50).toString()).toISOString().split('T')[0]}
-              max={(new Date(new Date().getTime()-86400000)).toISOString().split('T')[0]}
-              value={this.state.ownedSince}
+              min={new Date(birth.length
+                ? birth : (new Date().getFullYear() - 50).toString()).toISOString().split('T')[0]}
+              max={(new Date(new Date().getTime() - 86400000)).toISOString().split('T')[0]}
+              value={ownedSince}
               onChange={this.handleChange}
-              />
+            />
           </Form.Group>
           <Button variant="primary" type="submit">
             Submit
@@ -90,7 +94,7 @@ class NewPlantProfilePage extends React.Component {
       </div>
     );
   }
-};
+}
 NewPlantProfilePage.propTypes = {
   history: PropTypes.object.isRequired,
   store: PropTypes.shape({

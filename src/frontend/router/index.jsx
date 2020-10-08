@@ -21,7 +21,7 @@ const router = () => (
     <Switch>
       <Route exact path="/myplants" render={() => <MyPlantsPage />} />
       <Route exact path="/myplants/new" render={() => <NewPlantProfilePage />} />
-      <Route exact path="/myplants/:id" render={props => <PlantProfilePage {...props}/>} />
+      <Route exact path="/myplants/:id" render={(props) => <PlantProfilePage {...props} />} />
       <Route path="/login" render={() => <LoginPage />} />
       <Route path="/register" render={() => <RegisterPage />} />
       <Route path="/account" render={() => <AccountPage />} />

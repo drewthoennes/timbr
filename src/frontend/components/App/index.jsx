@@ -1,6 +1,6 @@
 import React from 'react';
-import Router from '../../router';
 import { Navbar, Nav, Button } from 'react-bootstrap';
+import Router from '../../router';
 import './styles.scss';
 
 const App = () => (

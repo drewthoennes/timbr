@@ -15,8 +15,8 @@ class PlantProfilePage extends React.Component {
   }
 
   render() {
-    const { store: { pets }, history } = this.props;
-    const pet = pets[this.props.match.params.id];
+    const { store: { pets }, match: { params: id } } = this.props;
+    const pet = pets[id];
     return (
       <div>
         <h1>{pet?.name}</h1>
@@ -26,12 +26,16 @@ class PlantProfilePage extends React.Component {
 }
 
 PlantProfilePage.propTypes = {
-  history: PropTypes.object.isRequired,
   store: PropTypes.shape({
     account: PropTypes.shape({
       uid: PropTypes.string,
     }),
     pets: PropTypes.object.isRequired,
+  }).isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.string,
+    }),
   }).isRequired,
 };
 

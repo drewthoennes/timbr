@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Button, Card } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 import map from '../../store/map';
 import './styles.scss';
-import PropTypes from 'prop-types';
 import accountActions from '../../store/actions/account';
 
 class MyPlantsPage extends React.Component {
@@ -29,10 +29,10 @@ class MyPlantsPage extends React.Component {
     accountActions.logout()
       .then(() => {
         history.push('/login');
-      })
-      .catch((error) => {
-        console.log(`Error: ${error.message}`);
       });
+    // .catch((error) => {
+    //   console.error(`Error: ${error.message}`);
+    // });
   }
 
   render() {
@@ -73,7 +73,7 @@ class MyPlantsPage extends React.Component {
       </div>
     );
   }
-};
+}
 MyPlantsPage.propTypes = {
   history: PropTypes.object.isRequired,
   store: PropTypes.shape({
