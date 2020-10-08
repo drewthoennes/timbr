@@ -1,0 +1,9 @@
+{
+  "setupFilesAfterEnv": [
+    "./test/setup.js"
+  ],
+  "transform": {
+    "^.+\\.jsx?$": "babel-jest",
+    "\\.(css|scss)$": "./test/styles.js"
+  }
+}

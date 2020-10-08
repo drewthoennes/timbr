@@ -22,14 +22,9 @@ The application will have started on `localhost:8080`.
 
 We've included unit and integration tests and linting as part of our application.
 
-To run the backend tests, run:
+To run the tests, run:
 ```bash
-npm run test-b
-```
-
-To run the frontend tests, run:
-```bash
-npm run test-f
+npm run test
 ```
 
 To lint, run:

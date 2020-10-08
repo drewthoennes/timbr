@@ -12,7 +12,7 @@ function updateCounter(currentCounter) {
 
 /* This method adds the current user to the database, if not already added. */
 function addToDatabase() {
-  const { uid, email } = firebase.auth().currentUser;
+  const { uid, email } = firebase.auth().currentUser || { uid: '', email: '' };
 
   if (!uid) {
     return Promise.resolve();
@@ -54,23 +54,20 @@ function registerWithTimbr(credentials) {
 
 /* This method uses firebase auth to sign in a user. */
 function loginWithTimbr(credentials) {
-  return firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password);
+  return firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password)
+    .then(addToDatabase());
 }
 
 /* This function uses Firebase auth to sign in a user using Facebook. */
 function loginWithFacebook() {
   return firebase.auth().signInWithPopup(facebookAuthProvider)
-    .then(() => {
-      addToDatabase();
-    });
+    .then(addToDatabase());
 }
 
 /* This function uses firebase auth to sign in a user using Google. */
 function loginWithGoogle() {
   return firebase.auth().signInWithPopup(googleAuthProvider)
-    .then(() => {
-      addToDatabase();
-    });
+    .then(addToDatabase());
 }
 
 /* This function uses firebase auth to log out a user */
@@ -81,24 +78,28 @@ function logout() {
 /* This function changes the username of the current username. */
 function changeUsername(username) {
   // checks if the username is taken by a different user
-  firebase.database().ref('/users').orderByChild('username').equalTo(username)
-    .once('value', (snapshot) => {
+  return firebase.database().ref('/users').orderByChild('username').equalTo(username)
+    .once('value')
+    .then((snapshot) => {
       if (snapshot.val()) {
         alert('Username Taken! Please select a different one.');
-      } else {
-        const { account: { uid } } = store.getState();
-        if (!uid) {
-          return;
+        return Promise.reject();
+      }
+
+      const { uid } = firebase.auth().currentUser || { uid: '' };
+      if (!uid) {
+        throw new Error('Provided username is already in use');
+      }
+
+      return firebase.database().ref(`users/${uid}`).once('value').then((user) => {
+        if (!user.exists()) {
+          throw new Error('Current user does not have an account');
         }
 
-        firebase.database().ref(`users/${uid}`).once('value', (user) => {
-          if (user.exists()) {
-            firebase.database().ref(`users/${uid}`).update({
-              username,
-            });
-          }
+        return firebase.database().ref(`users/${uid}`).update({
+          username,
         });
-      }
+      });
     });
 }
 
@@ -117,10 +118,10 @@ function getUsername(cb, myStore) {
 function changeTextsOn(textsOn) {
   const { account: { uid } } = store.getState();
   if (!uid) {
-    return;
+    return Promise.resolve();
   }
 
-  firebase.database().ref(`users/${uid}`).once('value', (user) => {
+  return firebase.database().ref(`users/${uid}`).once('value', (user) => {
     if (user.exists()) {
       firebase.database().ref(`users/${uid}`).update({
         textsOn,
