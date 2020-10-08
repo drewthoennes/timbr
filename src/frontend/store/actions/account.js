@@ -3,6 +3,11 @@ import { firebase, facebookAuthProvider, googleAuthProvider } from '../../fireba
 import store from '../index';
 import constants from '../const';
 
+/* Updates the counter value. */
+function updateCounter(currentCounter) {
+  firebase.database().ref().update({ counter: currentCounter + 1 });
+}
+
 /* This method adds the current user to the database, if not already added. */
 function addToDatabase() {
   const { uid, email } = firebase.auth().currentUser;
@@ -11,16 +16,25 @@ function addToDatabase() {
     return Promise.resolve();
   }
 
+  let username = 'timbr-user-';
+  const textsOn = false;
+  const emailsOn = false;
+
+  // check if the user exists in the database
   return firebase.database().ref(`users/${uid}`).once('value', (user) => {
     if (!user.exists()) {
-      const username = email.substring(0, email.indexOf('@'));
-      const textsOn = false;
-      const emailsOn = false;
-      firebase.database().ref(`users/${uid}`).set({
-        email,
-        username,
-        textsOn, // Stores a boolean value if the user has text notifications on or off
-        emailsOn, // Stores a boolean value if the user has email notifications on or off
+      // get and increment the counter value and create the username
+      firebase.database().ref('counter').once('value', (counter) => {
+        username += counter.val();
+        updateCounter(counter.val());
+
+        // set the values in the database
+        firebase.database().ref(`users/${uid}`).set({
+          email,
+          username,
+          textsOn, // Stores a boolean value if the user has text notifications on or off
+          emailsOn, // Stores a boolean value if the user has email notifications on or off
+        });
       });
     }
   });
@@ -28,15 +42,17 @@ function addToDatabase() {
 
 /* This method uses firebase auth to create a new user. */
 function registerWithTimbr(credentials) {
-  return firebase.auth().createUserWithEmailAndPassword(credentials.email, credentials.password);
+  return firebase.auth().createUserWithEmailAndPassword(credentials.email, credentials.password)
+    .then(() => {
+      if (firebase.auth().currentUser) {
+        addToDatabase();
+      }
+    });
 }
 
 /* This method uses firebase auth to sign in a user. */
 function loginWithTimbr(credentials) {
-  return firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password)
-    .then(() => {
-      addToDatabase();
-    });
+  return firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password);
 }
 
 /* This function uses Firebase auth to sign in a user using Facebook. */
