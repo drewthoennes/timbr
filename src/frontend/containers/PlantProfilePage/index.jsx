@@ -17,7 +17,6 @@ class PlantProfilePage extends React.Component {
   render() {
     const { store: { pets }, history } = this.props;
     const pet = pets[this.props.match.params.id];
-    console.log(pet);
     return (
       <div>
         <h1>{pet?.name}</h1>

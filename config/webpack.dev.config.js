@@ -13,5 +13,4 @@ module.exports = merge(base, {
       __name__: `'${config.name}'`,
     }),
   ],
-  watch: true
 });

@@ -33,6 +33,8 @@ class NewPlantProfilePage extends React.Component {
   }
 
   handleSubmit(e) {
+    e.preventDefault();
+    e.stopPropagation();
     createNewPet({
       name: this.state.name,
       birth: new Date(this.state.birth ?? Date.now()),
@@ -54,6 +56,7 @@ class NewPlantProfilePage extends React.Component {
               name="name"
               value={this.state.name}
               onChange={this.handleChange}
+              maxlength="40"
               placeholder="Name"/>
           </Form.Group>
 
@@ -62,7 +65,8 @@ class NewPlantProfilePage extends React.Component {
             <Form.Control
               name="birth"
               type="date"
-              max={(new Date()).toISOString().split('T')[0]}
+              min={new Date((new Date().getFullYear() - 50).toString()).toISOString().split('T')[0]}
+              max={(new Date(new Date().getTime()-86400000)).toISOString().split('T')[0]}
               value={this.state.birth}
               onChange={this.handleChange}
               />
@@ -72,12 +76,14 @@ class NewPlantProfilePage extends React.Component {
             <Form.Control
               name="ownedSince"
               type="date"
-              max={(new Date()).toISOString().split('T')[0]}
+              min={new Date(this.state.birth.length ?
+                this.state.birth : (new Date().getFullYear() - 50).toString()).toISOString().split('T')[0]}
+              max={(new Date(new Date().getTime()-86400000)).toISOString().split('T')[0]}
               value={this.state.ownedSince}
               onChange={this.handleChange}
               />
           </Form.Group>
-          <Button variant="primary" onClick={this.handleSubmit}>
+          <Button variant="primary" type="submit">
             Submit
           </Button>
         </Form>
