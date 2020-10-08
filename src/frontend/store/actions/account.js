@@ -1,4 +1,6 @@
 /* eslint-disable no-console */
+/* eslint-disable no-alert */
+
 import { firebase, facebookAuthProvider, googleAuthProvider } from '../../firebase/firebase';
 import store from '../index';
 import constants from '../const';
@@ -78,18 +80,26 @@ function logout() {
 
 /* This function changes the username of the current username. */
 function changeUsername(username) {
-  const { account: { uid } } = store.getState();
-  if (!uid) {
-    return;
-  }
+  // checks if the username is taken by a different user
+  firebase.database().ref('/users').orderByChild('username').equalTo(username)
+    .once('value', (snapshot) => {
+      if (snapshot.val()) {
+        alert('Username Taken! Please select a different one.');
+      } else {
+        const { account: { uid } } = store.getState();
+        if (!uid) {
+          return;
+        }
 
-  firebase.database().ref(`users/${uid}`).once('value', (user) => {
-    if (user.exists()) {
-      firebase.database().ref(`users/${uid}`).update({
-        username,
-      });
-    }
-  });
+        firebase.database().ref(`users/${uid}`).once('value', (user) => {
+          if (user.exists()) {
+            firebase.database().ref(`users/${uid}`).update({
+              username,
+            });
+          }
+        });
+      }
+    });
 }
 
 /* This function is used to get the username of the current user. */
