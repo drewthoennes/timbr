@@ -51,7 +51,7 @@ class NewPlantProfilePage extends React.Component {
   render() {
     const { name, birth, ownedSince } = this.state;
     return (
-      <div id="new-plant-page" className="container col-md-6 col-sm-12">
+      <div id="new-plant-page">
         <Navbar />
         <h1>Create New Plant</h1>
         <Form onSubmit={this.handleSubmit}>

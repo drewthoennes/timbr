@@ -55,19 +55,19 @@ export function registerWithTimbr(credentials) {
 /* This method uses firebase auth to sign in a user. */
 export function loginWithTimbr(credentials) {
   return firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password)
-    .then(addToDatabase());
+    .then(addToDatabase);
 }
 
 /* This function uses Firebase auth to sign in a user using Facebook. */
 export function loginWithFacebook() {
   return firebase.auth().signInWithPopup(facebookAuthProvider)
-    .then(addToDatabase());
+    .then(addToDatabase);
 }
 
 /* This function uses firebase auth to sign in a user using Google. */
 export function loginWithGoogle() {
   return firebase.auth().signInWithPopup(googleAuthProvider)
-    .then(addToDatabase());
+    .then(addToDatabase);
 }
 
 /* This function uses firebase auth to log out a user */

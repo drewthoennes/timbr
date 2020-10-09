@@ -69,16 +69,6 @@ class MyPlantsPage extends React.Component {
           </button>
 
           <button
-            id="account"
-            type="button"
-            onClick={() => {
-              history.push(`/${username}`);
-            }}
-          >
-            Go to Username
-          </button>
-
-          <button
             id="logout"
             type="button"
             onClick={this.handleLogout}
