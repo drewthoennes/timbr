@@ -6,12 +6,12 @@ import store from '../index';
 import constants from '../const';
 
 /* Updates the counter value. */
-function updateCounter(currentCounter) {
+export function updateCounter(currentCounter) {
   firebase.database().ref().update({ counter: currentCounter + 1 });
 }
 
 /* This method adds the current user to the database, if not already added. */
-function addToDatabase() {
+export function addToDatabase() {
   const { uid, email } = firebase.auth().currentUser || { uid: '', email: '' };
 
   if (!uid) {
@@ -43,7 +43,7 @@ function addToDatabase() {
 }
 
 /* This method uses firebase auth to create a new user. */
-function registerWithTimbr(credentials) {
+export function registerWithTimbr(credentials) {
   return firebase.auth().createUserWithEmailAndPassword(credentials.email, credentials.password)
     .then(() => {
       if (firebase.auth().currentUser) {
@@ -53,30 +53,30 @@ function registerWithTimbr(credentials) {
 }
 
 /* This method uses firebase auth to sign in a user. */
-function loginWithTimbr(credentials) {
+export function loginWithTimbr(credentials) {
   return firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password)
-    .then(addToDatabase());
+    .then(addToDatabase);
 }
 
 /* This function uses Firebase auth to sign in a user using Facebook. */
-function loginWithFacebook() {
+export function loginWithFacebook() {
   return firebase.auth().signInWithPopup(facebookAuthProvider)
-    .then(addToDatabase());
+    .then(addToDatabase);
 }
 
 /* This function uses firebase auth to sign in a user using Google. */
-function loginWithGoogle() {
+export function loginWithGoogle() {
   return firebase.auth().signInWithPopup(googleAuthProvider)
-    .then(addToDatabase());
+    .then(addToDatabase);
 }
 
 /* This function uses firebase auth to log out a user */
-function logout() {
+export function logout() {
   return firebase.auth().signOut();
 }
 
 /* This function changes the username of the current username. */
-function changeUsername(username) {
+export function changeUsername(username) {
   // checks if the username is taken by a different user
   return firebase.database().ref('/users').orderByChild('username').equalTo(username)
     .once('value')
@@ -104,7 +104,7 @@ function changeUsername(username) {
 }
 
 /* This function is used to get the username of the current user. */
-function getUsername(cb, myStore) {
+export function getUsername(cb, myStore) {
   const { account: { uid } } = myStore;
   if (!uid) {
     return;
@@ -115,7 +115,7 @@ function getUsername(cb, myStore) {
 }
 
 /* This function changes the texts status of the current user. */
-function changeTextsOn(textsOn) {
+export function changeTextsOn(textsOn) {
   const { account: { uid } } = store.getState();
   if (!uid) {
     return Promise.resolve();
@@ -131,7 +131,7 @@ function changeTextsOn(textsOn) {
 }
 
 /* This function is used to get the texts status of the current user. */
-function getTextsOn(cb, myStore) {
+export function getTextsOn(cb, myStore) {
   const { account: { uid } } = myStore;
   if (!uid) {
     return;
@@ -142,7 +142,7 @@ function getTextsOn(cb, myStore) {
 }
 
 /* This function changes the emails status of the current user. */
-function changeEmailsOn(emailsOn) {
+export function changeEmailsOn(emailsOn) {
   const { account: { uid } } = store.getState();
   if (!uid) {
     return;
@@ -158,7 +158,7 @@ function changeEmailsOn(emailsOn) {
 }
 
 /* This function is used to get the texts status of the current user. */
-function getEmailsOn(cb, myStore) {
+export function getEmailsOn(cb, myStore) {
   const { account: { uid } } = myStore;
   if (!uid) {
     return;
@@ -168,24 +168,43 @@ function getEmailsOn(cb, myStore) {
     .on('value', cb);
 }
 
-function setUID(uid) {
+export function setUID(uid) {
   store.dispatch({
     type: constants.SET_UID,
     uid,
   });
 }
 
-export default {
-  registerWithTimbr,
-  loginWithTimbr,
-  loginWithFacebook,
-  loginWithGoogle,
-  logout,
-  changeUsername,
-  getUsername,
-  changeTextsOn,
-  getTextsOn,
-  changeEmailsOn,
-  getEmailsOn,
-  setUID,
-};
+export function setUsername(username) {
+  store.dispatch({
+    type: constants.SET_USERNAME,
+    username,
+  });
+}
+
+export function setEmail(email) {
+  store.dispatch({
+    type: constants.SET_EMAIL,
+    email,
+  });
+}
+
+export function setTextsOn(textsOn) {
+  store.dispatch({
+    type: constants.SET_TEXTS_ON,
+    textsOn,
+  });
+}
+
+export function setEmailsOn(emailsOn) {
+  store.dispatch({
+    type: constants.SET_EMAILS_ON,
+    emailsOn,
+  });
+}
+
+export function setAccountLoaded() {
+  store.dispatch({
+    type: constants.SET_ACCOUNT_LOADED,
+  });
+}

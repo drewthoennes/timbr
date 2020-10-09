@@ -1,11 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { Card } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import Navbar from '../../components/Navbar';
 import map from '../../store/map';
 import './styles.scss';
-import accountActions from '../../store/actions/account';
+import { logout } from '../../store/actions/account';
 
 class MyPlantsPage extends React.Component {
   constructor() {
@@ -17,6 +18,7 @@ class MyPlantsPage extends React.Component {
 
   componentDidUpdate() {
     const { store: { account: { uid } }, history } = this.props;
+
     if (!uid) {
       history.push('/login');
     }
@@ -26,7 +28,7 @@ class MyPlantsPage extends React.Component {
     e.preventDefault();
 
     const { history } = this.props;
-    accountActions.logout()
+    logout()
       .then(() => {
         history.push('/login');
       });
@@ -36,19 +38,22 @@ class MyPlantsPage extends React.Component {
   }
 
   render() {
-    const { store: { pets }, history } = this.props;
+    const { store: { pets, account: { username } }, history } = this.props;
     const plantCards = Object.entries(pets).map(([id, pet]) => (
-      <a key={id} className="plant-link" href={`/myplants/${id}`}>
-        <Card className="plant-card">
-          <Card.Body>
-            <Card.Title>{pet.name}</Card.Title>
-            <Card.Text>{pet.type}</Card.Text>
-          </Card.Body>
-        </Card>
-      </a>
+      <span className="plant-link" key={id}>
+        <Link to={`/${username}/${id}`}>
+          <Card className="plant-card">
+            <Card.Body>
+              <Card.Title>{pet.name}</Card.Title>
+              <Card.Text>{pet.type}</Card.Text>
+            </Card.Body>
+          </Card>
+        </Link>
+      </span>
     ));
     return (
       <div id="my-plants-page">
+        <Navbar />
         <div className="container">
           {plantCards}
         </div>
@@ -62,6 +67,7 @@ class MyPlantsPage extends React.Component {
           >
             My Account
           </button>
+
           <button
             id="logout"
             type="button"
@@ -79,7 +85,8 @@ MyPlantsPage.propTypes = {
   store: PropTypes.shape({
     account: PropTypes.shape({
       uid: PropTypes.string,
-    }),
+      username: PropTypes.string,
+    }).isRequired,
     pets: PropTypes.object.isRequired,
   }).isRequired,
 };

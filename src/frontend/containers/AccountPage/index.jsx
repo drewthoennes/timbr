@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import Switch from 'react-switch';
 import map from '../../store/map';
 import './styles.scss';
-import accountActions from '../../store/actions/account';
+import { getUsername, getTextsOn, getEmailsOn, changeUsername, changeEmailsOn, changeTextsOn } from '../../store/actions/account';
 
 class AccountPage extends React.Component {
   constructor() {
@@ -39,6 +39,12 @@ class AccountPage extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
+    const { store: { account: { uid } }, history } = this.props;
+
+    if (!uid) {
+      history.push('/login');
+    }
+
     /* Changes username, text notifications status,
     and email notifications status when uid changes. */
     if (prevProps.store && this.props.store
@@ -55,21 +61,21 @@ class AccountPage extends React.Component {
 
   /* Calls the function to get current username and sets the state. */
   getCurrentUsername() {
-    accountActions.getUsername(
+    getUsername(
       (user) => { this.mounted && this.setState({ username: user.val() }); }, this.props.store,
     );
   }
 
   /* Calls the function to get current text notifications status and sets the state. */
   getTextsOn() {
-    accountActions.getTextsOn(
+    getTextsOn(
       (user) => { this.setState({ textsOn: user.val() }); }, this.props.store,
     );
   }
 
   /* Calls the function to get current email notifications status and sets the state. */
   getEmailsOn() {
-    accountActions.getEmailsOn(
+    getEmailsOn(
       (user) => { this.setState({ emailsOn: user.val() }); }, this.props.store,
     );
   }
@@ -81,7 +87,7 @@ class AccountPage extends React.Component {
       document.getElementById('username').value = '';
       return;
     }
-    accountActions.changeUsername(username);
+    changeUsername(username);
     /* Changes the username in the state. */
     this.getCurrentUsername();
     document.getElementById('username').value = '';
@@ -90,7 +96,7 @@ class AccountPage extends React.Component {
   changeTextsOn(textsEvent) {
     this.setState({ textsOn: textsEvent });
     const textsOn = textsEvent;
-    accountActions.changeTextsOn(textsOn);
+    changeTextsOn(textsOn);
     /* Changes the text notifications status in the state. */
     this.getTextsOn();
   }
@@ -98,13 +104,13 @@ class AccountPage extends React.Component {
   changeEmailsOn(emailsEvent) {
     this.setState({ emailsOn: emailsEvent });
     const emailsOn = emailsEvent;
-    accountActions.changeEmailsOn(emailsOn);
+    changeEmailsOn(emailsOn);
     /* Changes the email notifications status in the state. */
     this.getEmailsOn();
   }
 
   render() {
-    const { history } = this.props;
+    const { history, store: { account: { username } } } = this.props;
 
     return (
       <div id="account-page">
@@ -113,7 +119,7 @@ class AccountPage extends React.Component {
           id="home"
           type="button"
           onClick={() => {
-            history.push('/');
+            history.push(`/${username}`);
           }}
         >
           Home
@@ -166,6 +172,7 @@ AccountPage.propTypes = {
   store: PropTypes.shape({
     account: PropTypes.shape({
       uid: PropTypes.string,
+      username: PropTypes.string,
     }),
   }).isRequired,
 };

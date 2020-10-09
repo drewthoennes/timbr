@@ -1,21 +1,23 @@
 import React from 'react';
-import { Navbar, Nav, Button } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import map from '../../store/map';
+import LoadingWrapper from '../../containers/LoadingWrapper';
 import Router from '../../router';
 import './styles.scss';
 
 const App = () => (
-  <>
-    <Navbar bg="dark" variant="dark">
-      <Navbar.Brand href="/">timbr</Navbar.Brand>
-      <Nav className="mr-auto">
-        <Nav.Link href="/myplants">My Plants</Nav.Link>
-        <Nav.Link href="/myplants/new">
-          <Button>New Plant</Button>
-        </Nav.Link>
-      </Nav>
-    </Navbar>
+  <LoadingWrapper>
     <Router />
-  </>
+  </LoadingWrapper>
 );
 
-export default App;
+App.propTypes = {
+  store: PropTypes.shape({
+    account: PropTypes.shape({
+      username: PropTypes.string,
+    }).isRequired,
+  }).isRequired,
+};
+
+export default connect(map)(App);

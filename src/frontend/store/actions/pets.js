@@ -25,7 +25,23 @@ export function createNewPet({ parent = '', type = '', name, ownedSince, birth, 
   });
 }
 
-export default {
-  setPets,
-  createNewPet,
-};
+export function setForeignUserPets(username, petId) {
+  return firebase.database().ref('/users').orderByChild('username').equalTo(username)
+    .once('value')
+    .then((user) => {
+      if (!user.val()) {
+        throw new Error('No user with this username exists');
+      }
+
+      const data = Object.values(user.val())[0];
+      if (!data.pets?.[petId]) {
+        throw new Error('No pet with this ID exists for this user');
+      }
+
+      return store.dispatch({
+        type: constants.SET_FOREIGN_USER_PETS,
+        username,
+        pets: data.pets,
+      });
+    });
+}

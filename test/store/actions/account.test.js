@@ -1,5 +1,12 @@
 import sinon from 'sinon';
-import accountActions from '../../../src/frontend/store/actions/account';
+import {
+  registerWithTimbr,
+  loginWithTimbr,
+  loginWithGoogle,
+  loginWithFacebook,
+  logout,
+  changeUsername,
+} from '../../../src/frontend/store/actions/account';
 
 const mockCreateUserStub = sinon.stub();
 const mockSignInUserStub = sinon.stub();
@@ -43,7 +50,7 @@ describe('Redux account actions should work', () => {
   it('Registering with Timbr should work as expected', async () => {
     mockCreateUserStub.resolves();
 
-    const funcPromise = await expect(accountActions.registerWithTimbr({ email: 'test@purdue.edu', password: 'password' }))
+    const funcPromise = await expect(registerWithTimbr({ email: 'test@purdue.edu', password: 'password' }))
       .resolves.toBe(undefined);
     const stubPromise = mockCreateUserStub.callCount === 1 ? Promise.resolve() : Promise.reject();
 
@@ -53,7 +60,7 @@ describe('Redux account actions should work', () => {
   it('Logging in with Timbr should work as expected', async () => {
     mockSignInUserStub.resolves();
 
-    const funcPromise = await expect(accountActions.loginWithTimbr({ email: 'test@purdue.edu', password: 'password' }))
+    const funcPromise = await expect(loginWithTimbr({ email: 'test@purdue.edu', password: 'password' }))
       .resolves.toBe(undefined);
     const stubPromise = mockSignInUserStub.callCount === 1 ? Promise.resolve() : Promise.reject();
 
@@ -63,7 +70,7 @@ describe('Redux account actions should work', () => {
   it('Logging in with Facebook should work as expected', async () => {
     mockSignInPopupStub.resolves();
 
-    const funcPromise = await expect(accountActions.loginWithFacebook())
+    const funcPromise = await expect(loginWithFacebook())
       .resolves.toBe(undefined);
     const stubPromise = mockSignInPopupStub.callCount === 1 ? Promise.resolve() : Promise.reject();
 
@@ -73,7 +80,7 @@ describe('Redux account actions should work', () => {
   it('Logging in with Google should work as expected', async () => {
     mockSignInPopupStub.resolves();
 
-    const funcPromise = await expect(accountActions.loginWithGoogle())
+    const funcPromise = await expect(loginWithGoogle())
       .resolves.toBe(undefined);
     const stubPromise = mockSignInPopupStub.callCount === 1 ? Promise.resolve() : Promise.reject();
 
@@ -83,7 +90,7 @@ describe('Redux account actions should work', () => {
   it('Logging out should work as expected', async () => {
     mockSignOutStub.resolves();
 
-    const funcPromise = await expect(accountActions.logout())
+    const funcPromise = await expect(logout())
       .resolves;
     const stubPromise = mockSignOutStub.callCount === 1 ? Promise.resolve() : Promise.reject();
 
@@ -96,7 +103,7 @@ describe('Redux account actions should work', () => {
     mockDatabaseOnce.resolves(user);
     mockDatabaseUpdate.resolves();
 
-    const funcPromise = await expect(accountActions.changeUsername('newUsername'))
+    const funcPromise = await expect(changeUsername('newUsername'))
       .rejects;
     const stubOncePromise = mockDatabaseOnce.callCount === 1 ? Promise.resolve() : Promise.reject();
     const stubWindowAlert = mockWindowAlert.callCount === 1 ? Promise.resolve() : Promise.reject();
@@ -111,7 +118,7 @@ describe('Redux account actions should work', () => {
     mockDatabaseUpdate.resolves();
     mockCurrentUser.returns(1234567890);
 
-    const funcPromise = await expect(accountActions.changeUsername('newUsername'))
+    const funcPromise = await expect(changeUsername('newUsername'))
       .rejects;
     const stubOncePromise = mockDatabaseOnce.callCount === 2 ? Promise.resolve() : Promise.reject();
     const stubWindowAlert = mockWindowAlert.callCount === 0 ? Promise.resolve() : Promise.reject();
@@ -126,7 +133,7 @@ describe('Redux account actions should work', () => {
     mockDatabaseUpdate.resolves();
     mockCurrentUser.returns(1234567890);
 
-    await accountActions.changeUsername('newUsername');
+    await changeUsername('newUsername');
     const stubOncePromise = mockDatabaseOnce.callCount === 2 ? Promise.resolve() : Promise.reject();
     const stubWindowAlert = mockWindowAlert.callCount === 0 ? Promise.resolve() : Promise.reject();
     const stubUpdate = mockDatabaseUpdate.callCount === 1 ? Promise.resolve() : Promise.reject();

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Button, Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import Navbar from '../../components/Navbar';
 import map from '../../store/map';
 import { createNewPet } from '../../store/actions/pets';
 import './styles.scss';
@@ -35,6 +36,7 @@ class NewPlantProfilePage extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     e.stopPropagation();
+    const { store: { account: { username } } } = this.props;
     const { name, birth, ownedSince } = this.state;
     createNewPet({
       name,
@@ -42,14 +44,15 @@ class NewPlantProfilePage extends React.Component {
       ownedSince: new Date(ownedSince ?? Date.now()),
     }).then((snap) => {
       const { history } = this.props;
-      history.push(`/myplants/${snap.key}`);
+      history.push(`/${username}/${snap.key}`);
     });
   }
 
   render() {
     const { name, birth, ownedSince } = this.state;
     return (
-      <div id="new-plant-page" className="container col-md-6 col-sm-12">
+      <div id="new-plant-page">
+        <Navbar />
         <h1>Create New Plant</h1>
         <Form onSubmit={this.handleSubmit}>
           <Form.Group controlId="name">
@@ -59,7 +62,7 @@ class NewPlantProfilePage extends React.Component {
               name="name"
               value={name}
               onChange={this.handleChange}
-              maxlength="40"
+              maxLength="40"
               placeholder="Name"
             />
           </Form.Group>
@@ -100,6 +103,7 @@ NewPlantProfilePage.propTypes = {
   store: PropTypes.shape({
     account: PropTypes.shape({
       uid: PropTypes.string,
+      username: PropTypes.string,
     }),
     pets: PropTypes.object.isRequired,
   }).isRequired,

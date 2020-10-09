@@ -5,7 +5,9 @@ import {
   Router,
   Redirect,
 } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { createBrowserHistory } from 'history';
+import map from '../store/map';
 
 import LoginPage from '../containers/LoginPage';
 import RegisterPage from '../containers/RegisterPage';
@@ -16,18 +18,19 @@ import AccountPage from '../containers/AccountPage';
 
 const history = createBrowserHistory();
 
-const router = () => (
+const router = (props) => (
   <Router history={history}>
     <Switch>
-      <Route exact path="/myplants" render={() => <MyPlantsPage />} />
-      <Route exact path="/myplants/new" render={() => <NewPlantProfilePage />} />
-      <Route exact path="/myplants/:id" render={(props) => <PlantProfilePage {...props} />} />
+      <Route exact path={`/${props.store.account.username}`} render={() => <MyPlantsPage />} />
+      <Route exact path={`/${props.store.account.username}/new`} render={() => <NewPlantProfilePage />} />
+      <Route exact path={`/${props.store.account.username}/:id`} render={() => <PlantProfilePage />} />
+      <Route path="/:username/:id" render={() => <PlantProfilePage />} />
       <Route path="/login" render={() => <LoginPage />} />
       <Route path="/register" render={() => <RegisterPage />} />
       <Route path="/account" render={() => <AccountPage />} />
-      <Route path="*" render={() => <Redirect to="/" />} />
+      <Route path="*" render={() => <Redirect to={`/${props.store.account.username || 'login'}`} />} />
     </Switch>
   </Router>
 );
 
-export default router;
+export default connect(map)(router);
