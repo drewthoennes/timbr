@@ -1,16 +1,26 @@
 import { firebase } from '../firebase/firebase';
-import accountActions from './actions/account';
+import { setUID, setUsername, setEmail, setTextsOn, setEmailsOn, setAccountLoaded } from './actions/account';
 import { setPets } from './actions/pets';
 
 firebase.auth().onAuthStateChanged((user) => {
   const uid = user?.uid;
-  accountActions.setUID(user?.uid);
+  setUID(user?.uid);
 
   if (user) {
-    const petsRef = firebase.database().ref(`/users/${uid}/pets`);
+    const userRef = firebase.database().ref(`/users/${uid}`);
 
-    petsRef.on('value', (snapshot) => {
-      setPets(snapshot.val());
+    userRef.on('value', (snapshot) => {
+      const { username, email, textsOn, emailsOn, pets } = snapshot.val();
+
+      Promise.all([
+        setUsername(username),
+        setEmail(email),
+        setTextsOn(textsOn),
+        setEmailsOn(emailsOn),
+        setPets(pets),
+      ]).then(setAccountLoaded);
     });
+  } else {
+    setAccountLoaded();
   }
 });

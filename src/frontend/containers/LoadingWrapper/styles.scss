@@ -1,0 +1,12 @@
+@import "~@theme";
+
+$spinnerSize: '50px';
+
+#loading-wrapper {
+    height: 100%;
+
+    .spinner-border {
+        height: $spinnerSize;
+        width: $spinnerSize;
+    }
+}

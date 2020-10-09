@@ -8,7 +8,7 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import map from '../../store/map';
 import './styles.scss';
-import accountActions from '../../store/actions/account';
+import { loginWithTimbr, loginWithGoogle, loginWithFacebook } from '../../store/actions/account';
 import constants from '../../store/const';
 
 class LoginPage extends React.Component {
@@ -19,16 +19,16 @@ class LoginPage extends React.Component {
   }
 
   componentDidUpdate() {
-    const { store: { account: { uid } }, history } = this.props;
+    const { store: { account: { uid, username } }, history } = this.props;
     if (uid) {
-      history.push('/');
+      history.push(`/${username}`);
     }
   }
 
   /* This method handles login by sending user credentials to the corresponding function
     and redirecting to the home page. */
   handleAuth(option) {
-    const { history } = this.props;
+    const { history, store: { account: { username } } } = this.props;
 
     const credentials = {
       email: document.getElementById('email').value,
@@ -40,19 +40,19 @@ class LoginPage extends React.Component {
 
       switch (option) {
         case constants.LOGIN_WITH_TIMBR:
-          loginMethod = () => accountActions.loginWithTimbr(credentials);
+          loginMethod = () => loginWithTimbr(credentials);
           break;
         case constants.LOGIN_WITH_GOOGLE:
-          loginMethod = accountActions.loginWithGoogle;
+          loginMethod = loginWithGoogle;
           break;
         case constants.LOGIN_WITH_FACEBOOK:
-          loginMethod = accountActions.loginWithFacebook;
+          loginMethod = loginWithFacebook;
           break;
         default:
           break;
       }
 
-      loginMethod().then(history.push('/'));
+      loginMethod().then(history.push(`/${username}`));
     } catch (error) {
       if (document.getElementById('error')) {
         document.getElementById('error').innerHTML = error.message;
@@ -125,6 +125,7 @@ LoginPage.propTypes = {
   store: PropTypes.shape({
     account: PropTypes.shape({
       uid: PropTypes.string,
+      username: PropTypes.string,
     }),
   }).isRequired,
 };
