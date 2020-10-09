@@ -28,8 +28,6 @@ class LoginPage extends React.Component {
   /* This method handles login by sending user credentials to the corresponding function
     and redirecting to the home page. */
   handleAuth(option) {
-    const { history, store: { account: { username } } } = this.props;
-
     const credentials = {
       email: document.getElementById('email').value,
       password: btoa(document.getElementById('password').value),
@@ -52,7 +50,10 @@ class LoginPage extends React.Component {
           break;
       }
 
-      loginMethod().then(history.push(`/${username}`));
+      loginMethod()
+        .catch((error) => {
+          document.getElementById('error').innerHTML = error.message;
+        });
     } catch (error) {
       if (document.getElementById('error')) {
         document.getElementById('error').innerHTML = error.message;
