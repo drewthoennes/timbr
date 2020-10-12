@@ -1,0 +1,12 @@
+@import "~@theme";
+#my-plants-page {
+  .plant-card {
+    // width: 18rem;
+    margin: 8px 0 0 8px;
+    display: inline-block;
+  }
+  .plant-link {
+    color: inherit;
+    padding-right: 16px;
+  }
+}

@@ -8,7 +8,7 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import './styles.scss';
 import map from '../../store/map';
-import accountActions from '../../store/actions/account';
+import { registerWithTimbr } from '../../store/actions/account';
 
 class RegisterPage extends React.Component {
   constructor() {
@@ -18,9 +18,9 @@ class RegisterPage extends React.Component {
   }
 
   componentDidUpdate() {
-    const { store: { account: { uid } }, history } = this.props;
+    const { store: { account: { uid, username } }, history } = this.props;
     if (uid) {
-      history.push('/');
+      history.push(`/${username}`);
     }
   }
 
@@ -36,7 +36,7 @@ class RegisterPage extends React.Component {
     };
 
     // Redirects to the login page if registration successful. Else, displays the error message.
-    accountActions.registerWithTimbr(credentials)
+    registerWithTimbr(credentials)
       .then(() => {
         history.push('/login');
       })
@@ -46,9 +46,17 @@ class RegisterPage extends React.Component {
   }
 
   render() {
+    const { history } = this.props;
     return (
       <div id="register-page">
         <h1>timbr Register Page!</h1>
+        <button
+          type="button"
+          onClick={() => history.push('/login')}
+        >
+          Already a user? Go to login
+        </button>
+
         <form
           id="register-form"
           onSubmit={this.handleRegister}
@@ -79,6 +87,7 @@ RegisterPage.propTypes = {
   store: PropTypes.shape({
     account: PropTypes.shape({
       uid: PropTypes.string,
+      username: PropTypes.string,
     }),
   }).isRequired,
 };

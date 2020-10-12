@@ -1,12 +1,23 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import map from '../../store/map';
+import LoadingWrapper from '../../containers/LoadingWrapper';
 import Router from '../../router';
-
 import './styles.scss';
 
 const App = () => (
-  <>
+  <LoadingWrapper>
     <Router />
-  </>
+  </LoadingWrapper>
 );
 
-export default App;
+App.propTypes = {
+  store: PropTypes.shape({
+    account: PropTypes.shape({
+      username: PropTypes.string,
+    }).isRequired,
+  }).isRequired,
+};
+
+export default connect(map)(App);
