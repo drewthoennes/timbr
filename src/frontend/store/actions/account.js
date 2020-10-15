@@ -54,8 +54,7 @@ export function registerWithTimbr(credentials) {
 
 /* This method uses firebase auth to sign in a user. */
 export function loginWithTimbr(credentials) {
-  return firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password)
-    .then(addToDatabase);
+  return firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password);
 }
 
 /* This function uses Firebase auth to sign in a user using Facebook. */

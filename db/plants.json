@@ -1,0 +1,20 @@
+{
+    "aspidistra-elatior": {"name": "Cast iron plant", "scientificName": "Aspidistra elatior", "description": "", "carnivorous": false, "waterFreq": 3, "fertFreq": 3, "feedFreq": 3, "picture": "" },
+    "monstera-deliciosa": {"name": "Cheese plant", "scientificName": "Monstera deliciosa", "description": "", "carnivorous": false, "waterFreq": 3, "fertFreq": 3, "feedFreq": 3, "picture": "" },
+    "epipremnum-aureum": {"name": "Devil's vine", "scientificName": "Epipremnum aureum", "description": "", "carnivorous": false, "waterFreq": 3, "fertFreq": 3, "feedFreq": 3, "picture": "" },
+    "sedum-morganianum": {"name": "Donkey's tail", "scientificName": "Sedum morganianum", "description": "", "carnivorous": false, "waterFreq": 3, "fertFreq": 3, "feedFreq": 3, "picture": "" },
+    "hedera-helix": {"name": "English ivy", "scientificName": "Hedera helix", "description": "", "carnivorous": false, "waterFreq": 3, "fertFreq": 3, "feedFreq": 3, "picture": "" },
+    "crassula-ovata": {"name": "Jade plant", "scientificName": "Crassula ovata", "description": "", "carnivorous": false, "waterFreq": 3, "fertFreq": 3, "feedFreq": 3, "picture": "" },
+    "sedum-rubrotinctum": {"name": "Jellybean plant", "scientificName": "Sedum rubrotinctum", "description": "", "carnivorous": false, "waterFreq": 3, "fertFreq": 3, "feedFreq": 3, "picture": "" },
+    "dracaena-sanderiana": {"name": "Lucky bamboo", "scientificName": "Dracaena sanderiana", "description": "", "carnivorous": false, "waterFreq": 3, "fertFreq": 3, "feedFreq": 3, "picture": "" },
+    "pachira-aquatica": {"name": "Money tree", "scientificName": "Pachira aquatica", "description": "", "carnivorous": false, "waterFreq": 3, "fertFreq": 3, "feedFreq": 3, "picture": "" },
+    "gymnocalycium-mihanovichii": {"name": "Moon cactus", "scientificName": "Gymnocalycium mihanovichii", "description": "", "carnivorous": false, "waterFreq": 3, "fertFreq": 3, "feedFreq": 3, "picture": "" },
+    "chamaedorea-elegans": {"name": "Parlor palm", "scientificName": "Chamaedorea elegans", "description": "", "carnivorous": false, "waterFreq": 3, "fertFreq": 3, "feedFreq": 3, "picture": "" },
+    "ficus-elastica": {"name": "Rubber plant", "scientificName": "Ficus elastica", "description": "", "carnivorous": false, "waterFreq": 3, "fertFreq": 3, "feedFreq": 3, "picture": "" },
+    "dracaena-trifasciata": {"name": "Snake plant", "scientificName": "Dracaena trifasciata", "description": "", "carnivorous": false, "waterFreq": 3, "fertFreq": 3, "feedFreq": 3, "picture": "" },
+    "chlorophytum-comosum": {"name": "Spider plant", "scientificName": "Chlorophytum comosum", "description": "", "carnivorous": false, "waterFreq": 3, "fertFreq": 3, "feedFreq": 3, "picture": "" },
+    "senecio-rowleyanus": {"name": "String of pearls", "scientificName": "Senecio rowleyanus", "description": "", "carnivorous": false, "waterFreq": 3, "fertFreq": 3, "feedFreq": 3, "picture": "" },
+    "ficus-benjamina": {"name": "Weeping fig", "scientificName": "Ficus benjamina", "description": "", "carnivorous": false, "waterFreq": 3, "fertFreq": 3, "feedFreq": 3, "picture": "" },
+    "haworthiopsis-attenuata": {"name": "Zebra plant", "scientificName": "Haworthiopsis attenuata", "description": "", "carnivorous": false, "waterFreq": 3, "fertFreq": 3, "feedFreq": 3, "picture": "" },
+    "zamioculcas-zamiifolia": {"name": "ZZ plant", "scientificName": "Zamioculcas zamiifolia", "description": "", "carnivorous": false, "waterFreq": 3, "fertFreq": 3, "feedFreq": 3, "picture": "" }
+}
