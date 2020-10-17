@@ -46,3 +46,30 @@ export function setForeignUserPets(username, petId) {
       });
     });
 }
+
+//set watered data
+export function changeWatered(last) {
+  const { account: { uid } } = store.getState();
+  if (!uid) {
+    return Promise.resolve();
+  }
+
+  return firebase.database().ref(`users/${uid}`).once('value', (user) => {
+    if (user.exists()) {
+      firebase.database().ref(`users/${uid}/pets/watered/last`).push({
+      last,
+      });
+    }
+  });
+} 
+
+// This function is used to get the texts status of the current user. 
+export function getWateredState(cb, myStore) {
+  const { account: { uid } } = myStore;
+  if (!uid) {
+    return;
+  }
+  firebase.database().ref().child('users').child(uid)
+    .child('pets').child(petId).child('watered').child('last')
+    .on('value', cb);
+} 
