@@ -9,7 +9,7 @@ import 'react-calendar-heatmap/dist/styles.css';
 import Navbar from '../../components/Navbar';
 
 import { setForeignUserPets } from '../../store/actions/pets';
-import {changeWatered} from '../../store/actions/pets';
+import {changeWatered,getWateredState} from '../../store/actions/pets';
 import map from '../../store/map';
 import './styles.scss';
 
@@ -24,11 +24,13 @@ class PlantProfilePage extends React.Component {
   
   onWater() {
     const { history, match: { params: { username, id } } } = this.props;
-    var date=new Date();
-    changeWatered(id,
-    {[date]: true}
-    )
-   console.log("pet id is",id)
+    let today = new Date().toISOString().slice(0, 10);
+   // changeWatered(id,
+    //{[today]: true}
+   // )
+   changeWatered(id,today);
+    console.log("id is and today is",id,today);
+  
     
    
   }
@@ -69,13 +71,12 @@ class PlantProfilePage extends React.Component {
         </div>
          <div id='heatmap'>
          <CalendarHeatmap
-  startDate={new Date('2016-01-01')}
-  endDate={new Date('2016-04-01')}
+  startDate={new Date('2020-04-01')}
+  endDate={new Date('2020-11-01')}
   values={[
-    { date: '2016-01-01', value:true },
-    { date: '2016-01-22'  },
-    { date: '2016-01-30'  },
-    { date: '2016-03-20'},
+    { date: '2020-10-20', value:true },
+    { date: '2020-10-10', value:true }
+    
     // ...and so on
   ]} />
   </div>

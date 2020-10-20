@@ -1,7 +1,6 @@
 import { firebase } from '../../firebase/firebase';
 import store from '../index';
 import constants from '../const';
-import { DocumentSnapshot } from '@google-cloud/firestore';
 
 export function setPets(pets) {
   return store.dispatch({
@@ -21,9 +20,8 @@ export function createNewPet({ parent = '', type = '', name, ownedSince, birth, 
     ownedSince,
     birth,
     death,
-    watered: { last: '0', streak: '0',history:'' },
-    fertilized: { last: '0', streak: '0',history:''},
-    turned: { last: '0', streak: '0',history:'' },
+    created: Date.now(),
+    updated: Date.now(),
   });
 }
 
@@ -50,12 +48,16 @@ export function setForeignUserPets(username, petId) {
 
 //set watered data
 export function changeWatered(petId,curr_date) {
-  const uid = firebase.auth().currentUser?.uid;
+  //const uid = firebase.auth().currentUser?.uid;
+  const { account: { uid } } = store.getState();
+  if (!uid) {
+    return Promise.resolve();
+  }
 
-
-  firebase.database().ref(`users/${uid}/pets/${petId}/watered/history/`).push(
-    curr_date
-    );
+  //firebase.database().ref(`users/${uid}/pets/${petId}/watered/history/`).push(
+   // curr_date
+   // );
+   firebase.database().ref(`users/${uid}/pets/${petId}/watered/history/`).child(curr_date).set(true)
   firebase.database().ref(`users/${uid}/pets/${petId}/watered/last/`).set(
     curr_date
     );
@@ -66,9 +68,12 @@ export function changeWatered(petId,curr_date) {
 
 // This function is used to get the texts status of the current user. 
 /*export function getWateredState(petId) {
-  const uid = firebase.auth().currentUser?.uid;
+  const { account: { uid } } = store.getState();
+  if (!uid) {
+    return Promise.resolve();
+  }
   var val=firebase.database().ref(`users/${uid}/pets/${petId}/watered/last/`).once('value',DocumentSnapshot);
 
   
-  return DocumentSnapshot.val();
-}  */
+  return val;
+} */
