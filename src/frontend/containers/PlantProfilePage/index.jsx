@@ -8,8 +8,8 @@ import CalendarHeatmap from 'react-calendar-heatmap';
 import 'react-calendar-heatmap/dist/styles.css';
 import Navbar from '../../components/Navbar';
 
-import { setForeignUserPets, changeWatered } from '../../store/actions/pets';
-//import {changeWatered,getWateredState} from '../../store/actions/pets';
+import { setForeignUserPets } from '../../store/actions/pets';
+import {changeWatered} from '../../store/actions/pets';
 import map from '../../store/map';
 import './styles.scss';
 
@@ -23,12 +23,13 @@ class PlantProfilePage extends React.Component {
   }
   
   onWater() {
-    alert('HIII');
+    const { history, match: { params: { username, id } } } = this.props;
     var date=new Date();
-    changeWatered(
-    {date: true}
+    changeWatered(id,
+    {[date]: true}
     )
-    getWateredState(); 
+   console.log("pet id is",id)
+    
    
   }
 

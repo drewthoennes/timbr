@@ -1,6 +1,7 @@
 import { firebase } from '../../firebase/firebase';
 import store from '../index';
 import constants from '../const';
+import { DocumentSnapshot } from '@google-cloud/firestore';
 
 export function setPets(pets) {
   return store.dispatch({
@@ -20,9 +21,9 @@ export function createNewPet({ parent = '', type = '', name, ownedSince, birth, 
     ownedSince,
     birth,
     death,
-    watered: { last: '0', streak: '0' },
-    fertilized: { last: '0', streak: '0' },
-    turned: { last: '0', streak: '0' },
+    watered: { last: '0', streak: '0',history:'' },
+    fertilized: { last: '0', streak: '0',history:''},
+    turned: { last: '0', streak: '0',history:'' },
   });
 }
 
@@ -48,28 +49,26 @@ export function setForeignUserPets(username, petId) {
 }
 
 //set watered data
-export function changeWatered(last) {
-  const { account: { uid } } = store.getState();
-  if (!uid) {
-    return Promise.resolve();
-  }
+export function changeWatered(petId,curr_date) {
+  const uid = firebase.auth().currentUser?.uid;
 
-  return firebase.database().ref(`users/${uid}`).once('value', (user) => {
-    if (user.exists()) {
-      firebase.database().ref(`users/${uid}/pets/watered/last`).push({
-      last,
-      });
-    }
-  });
-} 
+
+  firebase.database().ref(`users/${uid}/pets/${petId}/watered/history/`).push(
+    curr_date
+    );
+  firebase.database().ref(`users/${uid}/pets/${petId}/watered/last/`).set(
+    curr_date
+    );
+    
+  }
+  
+
 
 // This function is used to get the texts status of the current user. 
-export function getWateredState(cb, myStore) {
-  const { account: { uid } } = myStore;
-  if (!uid) {
-    return;
-  }
-  firebase.database().ref().child('users').child(uid)
-    .child('pets').child(petId).child('watered').child('last')
-    .on('value', cb);
-} 
+/*export function getWateredState(petId) {
+  const uid = firebase.auth().currentUser?.uid;
+  var val=firebase.database().ref(`users/${uid}/pets/${petId}/watered/last/`).once('value',DocumentSnapshot);
+
+  
+  return DocumentSnapshot.val();
+}  */
