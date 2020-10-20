@@ -1,7 +1,9 @@
 import { firebase } from '../firebase/firebase';
 import { setUID, setUsername, setEmail, setTextsOn, setEmailsOn, setAccountLoaded } from './actions/account';
 import { setPets } from './actions/pets';
+import setPlants from './actions/plants';
 
+// Update account related data
 firebase.auth().onAuthStateChanged((user) => {
   const uid = user?.uid;
   setUID(user?.uid);
@@ -23,4 +25,9 @@ firebase.auth().onAuthStateChanged((user) => {
   } else {
     setAccountLoaded();
   }
+});
+
+// Update the static plant data
+firebase.database().ref('/plants').on('value', (snapshot) => {
+  setPlants(snapshot.val());
 });
