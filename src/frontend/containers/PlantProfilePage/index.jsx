@@ -8,11 +8,10 @@ import CalendarHeatmap from 'react-calendar-heatmap';
 import 'react-calendar-heatmap/dist/styles.css';
 import Navbar from '../../components/Navbar';
 
-import { setForeignUserPets } from '../../store/actions/pets';
-import {addDate} from '../../store/actions/pets';
+import { setForeignUserPets, addDate } from '../../store/actions/pets';
+
 import map from '../../store/map';
 import './styles.scss';
-
 
 class PlantProfilePage extends React.Component {
   constructor(props) {
@@ -21,40 +20,39 @@ class PlantProfilePage extends React.Component {
     this.onFertilize = this.onFertilize.bind(this);
     this.onRotate = this.onRotate.bind(this);
     this.state = {
-    }
+    };
   }
-  
-  onWater() {
-    const { history, match: { params: { username, id } } } = this.props;
-    let today = new Date().toISOString().slice(0, 10);
-    addDate(id,'watered',today);
 
-  }
-  onFertilize() {
-    const { history, match: { params: { username, id } } } = this.props;
-    let today = new Date().toISOString().slice(0, 10);
-    addDate(id,'fertilized',today);
-
-  }
-  onRotate() {
-    const { history, match: { params: { username, id } } } = this.props;
-    let today = new Date().toISOString().slice(0, 10);
-    addDate(id,'rotated',today);
-
-  }
- 
-  
   componentDidMount() {
     const { match: { params: { username, id } } } = this.props;
     const { history, store: { account: { username: ownUsername } } } = this.props;
-    
+
     console.log('Component did mount');
-    
+
     if (!username) return Promise.resolve();
-    
+
     return setForeignUserPets(username, id).catch(() => history.push(`/${ownUsername}`));
   }
 
+  onWater() {
+    const { match: { params: { id } } } = this.props;
+    const today = new Date().toISOString().slice(0, 10);
+    addDate(id, 'watered', today);
+    console.log('id is', id);
+  }
+
+  onFertilize() {
+    const { match: { params: { id } } } = this.props;
+    const today = new Date().toISOString().slice(0, 10);
+    addDate(id, 'fertilized', today);
+  }
+
+  onRotate() {
+    const { match: { params: { id } } } = this.props;
+
+    const today = new Date().toISOString().slice(0, 10);
+    addDate(id, 'rotated', today);
+  }
 
   render() {
     const { store: { users, pets, account: { username: ownUsername } } } = this.props;
@@ -74,30 +72,26 @@ class PlantProfilePage extends React.Component {
         <Navbar />
         <h1>{pet.name}</h1>
         <div>
-        <button onClick={this.onWater}> Water </button>
-        <button onClick={this.onFertilize}> Fertilize </button>
-        <button onClick={this.onRotate}> Rotate </button>
+          <button type="button" onClick={this.onWater}> Water </button>
+          <button type="button" onClick={this.onFertilize}> Fertilize </button>
+          <button type="button" onClick={this.onRotate}> Rotate </button>
         </div>
-         <div id='heatmap'>
-         <CalendarHeatmap
-  startDate={new Date('2020-04-01')}
-  endDate={new Date('2020-11-01')}
-  values={[
-    { date: '2020-10-20', value:true },
-    { date: '2020-10-10', value:true }
-    
-    // ...and so on
-  ]} />
-  </div>
+        <div id="heatmap">
+          <CalendarHeatmap
+            startDate={new Date('2020-04-01')}
+            endDate={new Date('2020-11-01')}
+            values={[
+              { date: '2020-10-20', value: true },
+              { date: '2020-10-10', value: true },
+
+              // ...and so on
+            ]}
+          />
+        </div>
       </div>
     );
   }
-  handleDateClick = (arg) => { // bind with an arrow function
-    alert(arg.dateStr)
-    console.log("hello")
-  }
 }
-
 
 PlantProfilePage.propTypes = {
   history: PropTypes.object.isRequired,
