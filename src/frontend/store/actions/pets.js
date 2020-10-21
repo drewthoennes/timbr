@@ -46,19 +46,14 @@ export function setForeignUserPets(username, petId) {
     });
 }
 
-//set watered data
-export function changeWatered(petId,curr_date) {
-  //const uid = firebase.auth().currentUser?.uid;
+//updates last action and history based on the action
+export function addDate(petId,action,curr_date) {
   const { account: { uid } } = store.getState();
   if (!uid) {
     return Promise.resolve();
   }
-
-  //firebase.database().ref(`users/${uid}/pets/${petId}/watered/history/`).push(
-   // curr_date
-   // );
-   firebase.database().ref(`users/${uid}/pets/${petId}/watered/history/`).child(curr_date).set(true)
-  firebase.database().ref(`users/${uid}/pets/${petId}/watered/last/`).set(
+   firebase.database().ref(`users/${uid}/pets/${petId}/${action}/history/`).child(curr_date).set(true)
+  firebase.database().ref(`users/${uid}/pets/${petId}/${action}/last/`).set(
     curr_date
     );
     
@@ -67,13 +62,14 @@ export function changeWatered(petId,curr_date) {
 
 
 // This function is used to get the texts status of the current user. 
-/*export function getWateredState(petId) {
-  const { account: { uid } } = store.getState();
-  if (!uid) {
-    return Promise.resolve();
-  }
-  var val=firebase.database().ref(`users/${uid}/pets/${petId}/watered/last/`).once('value',DocumentSnapshot);
+export function getWateredState(petId) {
+  var uid = firebase.auth().currentUser.uid;
+  //var date='';
+  firebase.database().ref(`users/${uid}/pets/${petId}/watered/last/`).once('value').then(function(snapshot) {
+    console.log('before return',snapshot.val())
+    return snapshot.val();
 
+
+  });
   
-  return val;
-} */
+}

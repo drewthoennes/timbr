@@ -9,7 +9,7 @@ import 'react-calendar-heatmap/dist/styles.css';
 import Navbar from '../../components/Navbar';
 
 import { setForeignUserPets } from '../../store/actions/pets';
-import {changeWatered,getWateredState} from '../../store/actions/pets';
+import {addDate} from '../../store/actions/pets';
 import map from '../../store/map';
 import './styles.scss';
 
@@ -18,6 +18,8 @@ class PlantProfilePage extends React.Component {
   constructor(props) {
     super(props);
     this.onWater = this.onWater.bind(this);
+    this.onFertilize = this.onFertilize.bind(this);
+    this.onRotate = this.onRotate.bind(this);
     this.state = {
     }
   }
@@ -25,16 +27,21 @@ class PlantProfilePage extends React.Component {
   onWater() {
     const { history, match: { params: { username, id } } } = this.props;
     let today = new Date().toISOString().slice(0, 10);
-   // changeWatered(id,
-    //{[today]: true}
-   // )
-   changeWatered(id,today);
-    console.log("id is and today is",id,today);
-  
-    
-   
-  }
+    addDate(id,'watered',today);
 
+  }
+  onFertilize() {
+    const { history, match: { params: { username, id } } } = this.props;
+    let today = new Date().toISOString().slice(0, 10);
+    addDate(id,'fertilized',today);
+
+  }
+  onRotate() {
+    const { history, match: { params: { username, id } } } = this.props;
+    let today = new Date().toISOString().slice(0, 10);
+    addDate(id,'rotated',today);
+
+  }
  
   
   componentDidMount() {
@@ -68,6 +75,8 @@ class PlantProfilePage extends React.Component {
         <h1>{pet.name}</h1>
         <div>
         <button onClick={this.onWater}> Water </button>
+        <button onClick={this.onFertilize}> Fertilize </button>
+        <button onClick={this.onRotate}> Rotate </button>
         </div>
          <div id='heatmap'>
          <CalendarHeatmap
