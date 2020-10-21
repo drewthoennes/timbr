@@ -20,8 +20,9 @@ export function createNewPet({ parent = '', type = '', name, ownedSince, birth, 
     ownedSince,
     birth,
     death,
-    created: Date.now(),
-    updated: Date.now(),
+    watered: { last: '0', streak: '0' },
+    fertilized: { last: '0', streak: '0' },
+    turned: { last: '0', streak: '0' },
   });
 }
 
