@@ -49,7 +49,7 @@ class PlantProfilePage extends React.Component {
     const { match: { params: { id } } } = this.props;
 
     const today = new Date().toISOString().slice(0, 10);
-    addDate(id, 'rotated', today);
+    addDate(id, 'turned', today);
   }
 
   render() {
