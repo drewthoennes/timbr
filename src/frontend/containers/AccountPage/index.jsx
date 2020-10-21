@@ -213,6 +213,13 @@ class AccountPage extends React.Component {
             Change Phone number
           </button>
           <p id="phone-error"> </p>
+          <button
+            id="change-password"
+            type="button"
+            onClick={() => history.push('/change-password')}
+          >
+            Change Password
+          </button>
         </form>
       </div>
     );

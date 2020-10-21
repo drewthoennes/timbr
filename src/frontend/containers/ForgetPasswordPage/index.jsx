@@ -36,7 +36,7 @@ class ForgetPasswordPage extends React.Component {
           >
             Send Password Reset Email
           </button>
-          <p id="error">Error: Account does not exist! (Hardcoded for now)</p>
+          <p id="error">Error: Account does not exist! (Conditional on user input, hardcoded for now)</p>
         </form>
       </div>
     );
