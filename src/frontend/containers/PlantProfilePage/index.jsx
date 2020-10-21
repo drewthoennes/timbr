@@ -4,18 +4,21 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-
 import Navbar from '../../components/Navbar';
 
-import { setForeignUserPets } from '../../store/actions/pets';
+import { setForeignUserPets, addDate } from '../../store/actions/pets';
+
 import map from '../../store/map';
 import './styles.scss';
 
 class PlantProfilePage extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {};
+    this.onWater = this.onWater.bind(this);
+    this.onFertilize = this.onFertilize.bind(this);
+    this.onRotate = this.onRotate.bind(this);
+    this.state = {
+    };
   }
 
   componentDidMount() {
@@ -27,6 +30,26 @@ class PlantProfilePage extends React.Component {
     if (!username) return Promise.resolve();
 
     return setForeignUserPets(username, id).catch(() => history.push(`/${ownUsername}`));
+  }
+
+  onWater() {
+    const { match: { params: { id } } } = this.props;
+    const today = new Date().toISOString().slice(0, 10);
+    addDate(id, 'watered', today);
+    console.log('id is', id);
+  }
+
+  onFertilize() {
+    const { match: { params: { id } } } = this.props;
+    const today = new Date().toISOString().slice(0, 10);
+    addDate(id, 'fertilized', today);
+  }
+
+  onRotate() {
+    const { match: { params: { id } } } = this.props;
+
+    const today = new Date().toISOString().slice(0, 10);
+    addDate(id, 'turned', today);
   }
 
   render() {
@@ -46,6 +69,11 @@ class PlantProfilePage extends React.Component {
       <div>
         <Navbar />
         <h1>{pet.name}</h1>
+        <div>
+          <button type="button" onClick={this.onWater}> Water </button>
+          <button type="button" onClick={this.onFertilize}> Fertilize </button>
+          <button type="button" onClick={this.onRotate}> Rotate </button>
+        </div>
       </div>
     );
   }

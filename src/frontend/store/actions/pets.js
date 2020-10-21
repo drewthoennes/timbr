@@ -46,3 +46,14 @@ export function setForeignUserPets(username, petId) {
       });
     });
 }
+
+// updates last action and history based on the action
+export function addDate(petId, action, currDate) {
+  const { account: { uid } } = store.getState();
+  if (!uid) {
+    return Promise.resolve();
+  }
+  return Promise.all([
+    firebase.database().ref(`users/${uid}/pets/${petId}/${action}/history/`).child(currDate).set(true),
+    firebase.database().ref(`users/${uid}/pets/${petId}/${action}/last/`).set(currDate)]);
+}
