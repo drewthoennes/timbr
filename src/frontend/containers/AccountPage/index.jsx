@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-/* eslint class-methods-use-this: ["error", { "exceptMethods": ["changeUsername"] }] */
+/* eslint-disable class-methods-use-this */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable no-unused-expressions */
 
@@ -9,9 +9,11 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Switch from 'react-switch';
 import Input from 'react-phone-number-input/input';
+import ImageUploader from 'react-images-upload';
 import map from '../../store/map';
 import './styles.scss';
 import { getUsername, getTextsOn, getEmailsOn, changeUsername, changeEmailsOn, changeTextsOn } from '../../store/actions/account';
+import ProfilePicture from '../../assets/images/profile_picture.png';
 
 class AccountPage extends React.Component {
   constructor() {
@@ -25,6 +27,7 @@ class AccountPage extends React.Component {
     this.getEmailsOn = this.getEmailsOn.bind(this);
     this.changeEmailsOn = this.changeEmailsOn.bind(this);
     this.changePhoneNumber = this.changePhoneNumber.bind(this);
+    this.changeProfilePicture = this.changeProfilePicture.bind(this);
 
     this.state = {
       username: 'timbr-user',
@@ -140,9 +143,16 @@ class AccountPage extends React.Component {
     // TODO: Change the phone number in the database
   }
 
+  changeProfilePicture() {
+    console.log('Profile picture changed!');
+    // TODO: Change profile picture in the database
+  }
+
   render() {
     const { history, store: { account: { username } } } = this.props;
-
+    const styles = {
+      width: '150px',
+    };
     return (
       <div id="account-page">
         <h1>timbr Account Page!</h1>
@@ -155,7 +165,21 @@ class AccountPage extends React.Component {
         >
           Home
         </button>
-
+        <br />
+        <img id="profile-picture" src={ProfilePicture} alt="Profile" />
+        <ImageUploader
+          id="image-uploader"
+          style={styles}
+          withIcon={false}
+          withLabel={false}
+          buttonText="Change Profile Picture"
+          imgExtension={['.jpg', '.png']}
+          maxFileSize={5242880}
+          singleImage
+          onChange={this.changeProfilePicture}
+        />
+        <br />
+        <br />
         <form id="account-settings">
 
           <label htmlFor="text-switch">

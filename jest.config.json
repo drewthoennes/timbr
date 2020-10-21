@@ -4,6 +4,8 @@
   ],
   "transform": {
     "^.+\\.jsx?$": "babel-jest",
-    "\\.(css|scss)$": "./test/styles.js"
-  }
+    "\\.(css|scss)$": "./test/styles.js",
+    ".+\\.(png|jpg|jpeg)$": "identity-obj-proxy"
+    },
+  "transformIgnorePatterns": ["/node_modules/react-images-upload"]
 }
