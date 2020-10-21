@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import map from '../../store/map';
 import LoadingWrapper from '../../containers/LoadingWrapper';
 import Router from '../../router';
+import 'bootswatch/dist/Minty/bootstrap.min.css';
 import './styles.scss';
 
 const App = () => (

@@ -66,56 +66,90 @@ class LoginPage extends React.Component {
     return (
       <div id="login-page">
         <h1>timbr Login Page!</h1>
-        <form
-          id="login-form"
-          onSubmit={(e) => {
-            e.preventDefault();
-            this.handleAuth(constants.LOGIN_WITH_TIMBR);
-          }}
-        >
-          <input
-            id="email"
-            type="text"
-            placeholder="Email"
-          />
 
-          <input
-            id="password"
-            type="password"
-            placeholder="Password"
-          />
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="card">
+              <div class="card-body">
+                
 
-          <button type="submit">Login</button>
-        </form>
+                <h5 class="card-title">Log In With timbr</h5>
+                <p class="card-text">Login card.</p>
 
-        <button
-          id="Facebook"
-          type="button"
-          onClick={(e) => {
-            e.preventDefault();
-            this.handleAuth(constants.LOGIN_WITH_FACEBOOK);
-          }}
-        >
-          Sign in with Facebook
-        </button>
+                <button
+                  id="Facebook"
+                  type="button"
+                  class="btn btn-primary"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    this.handleAuth(constants.LOGIN_WITH_FACEBOOK);
+                  }}
+                >
+                  Sign in with Facebook
+                </button>
 
-        <button
-          id="Google"
-          type="button"
-          onClick={(e) => {
-            e.preventDefault();
-            this.handleAuth(constants.LOGIN_WITH_GOOGLE);
-          }}
-        >
-          Sign in with Google
-        </button>
-        <p id="error" />
-        <button
-          type="button"
-          onClick={() => history.push('/register')}
-        >
-          Not a user? Register with timbr here.
-        </button>
+                <button
+                  id="Google"
+                  type="button"
+                  class="btn btn-primary"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    this.handleAuth(constants.LOGIN_WITH_GOOGLE);
+                  }}
+                >
+                  Sign in with Google
+                </button>
+
+                <form
+                  id="login-form"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    this.handleAuth(constants.LOGIN_WITH_TIMBR);
+                  }}
+                >
+                  <div class="form-group">
+                    <input
+                      id="email"
+                      class="form-control"
+                      type="text"
+                      placeholder="Email"
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <input
+                      id="password"
+                      class="form-control"
+                      type="password"
+                      placeholder="Password"
+                    />
+                  </div>
+
+                  <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+                <p id="error" />
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Sign-Up With timbr</h5>
+                <p class="card-text">Don't have an account yet? Sign up now.</p>
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  onClick={() => history.push('/register')}
+                >
+                  Not a user? Register with timbr here.
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
       </div>
     );
   }
