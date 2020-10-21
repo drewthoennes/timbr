@@ -4,8 +4,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import CalendarHeatmap from 'react-calendar-heatmap';
-import 'react-calendar-heatmap/dist/styles.css';
 import Navbar from '../../components/Navbar';
 
 import { setForeignUserPets, addDate } from '../../store/actions/pets';
@@ -75,18 +73,6 @@ class PlantProfilePage extends React.Component {
           <button type="button" onClick={this.onWater}> Water </button>
           <button type="button" onClick={this.onFertilize}> Fertilize </button>
           <button type="button" onClick={this.onRotate}> Rotate </button>
-        </div>
-        <div id="heatmap">
-          <CalendarHeatmap
-            startDate={new Date('2020-04-01')}
-            endDate={new Date('2020-11-01')}
-            values={[
-              { date: '2020-10-20', value: true },
-              { date: '2020-10-10', value: true },
-
-              // ...and so on
-            ]}
-          />
         </div>
       </div>
     );
