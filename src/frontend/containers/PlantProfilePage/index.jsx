@@ -6,10 +6,11 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Navbar from '../../components/Navbar';
 
-import { setForeignUserPets, addDate } from '../../store/actions/pets';
+import { setForeignUserPets, addDate, getDate } from '../../store/actions/pets';
 
 import map from '../../store/map';
 import './styles.scss';
+
 
 class PlantProfilePage extends React.Component {
   constructor(props) {
@@ -18,6 +19,8 @@ class PlantProfilePage extends React.Component {
     this.onFertilize = this.onFertilize.bind(this);
     this.onRotate = this.onRotate.bind(this);
     this.state = {
+    count:''
+      
     };
   }
 
@@ -28,34 +31,67 @@ class PlantProfilePage extends React.Component {
     console.log('Component did mount');
 
     if (!username) return Promise.resolve();
-
+    
     return setForeignUserPets(username, id).catch(() => history.push(`/${ownUsername}`));
   }
 
   onWater() {
     const { match: { params: { id } } } = this.props;
     const today = new Date().toISOString().slice(0, 10);
-    addDate(id, 'watered', today);
-    console.log('id is', id);
+    addDate(id, 'watered', today).then((value) => {
+      getDate(id,'watered')
+    .then((result) => {
+        console.log('the result is', result)
+        const { count } = this.state;
+        return this.setState({count : count.concat('water')});
+    })
+    
+      
+    }); 
+    
+    
   }
 
   onFertilize() {
     const { match: { params: { id } } } = this.props;
     const today = new Date().toISOString().slice(0, 10);
     addDate(id, 'fertilized', today);
+    addDate(id, 'fertilized', today).then((value) => {
+      getDate(id,'fertilized')
+    .then((result) => {
+        console.log('the result is', result)
+        const { count } = this.state;
+        return this.setState({count : count.concat('fertilized')});
+    })
+    
+      
+    });
+    console.log("result HERE",result)
   }
 
   onRotate() {
     const { match: { params: { id } } } = this.props;
 
     const today = new Date().toISOString().slice(0, 10);
-    addDate(id, 'turned', today);
+    addDate(id, 'turned', today).then((value) => {
+      getDate(id,'turned')
+    .then((result) => {
+        console.log('the result is', result)
+        const { count } = this.state;
+        return this.setState({ count: 1 });
+    })
+    
+      
+    });
   }
 
+  
+  
+
   render() {
+    const { count } = this.state;
     const { store: { users, pets, account: { username: ownUsername } } } = this.props;
     const { history, match: { params: { username, id } } } = this.props;
-
     let pet;
     if (username && username !== ownUsername) {
       pet = users[username] ? users[username].pets[id] : { name: '' };
@@ -69,10 +105,13 @@ class PlantProfilePage extends React.Component {
       <div>
         <Navbar />
         <h1>{pet.name}</h1>
+        
         <div>
+           <p>{count}</p>
           <button type="button" onClick={this.onWater}> Water </button>
           <button type="button" onClick={this.onFertilize}> Fertilize </button>
           <button type="button" onClick={this.onRotate}> Rotate </button>
+          <button type="button" onClick={this.onEverything}> Rotate </button>
         </div>
       </div>
     );
