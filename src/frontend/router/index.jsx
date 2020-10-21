@@ -15,6 +15,7 @@ import MyPlantsPage from '../containers/MyPlantsPage';
 import NewPlantProfilePage from '../containers/NewPlantProfilePage';
 import PlantProfilePage from '../containers/PlantProfilePage';
 import AccountPage from '../containers/AccountPage';
+import ForgetPasswordPage from '../containers/ForgetPasswordPage';
 
 const history = createBrowserHistory();
 
@@ -28,6 +29,7 @@ const router = (props) => (
       <Route path="/login" render={() => <LoginPage />} />
       <Route path="/register" render={() => <RegisterPage />} />
       <Route path="/account" render={() => <AccountPage />} />
+      <Route path="/forget-password" render={() => <ForgetPasswordPage />} />
       <Route path="*" render={() => <Redirect to={`/${props.store.account.username || 'login'}`} />} />
     </Switch>
   </Router>
