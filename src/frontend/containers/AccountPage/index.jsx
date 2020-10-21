@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Switch from 'react-switch';
+import Input from 'react-phone-number-input/input';
 import map from '../../store/map';
 import './styles.scss';
 import { getUsername, getTextsOn, getEmailsOn, changeUsername, changeEmailsOn, changeTextsOn } from '../../store/actions/account';
@@ -18,15 +19,18 @@ class AccountPage extends React.Component {
 
     this.changeUsername = this.changeUsername.bind(this);
     this.getCurrentUsername = this.getCurrentUsername.bind(this);
+    this.getCurrentPhoneNumber = this.getCurrentPhoneNumber.bind(this);
     this.getTextsOn = this.getTextsOn.bind(this);
     this.changeTextsOn = this.changeTextsOn.bind(this);
     this.getEmailsOn = this.getEmailsOn.bind(this);
     this.changeEmailsOn = this.changeEmailsOn.bind(this);
+    this.changePhoneNumber = this.changePhoneNumber.bind(this);
 
     this.state = {
       username: 'timbr-user',
       textsOn: false,
       emailsOn: false,
+      phoneNumber: '',
     };
     this.mounted = false;
   }
@@ -34,6 +38,7 @@ class AccountPage extends React.Component {
   componentDidMount() {
     this.mounted = true;
     this.getCurrentUsername();
+    this.getCurrentPhoneNumber();
     this.getTextsOn();
     this.getEmailsOn();
   }
@@ -50,6 +55,7 @@ class AccountPage extends React.Component {
     if (prevProps.store && this.props.store
       && this.props.store.account.uid !== prevProps.store.account.uid) {
       this.getCurrentUsername();
+      this.getCurrentPhoneNumber();
       this.getTextsOn();
       this.getEmailsOn();
     }
@@ -64,6 +70,13 @@ class AccountPage extends React.Component {
     getUsername(
       (user) => { this.mounted && this.setState({ username: user.val() }); }, this.props.store,
     );
+  }
+
+  getCurrentPhoneNumber() {
+    // TODO: Get the phone number from the database, hard coded for now
+    this.setState({
+      phoneNumber: '123456789',
+    });
   }
 
   /* Calls the function to get current text notifications status and sets the state. */
@@ -107,6 +120,24 @@ class AccountPage extends React.Component {
     changeEmailsOn(emailsOn);
     /* Changes the email notifications status in the state. */
     this.getEmailsOn();
+  }
+
+  changePhoneNumber() {
+    const number = document.getElementById('phone-number').value;
+    console.log(`Phone number entered: ${number}`);
+    document.getElementById('phone-number').value = '';
+
+    // Error handling for phone number
+    // checking if the length is 14 to account for the formatting of the phone number
+    if (number.toString().length !== 14) {
+      document.getElementById('phone-error').innerHTML = 'Phone number invalid!';
+    } else {
+      document.getElementById('phone-error').innerHTML = '';
+      this.setState({
+        phoneNumber: number,
+      });
+    }
+    // TODO: Change the phone number in the database
   }
 
   render() {
@@ -161,6 +192,27 @@ class AccountPage extends React.Component {
           >
             Change Username
           </button>
+          <p>
+            Current Phone Number:
+            {' '}
+            {this.state.phoneNumber}
+          </p>
+          +1
+          {' '}
+          <Input
+            placeholder="Enter phone number"
+            id="phone-number"
+            country="US"
+            onChange={() => {}}
+          />
+          <button
+            id="change-phone-number"
+            type="button"
+            onClick={this.changePhoneNumber}
+          >
+            Change Phone number
+          </button>
+          <p id="phone-error"> </p>
         </form>
       </div>
     );
