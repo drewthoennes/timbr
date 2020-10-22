@@ -53,7 +53,6 @@ export function addDate(petId, action, currDate) {
   if (!uid) {
     return Promise.resolve();
   }
-  
   return Promise.all([
     firebase.database().ref(`users/${uid}/pets/${petId}/${action}/history/`).child(currDate).set(true),
     firebase.database().ref(`users/${uid}/pets/${petId}/${action}/last/`).set(currDate),
@@ -63,11 +62,11 @@ export function addDate(petId, action, currDate) {
 export function getDate(petId,action){
   const uid = firebase.auth().currentUser?.uid;
   
-    var ref = firebase.database().ref(`users/${uid}/pets/${petId}/watered/history/`)
+    var ref = firebase.database().ref(`users/${uid}/pets/${petId}/${action}/history/`)
    
     return ref.once('value')
       .then((snapshot) => {
-          return snapshot.val()
+          return Object.keys(snapshot.val());
       })
       
 }

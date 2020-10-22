@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Navbar from '../../components/Navbar';
-
+import CalendarHeatmap from 'react-calendar-heatmap';
+import 'react-calendar-heatmap/dist/styles.css';
 import { setForeignUserPets, addDate, getDate } from '../../store/actions/pets';
 
 import map from '../../store/map';
@@ -18,32 +19,54 @@ class PlantProfilePage extends React.Component {
     this.onWater = this.onWater.bind(this);
     this.onFertilize = this.onFertilize.bind(this);
     this.onRotate = this.onRotate.bind(this);
+    this.getEventList = this.getEventList.bind(this);
     this.state = {
-    count:''
+    count:0,
+    eventsArr:{},
+    data:[]
       
     };
   }
 
   componentDidMount() {
+    
     const { match: { params: { username, id } } } = this.props;
     const { history, store: { account: { username: ownUsername } } } = this.props;
-
+    
     console.log('Component did mount');
+    getDate(id,'watered').then((response)=>{
+      console.log("HI THE RESULT IS",response);
+      let data = [];
+      //data.push("hi dude");
+      data="hey there";
+      this.setState({ data:data });
+      console.log("inside data is",this.data)
 
+    });
+    console.log("data is",this.data)
     if (!username) return Promise.resolve();
     
     return setForeignUserPets(username, id).catch(() => history.push(`/${ownUsername}`));
   }
 
   onWater() {
+    //checking if other actions have been performed yet
+    const { count } = this.state;
+    if(count==0){
+      this.setState({ count: 1 })
+    }else{
+      this.setState({ count: 4 })
+    }
+    
     const { match: { params: { id } } } = this.props;
     const today = new Date().toISOString().slice(0, 10);
     addDate(id, 'watered', today).then((value) => {
       getDate(id,'watered')
     .then((result) => {
         console.log('the result is', result)
-        const { count } = this.state;
-        return this.setState({count : count.concat('water')});
+        console.log("count is",{count})
+        this.getEventList(1,result);
+        
     })
     
       
@@ -53,43 +76,73 @@ class PlantProfilePage extends React.Component {
   }
 
   onFertilize() {
-    const { match: { params: { id } } } = this.props;
+    const { count } = this.state;
+    if(count==0){
+      this.setState({ count: 2 })
+    }else{
+      this.setState({ count: 4 })
+    }
     const today = new Date().toISOString().slice(0, 10);
-    addDate(id, 'fertilized', today);
+    const { match: { params: { id } } } = this.props;
     addDate(id, 'fertilized', today).then((value) => {
       getDate(id,'fertilized')
     .then((result) => {
         console.log('the result is', result)
-        const { count } = this.state;
-        return this.setState({count : count.concat('fertilized')});
+        this.getEventList(2,result);
     })
+  });
     
-      
-    });
-    console.log("result HERE",result)
   }
 
   onRotate() {
+    const { count } = this.state;
+    if(count==0){
+      this.setState({ count: 3 })
+    }else{
+      this.setState({ count: 4 })
+    }
+    
     const { match: { params: { id } } } = this.props;
-
     const today = new Date().toISOString().slice(0, 10);
     addDate(id, 'turned', today).then((value) => {
       getDate(id,'turned')
     .then((result) => {
         console.log('the result is', result)
-        const { count } = this.state;
-        return this.setState({ count: 1 });
+        this.getEventList(3,result);
     })
     
       
     });
   }
 
+  getEventList(count,result){
+    var wateredEvents='';
+    var fertilizedEvents='';
+    
+    
+    const { match: { params: { id } } } = this.props;
+    console.log("here it is",count,result)
+    //get watered dates
+    Promise.all([
+    getDate(id,'watered'),
+    //get filtered dates
+    getDate(id,'fertilized')
+    
+  ]).then(function(results){
+    console.log("results are",results)
+    let difference = results[0].filter(x => !results[1].includes(x));
+    console.log("difference is",difference)
+    return difference;
+  })
+    //let difference = wateredEvents.filter(x => !fertilizedEvents.includes(x));
+    console.log("outside watered",wateredEvents);
   
+  }
   
 
   render() {
-    const { count } = this.state;
+    
+    
     const { store: { users, pets, account: { username: ownUsername } } } = this.props;
     const { history, match: { params: { username, id } } } = this.props;
     let pet;
@@ -100,6 +153,10 @@ class PlantProfilePage extends React.Component {
     } else {
       pet = pets[id];
     }
+   /* let test=this.state.data;
+    let itemList = this.state.data.map(function(item) {
+      return <li className="item" key={item.id}>{item.title}</li>; 
+  }); */
 
     return (
       <div>
@@ -107,11 +164,23 @@ class PlantProfilePage extends React.Component {
         <h1>{pet.name}</h1>
         
         <div>
-           <p>{count}</p>
+           <p></p>
           <button type="button" onClick={this.onWater}> Water </button>
           <button type="button" onClick={this.onFertilize}> Fertilize </button>
           <button type="button" onClick={this.onRotate}> Rotate </button>
-          <button type="button" onClick={this.onEverything}> Rotate </button>
+        </div>
+        <div id="heatmap">
+          <CalendarHeatmap
+            startDate={new Date('2020-04-01')}
+            endDate={new Date('2020-11-01')}
+            values={[
+              { date: '2020-10-20', value: 1 },
+              { date: '2020-10-10', value: 2},
+              { date: '2020-10-10', value:3}
+
+              // ...and so on
+            ]}
+          />
         </div>
       </div>
     );
