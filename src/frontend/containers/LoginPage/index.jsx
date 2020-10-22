@@ -116,6 +116,12 @@ class LoginPage extends React.Component {
         >
           Not a user? Register with timbr here.
         </button>
+        <button
+          type="button"
+          onClick={() => history.push('/forget-password')}
+        >
+          Forgot your password? Reset it here.
+        </button>
       </div>
     );
   }

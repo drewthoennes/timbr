@@ -5,5 +5,9 @@
   "transform": {
     "^.+\\.jsx?$": "babel-jest",
     "\\.(css|scss)$": "./test/styles.js"
+  },
+  "moduleNameMapper": {
+    "react-images-upload": "<rootDir>/test/styles.js",
+    ".+\\.(png|jpg|jpeg)$": "identity-obj-proxy"
   }
 }
