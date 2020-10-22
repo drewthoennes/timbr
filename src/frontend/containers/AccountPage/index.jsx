@@ -12,7 +12,7 @@ import Input from 'react-phone-number-input/input';
 import ImageUploader from 'react-images-upload';
 import map from '../../store/map';
 import './styles.scss';
-import { getUsername, getTextsOn, getEmailsOn, changeUsername, changeEmailsOn, changeTextsOn } from '../../store/actions/account';
+import { getUsername, getTextsOn, getEmailsOn, changeUsername, changeEmailsOn, changeTextsOn, logout } from '../../store/actions/account';
 import ProfilePicture from '../../assets/images/profile_picture.png';
 
 class AccountPage extends React.Component {
@@ -28,6 +28,7 @@ class AccountPage extends React.Component {
     this.changeEmailsOn = this.changeEmailsOn.bind(this);
     this.changePhoneNumber = this.changePhoneNumber.bind(this);
     this.changeProfilePicture = this.changeProfilePicture.bind(this);
+    this.deleteAccount = this.deleteAccount.bind(this);
 
     this.state = {
       username: 'timbr-user',
@@ -148,6 +149,12 @@ class AccountPage extends React.Component {
     // TODO: Change profile picture in the database
   }
 
+  deleteAccount() {
+    alert('Account deleted.');
+    // TODO: This will be changed to a delete account function call.
+    logout();
+  }
+
   render() {
     const { history, store: { account: { username } } } = this.props;
     const styles = {
@@ -166,7 +173,7 @@ class AccountPage extends React.Component {
           Home
         </button>
         <br />
-        <img id="profile-picture" src={ProfilePicture} alt="Profile" />
+        <img style={styles} id="profile-picture" src={ProfilePicture} alt="Profile" />
         <ImageUploader
           id="image-uploader"
           style={styles}
@@ -243,6 +250,14 @@ class AccountPage extends React.Component {
             onClick={() => history.push('/change-password')}
           >
             Change Password
+          </button>
+          <br />
+          <button
+            id="delete-account"
+            type="button"
+            onClick={this.deleteAccount}
+          >
+          Delete my timbr account
           </button>
         </form>
       </div>
