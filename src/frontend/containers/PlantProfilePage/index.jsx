@@ -8,7 +8,8 @@ import Navbar from '../../components/Navbar';
 import CalendarHeatmap from 'react-calendar-heatmap';
 import 'react-calendar-heatmap/dist/styles.css';
 import { setForeignUserPets, addDate, getDate } from '../../store/actions/pets';
-
+import FullCalendar from '@fullcalendar/react'
+import dayGridPlugin from '@fullcalendar/daygrid'
 import map from '../../store/map';
 import './styles.scss';
 
@@ -23,7 +24,7 @@ class PlantProfilePage extends React.Component {
     this.state = {
     count:0,
     eventsArr:{},
-    data:[]
+    data:''
       
     };
   }
@@ -34,7 +35,20 @@ class PlantProfilePage extends React.Component {
     const { history, store: { account: { username: ownUsername } } } = this.props;
     
     console.log('Component did mount');
-    getDate(id,'watered').then((response)=>{
+    const fetchDates = async () => {
+      const response = await getDate(id,'watered');
+      //const { data } = await response;
+      //const {data}=response[0]
+      let data = [];
+      data.push("hi dude");
+      console.log("data over here is",data,' and response is ',response)
+      this.setState({
+        data
+      });
+    };
+    fetchDates();
+  
+    /*getDate(id,'watered').then((response)=>{
       console.log("HI THE RESULT IS",response);
       let data = [];
       //data.push("hi dude");
@@ -43,7 +57,7 @@ class PlantProfilePage extends React.Component {
       console.log("inside data is",this.data)
 
     });
-    console.log("data is",this.data)
+    console.log("data is",this.data)*/
     if (!username) return Promise.resolve();
     
     return setForeignUserPets(username, id).catch(() => history.push(`/${ownUsername}`));
@@ -164,10 +178,21 @@ class PlantProfilePage extends React.Component {
         <h1>{pet.name}</h1>
         
         <div>
-           <p></p>
+           <p>{this.state.data}</p>
           <button type="button" onClick={this.onWater}> Water </button>
           <button type="button" onClick={this.onFertilize}> Fertilize </button>
           <button type="button" onClick={this.onRotate}> Rotate </button>
+        </div>
+        <div id="calendar">
+        <FullCalendar
+  plugins={[ dayGridPlugin ]}
+  initialView="dayGridMonth"
+  weekends={false}
+  events={[
+    { title: 'event 1', date: '2020-10-01' },
+    { title: 'event 2', date: '2020-10-21' }
+  ]}
+    />
         </div>
         <div id="heatmap">
           <CalendarHeatmap
