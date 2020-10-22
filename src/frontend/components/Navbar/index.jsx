@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import map from '../../store/map';
 import './styles.scss';
+import { logout } from '../../store/actions/account';
 
 const Navbar = (props) => (
   <div id="navbar">
@@ -19,7 +20,19 @@ const Navbar = (props) => (
         </span>
         <span className="plant-link">
           { /* eslint-disable-next-line react/destructuring-assignment */}
-          <Link to={`/${props.store.account.username}/new`}>New Plant</Link>
+          <Link to={`/${props.store.account.username}/new`}>
+            New Plant
+          </Link>
+        </span>
+        <span className="plant-link">
+          <Link to="/account">
+            Account
+          </Link>
+        </span>
+        <span className="plant-link">
+          <Link to="/login" onClick={logout}>
+            Logout
+          </Link>
         </span>
       </Nav>
     </Bar>

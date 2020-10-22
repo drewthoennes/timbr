@@ -2,6 +2,7 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable no-unused-expressions */
+/* eslint-disable no-alert */
 
 import React from 'react';
 import { connect } from 'react-redux';
@@ -14,6 +15,7 @@ import map from '../../store/map';
 import './styles.scss';
 import { getUsername, getTextsOn, getEmailsOn, changeUsername, changeEmailsOn, changeTextsOn, logout } from '../../store/actions/account';
 import ProfilePicture from '../../assets/images/profile_picture.png';
+import Navbar from '../../components/Navbar';
 
 class AccountPage extends React.Component {
   constructor() {
@@ -156,22 +158,13 @@ class AccountPage extends React.Component {
   }
 
   render() {
-    const { history, store: { account: { username } } } = this.props;
+    const { history } = this.props;
     const styles = {
       width: '150px',
     };
     return (
       <div id="account-page">
-        <h1>timbr Account Page!</h1>
-        <button
-          id="home"
-          type="button"
-          onClick={() => {
-            history.push(`/${username}`);
-          }}
-        >
-          Home
-        </button>
+        <Navbar />
         <br />
         <img style={styles} id="profile-picture" src={ProfilePicture} alt="Profile" />
         <ImageUploader
@@ -257,7 +250,7 @@ class AccountPage extends React.Component {
             type="button"
             onClick={this.deleteAccount}
           >
-          Delete my timbr account
+            Delete my timbr account
           </button>
         </form>
       </div>

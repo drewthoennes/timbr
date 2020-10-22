@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import map from '../../store/map';
+import Navbar from '../../components/Navbar';
 
 class ChangePasswordPage extends React.Component {
   constructor() {
@@ -31,7 +32,7 @@ class ChangePasswordPage extends React.Component {
   render() {
     return (
       <div id="change-password-page">
-        <h1>timbr Change Password Page</h1>
+        <Navbar />
         <form id="password-reset-form">
           <input
             id="current-pwd"
