@@ -1,4 +1,5 @@
 /* eslint-disable no-alert */
+/* eslint-disable react/no-unused-state */
 
 import React from 'react';
 import { connect } from 'react-redux';
@@ -12,11 +13,15 @@ class ChangePasswordPage extends React.Component {
     super();
 
     this.changePassword = this.changePassword.bind(this);
+    this.state = {
+      currentpwd: '',
+      newpwd: '',
+      confirmpwd: '',
+    };
   }
 
   changePassword() {
-    const newpwd = btoa(document.getElementById('new-pwd').value);
-    const confirmpwd = btoa(document.getElementById('confirm-pwd').value);
+    const { newpwd, confirmpwd } = this.state;
     if (newpwd !== confirmpwd) {
       document.getElementById('error').innerHTML = "Passwords don't match";
       return;
@@ -38,16 +43,25 @@ class ChangePasswordPage extends React.Component {
             id="current-pwd"
             type="password"
             placeholder="Current Password"
+            onChange={(event) => this.setState({
+              currentpwd: event.target.value,
+            })}
           />
           <input
             id="new-pwd"
             type="password"
             placeholder="New Password"
+            onChange={(event) => this.setState({
+              newpwd: event.target.value,
+            })}
           />
           <input
             id="confirm-pwd"
             type="password"
             placeholder="Confirm New Password"
+            onChange={(event) => this.setState({
+              confirmpwd: event.target.value,
+            })}
           />
 
           <button

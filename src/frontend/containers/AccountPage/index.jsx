@@ -131,7 +131,6 @@ class AccountPage extends React.Component {
   changePhoneNumber() {
     const number = document.getElementById('phone-number').value;
     console.log(`Phone number entered: ${number}`);
-    document.getElementById('phone-number').value = '';
 
     // Error handling for phone number
     // checking if the length is 14 to account for the formatting of the phone number
@@ -139,6 +138,7 @@ class AccountPage extends React.Component {
       document.getElementById('phone-error').innerHTML = 'Phone number invalid!';
     } else {
       document.getElementById('phone-error').innerHTML = '';
+      document.getElementById('phone-number').value = '';
       this.setState({
         phoneNumber: number,
       });
