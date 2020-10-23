@@ -167,6 +167,12 @@ export function getEmailsOn(cb, myStore) {
     .on('value', cb);
 }
 
+export function changeProfilePicture(file) {
+  const { account: { uid } } = store.getState();
+  const storageRef = firebase.storage().ref();
+  return storageRef.child(`profile-pictures/${uid}`).put(file);
+}
+
 export function setUID(uid) {
   store.dispatch({
     type: constants.SET_UID,

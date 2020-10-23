@@ -10,10 +10,9 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Switch from 'react-switch';
 import Input from 'react-phone-number-input/input';
-import ImageUploader from 'react-images-upload';
 import map from '../../store/map';
 import './styles.scss';
-import { getUsername, getTextsOn, getEmailsOn, changeUsername, changeEmailsOn, changeTextsOn, logout } from '../../store/actions/account';
+import { getUsername, getTextsOn, getEmailsOn, changeUsername, changeEmailsOn, changeTextsOn, logout, changeProfilePicture } from '../../store/actions/account';
 import ProfilePicture from '../../assets/images/profile_picture.png';
 import Navbar from '../../components/Navbar';
 
@@ -146,9 +145,15 @@ class AccountPage extends React.Component {
     // TODO: Change the phone number in the database
   }
 
-  changeProfilePicture() {
-    console.log('Profile picture changed!');
-    // TODO: Change profile picture in the database
+  changeProfilePicture(file) {
+    // The following function changes the profile picture in the database.
+    changeProfilePicture(file)
+      .then(() => {
+        console.log('Profile Picture updated!');
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
   }
 
   deleteAccount() {
@@ -167,18 +172,16 @@ class AccountPage extends React.Component {
         <Navbar />
         <br />
         <img style={styles} id="profile-picture" src={ProfilePicture} alt="Profile" />
-        <ImageUploader
-          id="image-uploader"
-          style={styles}
-          withIcon={false}
-          withLabel={false}
-          buttonText="Change Profile Picture"
-          imgExtension={['.jpg', '.png']}
-          maxFileSize={5242880}
-          singleImage
-          onChange={this.changeProfilePicture}
-        />
         <br />
+        <label htmlFor="image-uploader">
+          Change Profile Picture
+          <input
+            type="file"
+            id="image-uploader"
+            accept="image/jpg,image/jpeg,image/png"
+            onChange={(event) => { this.changeProfilePicture(event.target.files[0]); }}
+          />
+        </label>
         <br />
         <form id="account-settings">
 
