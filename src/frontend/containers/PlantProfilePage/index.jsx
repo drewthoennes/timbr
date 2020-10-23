@@ -29,27 +29,23 @@ class PlantProfilePage extends React.Component {
 
   async testFunction(){
     const { match: { params: { id } } } = this.props;
-    console.log("inside fetch dates")
       const response1 = await getDate(id,'watered');
-      console.log("AFTER WATER")
       const response2=await getDate(id,'fertilized');
-      console.log("AFTER FERTILIZE")
       const response3= await getDate(id,'turned');
-      console.log("AFTER TURN")
-      //construct an array of objects
+     
       let eventList=[]
       if(response1!=null){
       response1.forEach(function(item){
-        eventList.push({title:'watered',date:`${item}`})
+        eventList.push({title:'watered 💦',date:`${item}`})
       })
     }
     if(response2!=null){
       response2.forEach(function(item){
-        eventList.push({title:'fertilized',date:`${item}`})
+        eventList.push({title:'fertilized 🌱',date:`${item}`})
       })
     }if(response3!=null){
       response3.forEach(function(item){
-        eventList.push({title:'turned',date:`${item}`})
+        eventList.push({title:'turned💃',date:`${item}`})
       })
     }
       this.setState({
@@ -64,35 +60,6 @@ class PlantProfilePage extends React.Component {
     const { history, store: { account: { username: ownUsername } } } = this.props;
     
     console.log('Component did mount');
-   /* const fetchDates = async () => {
-      console.log("inside fetch dates")
-      const response1 = await getDate(id,'watered');
-      console.log("AFTER WATER")
-      const response2=await getDate(id,'fertilized');
-      console.log("AFTER FERTILIZE")
-      const response3= await getDate(id,'turned');
-      console.log("AFTER TURN")
-      //construct an array of objects
-      let eventList=[]
-      if(response1!=null){
-      response1.forEach(function(item){
-        eventList.push({title:'watered',date:`${item}`})
-      })
-    }
-    if(response2!=null){
-      response2.forEach(function(item){
-        eventList.push({title:'fertilized',date:`${item}`})
-      })
-    }if(response3!=null){
-      response3.forEach(function(item){
-        eventList.push({title:'turned',date:`${item}`})
-      })
-    }
-      this.setState({
-        data: eventList
-      });
-    };
-    fetchDates() */
     
     this.testFunction('watered');
     this.testFunction('fertilized');
@@ -158,7 +125,6 @@ class PlantProfilePage extends React.Component {
         <h1>{pet.name}</h1>
         
         <div>
-           <p>hi</p>
           <button type="button" onClick={this.onWater}> Water </button>
           <button type="button" onClick={this.onFertilize}> Fertilize </button>
           <button type="button" onClick={this.onRotate}> Rotate </button>
