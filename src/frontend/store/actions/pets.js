@@ -63,9 +63,13 @@ export function getDate(petId,action){
   const uid = firebase.auth().currentUser?.uid;
   
     var ref = firebase.database().ref(`users/${uid}/pets/${petId}/${action}/history/`)
+    
    
     return ref.once('value')
       .then((snapshot) => {
+          if(snapshot.val()==null){
+            return null
+          }
           return Object.keys(snapshot.val());
       })
       

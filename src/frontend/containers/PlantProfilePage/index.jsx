@@ -20,13 +20,42 @@ class PlantProfilePage extends React.Component {
     this.onWater = this.onWater.bind(this);
     this.onFertilize = this.onFertilize.bind(this);
     this.onRotate = this.onRotate.bind(this);
-    this.getEventList = this.getEventList.bind(this);
+    this.testFunction=this.testFunction.bind(this);
     this.state = {
-    count:0,
-    eventsArr:{},
-    data:''
+    data:[]
       
     };
+  }
+
+  async testFunction(){
+    const { match: { params: { id } } } = this.props;
+    console.log("inside fetch dates")
+      const response1 = await getDate(id,'watered');
+      console.log("AFTER WATER")
+      const response2=await getDate(id,'fertilized');
+      console.log("AFTER FERTILIZE")
+      const response3= await getDate(id,'turned');
+      console.log("AFTER TURN")
+      //construct an array of objects
+      let eventList=[]
+      if(response1!=null){
+      response1.forEach(function(item){
+        eventList.push({title:'watered',date:`${item}`})
+      })
+    }
+    if(response2!=null){
+      response2.forEach(function(item){
+        eventList.push({title:'fertilized',date:`${item}`})
+      })
+    }if(response3!=null){
+      response3.forEach(function(item){
+        eventList.push({title:'turned',date:`${item}`})
+      })
+    }
+      this.setState({
+        data: eventList
+      });
+    
   }
 
   componentDidMount() {
@@ -35,123 +64,77 @@ class PlantProfilePage extends React.Component {
     const { history, store: { account: { username: ownUsername } } } = this.props;
     
     console.log('Component did mount');
-    const fetchDates = async () => {
-      const response = await getDate(id,'watered');
-      //const { data } = await response;
-      //const {data}=response[0]
-      let data = [];
-      data.push("hi dude");
-      console.log("data over here is",data,' and response is ',response)
+   /* const fetchDates = async () => {
+      console.log("inside fetch dates")
+      const response1 = await getDate(id,'watered');
+      console.log("AFTER WATER")
+      const response2=await getDate(id,'fertilized');
+      console.log("AFTER FERTILIZE")
+      const response3= await getDate(id,'turned');
+      console.log("AFTER TURN")
+      //construct an array of objects
+      let eventList=[]
+      if(response1!=null){
+      response1.forEach(function(item){
+        eventList.push({title:'watered',date:`${item}`})
+      })
+    }
+    if(response2!=null){
+      response2.forEach(function(item){
+        eventList.push({title:'fertilized',date:`${item}`})
+      })
+    }if(response3!=null){
+      response3.forEach(function(item){
+        eventList.push({title:'turned',date:`${item}`})
+      })
+    }
       this.setState({
-        data
+        data: eventList
       });
     };
-    fetchDates();
-  
-    /*getDate(id,'watered').then((response)=>{
-      console.log("HI THE RESULT IS",response);
-      let data = [];
-      //data.push("hi dude");
-      data="hey there";
-      this.setState({ data:data });
-      console.log("inside data is",this.data)
-
-    });
-    console.log("data is",this.data)*/
+    fetchDates() */
+    
+    this.testFunction('watered');
+    this.testFunction('fertilized');
+    this.testFunction('turned');
     if (!username) return Promise.resolve();
     
     return setForeignUserPets(username, id).catch(() => history.push(`/${ownUsername}`));
   }
 
   onWater() {
-    //checking if other actions have been performed yet
-    const { count } = this.state;
-    if(count==0){
-      this.setState({ count: 1 })
-    }else{
-      this.setState({ count: 4 })
-    }
+    
     
     const { match: { params: { id } } } = this.props;
     const today = new Date().toISOString().slice(0, 10);
-    addDate(id, 'watered', today).then((value) => {
-      getDate(id,'watered')
-    .then((result) => {
-        console.log('the result is', result)
-        console.log("count is",{count})
-        this.getEventList(1,result);
-        
-    })
-    
-      
-    }); 
+    addDate(id, 'watered', today).then((result)=>{
+      this.testFunction();
+    });
     
     
   }
 
   onFertilize() {
-    const { count } = this.state;
-    if(count==0){
-      this.setState({ count: 2 })
-    }else{
-      this.setState({ count: 4 })
-    }
+   
     const today = new Date().toISOString().slice(0, 10);
     const { match: { params: { id } } } = this.props;
-    addDate(id, 'fertilized', today).then((value) => {
-      getDate(id,'fertilized')
-    .then((result) => {
-        console.log('the result is', result)
-        this.getEventList(2,result);
-    })
-  });
+    addDate(id, 'fertilized', today).then((result)=>{
+      this.testFunction();
+    });
     
   }
 
   onRotate() {
-    const { count } = this.state;
-    if(count==0){
-      this.setState({ count: 3 })
-    }else{
-      this.setState({ count: 4 })
-    }
+   
     
     const { match: { params: { id } } } = this.props;
     const today = new Date().toISOString().slice(0, 10);
-    addDate(id, 'turned', today).then((value) => {
-      getDate(id,'turned')
-    .then((result) => {
-        console.log('the result is', result)
-        this.getEventList(3,result);
-    })
-    
-      
+    addDate(id, 'turned', today).then((result)=>{
+      this.testFunction();
     });
   }
 
-  getEventList(count,result){
-    var wateredEvents='';
-    var fertilizedEvents='';
-    
-    
-    const { match: { params: { id } } } = this.props;
-    console.log("here it is",count,result)
-    //get watered dates
-    Promise.all([
-    getDate(id,'watered'),
-    //get filtered dates
-    getDate(id,'fertilized')
-    
-  ]).then(function(results){
-    console.log("results are",results)
-    let difference = results[0].filter(x => !results[1].includes(x));
-    console.log("difference is",difference)
-    return difference;
-  })
-    //let difference = wateredEvents.filter(x => !fertilizedEvents.includes(x));
-    console.log("outside watered",wateredEvents);
   
-  }
   
 
   render() {
@@ -167,10 +150,7 @@ class PlantProfilePage extends React.Component {
     } else {
       pet = pets[id];
     }
-   /* let test=this.state.data;
-    let itemList = this.state.data.map(function(item) {
-      return <li className="item" key={item.id}>{item.title}</li>; 
-  }); */
+   
 
     return (
       <div>
@@ -178,7 +158,7 @@ class PlantProfilePage extends React.Component {
         <h1>{pet.name}</h1>
         
         <div>
-           <p>{this.state.data}</p>
+           <p>hi</p>
           <button type="button" onClick={this.onWater}> Water </button>
           <button type="button" onClick={this.onFertilize}> Fertilize </button>
           <button type="button" onClick={this.onRotate}> Rotate </button>
@@ -188,24 +168,8 @@ class PlantProfilePage extends React.Component {
   plugins={[ dayGridPlugin ]}
   initialView="dayGridMonth"
   weekends={false}
-  events={[
-    { title: 'event 1', date: '2020-10-01' },
-    { title: 'event 2', date: '2020-10-21' }
-  ]}
+  events={this.state.data}
     />
-        </div>
-        <div id="heatmap">
-          <CalendarHeatmap
-            startDate={new Date('2020-04-01')}
-            endDate={new Date('2020-11-01')}
-            values={[
-              { date: '2020-10-20', value: 1 },
-              { date: '2020-10-10', value: 2},
-              { date: '2020-10-10', value:3}
-
-              // ...and so on
-            ]}
-          />
         </div>
       </div>
     );
