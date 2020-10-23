@@ -20,14 +20,14 @@ class PlantProfilePage extends React.Component {
     this.onWater = this.onWater.bind(this);
     this.onFertilize = this.onFertilize.bind(this);
     this.onRotate = this.onRotate.bind(this);
-    this.testFunction=this.testFunction.bind(this);
+    this.fetchEventList=this.fetchEventList.bind(this);
     this.state = {
     data:[]
       
     };
   }
 
-  async testFunction(){
+  async fetchEventList(){
     const { match: { params: { id } } } = this.props;
       const response1 = await getDate(id,'watered');
       const response2=await getDate(id,'fertilized');
@@ -61,9 +61,9 @@ class PlantProfilePage extends React.Component {
     
     console.log('Component did mount');
     
-    this.testFunction('watered');
-    this.testFunction('fertilized');
-    this.testFunction('turned');
+    this.fetchEventList('watered');
+    this.fetchEventList('fertilized');
+    this.fetchEventList('turned');
     if (!username) return Promise.resolve();
     
     return setForeignUserPets(username, id).catch(() => history.push(`/${ownUsername}`));
@@ -75,7 +75,7 @@ class PlantProfilePage extends React.Component {
     const { match: { params: { id } } } = this.props;
     const today = new Date().toISOString().slice(0, 10);
     addDate(id, 'watered', today).then((result)=>{
-      this.testFunction();
+      this.fetchEventList();
     });
     
     
@@ -86,7 +86,7 @@ class PlantProfilePage extends React.Component {
     const today = new Date().toISOString().slice(0, 10);
     const { match: { params: { id } } } = this.props;
     addDate(id, 'fertilized', today).then((result)=>{
-      this.testFunction();
+      this.fetchEventList();
     });
     
   }
@@ -97,7 +97,7 @@ class PlantProfilePage extends React.Component {
     const { match: { params: { id } } } = this.props;
     const today = new Date().toISOString().slice(0, 10);
     addDate(id, 'turned', today).then((result)=>{
-      this.testFunction();
+      this.fetchEventList();
     });
   }
 
