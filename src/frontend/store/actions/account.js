@@ -121,7 +121,13 @@ export function getProfilePicture(cb) {
 
   const pictureRef = firebase.storage().ref().child(`profile-pictures/${uid}`);
   pictureRef.getDownloadURL()
-    .then(cb);
+    .then(cb)
+    .catch((error) => {
+      // Do nothing if the user does not have a profile pic sent, the default one will be displayed.
+      if (error.code !== 'storage/object-not-found') {
+        console.log(error.message);
+      }
+    });
 }
 
 /* This function changes the texts status of the current user. */
