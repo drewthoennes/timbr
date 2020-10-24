@@ -3,15 +3,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
 import PropTypes from 'prop-types';
 import Navbar from '../../components/Navbar';
-import 'react-calendar-heatmap/dist/styles.css';
-import { setForeignUserPets, addDate} from '../../store/actions/pets';
-import FullCalendar from '@fullcalendar/react'
-import dayGridPlugin from '@fullcalendar/daygrid'
+import { setForeignUserPets, addDate } from '../../store/actions/pets';
 import map from '../../store/map';
 import './styles.scss';
-
 
 class PlantProfilePage extends React.Component {
   constructor(props) {
@@ -19,90 +17,78 @@ class PlantProfilePage extends React.Component {
     this.onWater = this.onWater.bind(this);
     this.onFertilize = this.onFertilize.bind(this);
     this.onRotate = this.onRotate.bind(this);
-    this.fetchEventList=this.fetchEventList.bind(this);
+    this.fetchEventList = this.fetchEventList.bind(this);
     this.state = {
-    eventList:[]
-      
+      eventList: [],
+
     };
   }
 
-  fetchEventList(){
-    //fetches action history
-    const { match: { params: { id } } } = this.props;
-    var wateredDates=Object.keys(this.props.store.pets[id].watered.history);
-    var fertilizedDates=Object.keys(this.props.store.pets[id].fertilized.history);
-    var turnedDates=Object.keys(this.props.store.pets[id].turned.history);
-    //construct eventList with title and date
-      let eventList=[]
-      wateredDates.forEach(function(item){
-        eventList.push({title:'watered 💦',date:`${item}`})
-      })
-      fertilizedDates.forEach(function(item){
-        eventList.push({title:'fertilized 🌱',date:`${item}`})
-      })
-      turnedDates.forEach(function(item){
-        eventList.push({title:'turned 💃',date:`${item}`})
-      }) 
-      this.setState({
-        eventList: eventList
-      }); 
-    
-  }
-
   componentDidMount() {
-    
     const { match: { params: { username, id } } } = this.props;
     const { history, store: { account: { username: ownUsername } } } = this.props;
-    
+
     console.log('Component did mount');
-    
+
     this.fetchEventList();
-   
+
     if (!username) return Promise.resolve();
-    
+
     return setForeignUserPets(username, id).catch(() => history.push(`/${ownUsername}`));
   }
 
   onWater() {
-    
-    
     const { match: { params: { id } } } = this.props;
     const today = new Date().toISOString().slice(0, 10);
-    addDate(id, 'watered', today).then((result)=>{
+    addDate(id, 'watered', today).then(() => {
       this.fetchEventList();
     });
-    
-    
   }
 
   onFertilize() {
-   
     const today = new Date().toISOString().slice(0, 10);
     const { match: { params: { id } } } = this.props;
-    addDate(id, 'fertilized', today).then((result)=>{
+    addDate(id, 'fertilized', today).then(() => {
       this.fetchEventList();
     });
-    
   }
 
   onRotate() {
-   
-    
     const { match: { params: { id } } } = this.props;
     const today = new Date().toISOString().slice(0, 10);
-    addDate(id, 'turned', today).then((result)=>{
+    addDate(id, 'turned', today).then(() => {
       this.fetchEventList();
     });
   }
 
-  
-  
+  fetchEventList() {
+    // fetches action history
+    const { match: { params: { id } } } = this.props;
+    const { store: { pets } = {} } = this.props;
+
+    const wateredDates = Object.keys(pets[id].watered.history);
+    const fertilizedDates = Object.keys(pets[id].fertilized.history);
+    const turnedDates = Object.keys(pets[id].turned.history);
+    // construct eventList with title and date
+    const eventList = [];
+    wateredDates.forEach((item) => {
+      eventList.push({ title: 'watered 💦', date: `${item}` });
+    });
+    fertilizedDates.forEach((item) => {
+      eventList.push({ title: 'fertilized 🌱', date: `${item}` });
+    });
+    turnedDates.forEach((item) => {
+      eventList.push({ title: 'turned 💃', date: `${item}` });
+    });
+    this.setState({
+      eventList,
+    });
+  }
 
   render() {
-    
-    
     const { store: { users, pets, account: { username: ownUsername } } } = this.props;
     const { history, match: { params: { username, id } } } = this.props;
+    const { eventList } = this.state;
     let pet;
     if (username && username !== ownUsername) {
       pet = users[username] ? users[username].pets[id] : { name: '' };
@@ -111,25 +97,24 @@ class PlantProfilePage extends React.Component {
     } else {
       pet = pets[id];
     }
-   
 
     return (
       <div>
         <Navbar />
         <h1>{pet.name}</h1>
-        
+
         <div>
           <button type="button" onClick={this.onWater}> Water </button>
           <button type="button" onClick={this.onFertilize}> Fertilize </button>
           <button type="button" onClick={this.onRotate}> Rotate </button>
         </div>
         <div id="calendar">
-        <FullCalendar
-  plugins={[ dayGridPlugin ]}
-  initialView="dayGridMonth"
-  weekends={true}
-  events={this.state.eventList}
-    />
+          <FullCalendar
+            plugins={[dayGridPlugin]}
+            initialView="dayGridMonth"
+            weekends
+            events={eventList}
+          />
         </div>
       </div>
     );
