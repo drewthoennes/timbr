@@ -37,7 +37,7 @@ class AccountPage extends React.Component {
       textsOn: false,
       emailsOn: false,
       phoneNumber: '',
-      profilepic: ProfilePicture,
+      profilePic: ProfilePicture,
     };
     this.mounted = false;
   }
@@ -90,9 +90,9 @@ class AccountPage extends React.Component {
 
   /* Calls the function to get the url for the current profile picture and sets the state. */
   getCurrentProfilePicture() {
-    // UNCOMMENT THE FOLLOWING LINE WHEN TESTING PROFILE PICTURE.
+    // Comment out the following lines when not testing profile picture.
     getProfilePicture(
-      (picture) => { this.mounted && this.setState({ profilepic: picture }); },
+      (picture) => { this.mounted && this.setState({ profilePic: picture }); },
     );
   }
 
@@ -184,7 +184,7 @@ class AccountPage extends React.Component {
       <div id="account-page">
         <Navbar />
         <br />
-        <img style={styles} id="profile-picture" src={this.state.profilepic} alt="Profile" />
+        <img style={styles} id="profile-picture" src={this.state.profilePic} alt="Profile" />
         <br />
         <label htmlFor="image-uploader">
           Change Profile Picture:
