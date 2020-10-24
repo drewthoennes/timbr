@@ -5,9 +5,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Navbar from '../../components/Navbar';
-import CalendarHeatmap from 'react-calendar-heatmap';
 import 'react-calendar-heatmap/dist/styles.css';
-import { setForeignUserPets, addDate, getDate } from '../../store/actions/pets';
+import { setForeignUserPets, addDate} from '../../store/actions/pets';
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import map from '../../store/map';
@@ -22,35 +21,31 @@ class PlantProfilePage extends React.Component {
     this.onRotate = this.onRotate.bind(this);
     this.fetchEventList=this.fetchEventList.bind(this);
     this.state = {
-    data:[]
+    eventList:[]
       
     };
   }
 
-  async fetchEventList(){
+  fetchEventList(){
+    //fetches action history
     const { match: { params: { id } } } = this.props;
-      const response1 = await getDate(id,'watered');
-      const response2=await getDate(id,'fertilized');
-      const response3= await getDate(id,'turned');
-     
+    var wateredDates=Object.keys(this.props.store.pets[id].watered.history);
+    var fertilizedDates=Object.keys(this.props.store.pets[id].fertilized.history);
+    var turnedDates=Object.keys(this.props.store.pets[id].turned.history);
+    //construct eventList with title and date
       let eventList=[]
-      if(response1!=null){
-      response1.forEach(function(item){
+      wateredDates.forEach(function(item){
         eventList.push({title:'watered 💦',date:`${item}`})
       })
-    }
-    if(response2!=null){
-      response2.forEach(function(item){
+      fertilizedDates.forEach(function(item){
         eventList.push({title:'fertilized 🌱',date:`${item}`})
       })
-    }if(response3!=null){
-      response3.forEach(function(item){
-        eventList.push({title:'turned💃',date:`${item}`})
-      })
-    }
+      turnedDates.forEach(function(item){
+        eventList.push({title:'turned 💃',date:`${item}`})
+      }) 
       this.setState({
-        data: eventList
-      });
+        eventList: eventList
+      }); 
     
   }
 
@@ -61,9 +56,8 @@ class PlantProfilePage extends React.Component {
     
     console.log('Component did mount');
     
-    this.fetchEventList('watered');
-    this.fetchEventList('fertilized');
-    this.fetchEventList('turned');
+    this.fetchEventList();
+   
     if (!username) return Promise.resolve();
     
     return setForeignUserPets(username, id).catch(() => history.push(`/${ownUsername}`));
@@ -133,8 +127,8 @@ class PlantProfilePage extends React.Component {
         <FullCalendar
   plugins={[ dayGridPlugin ]}
   initialView="dayGridMonth"
-  weekends={false}
-  events={this.state.data}
+  weekends={true}
+  events={this.state.eventList}
     />
         </div>
       </div>
