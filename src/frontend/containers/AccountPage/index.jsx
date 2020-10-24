@@ -10,10 +10,9 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Switch from 'react-switch';
 import Input from 'react-phone-number-input/input';
-import ImageUploader from 'react-images-upload';
 import map from '../../store/map';
 import './styles.scss';
-import { getUsername, getTextsOn, getEmailsOn, changeUsername, changeEmailsOn, changeTextsOn, logout } from '../../store/actions/account';
+import { getUsername, getProfilePicture, getTextsOn, getEmailsOn, changeUsername, changeEmailsOn, changeTextsOn, logout, changeProfilePicture } from '../../store/actions/account';
 import ProfilePicture from '../../assets/images/profile_picture.png';
 import Navbar from '../../components/Navbar';
 
@@ -24,6 +23,7 @@ class AccountPage extends React.Component {
     this.changeUsername = this.changeUsername.bind(this);
     this.getCurrentUsername = this.getCurrentUsername.bind(this);
     this.getCurrentPhoneNumber = this.getCurrentPhoneNumber.bind(this);
+    this.getCurrentProfilePicture = this.getCurrentProfilePicture.bind(this);
     this.getTextsOn = this.getTextsOn.bind(this);
     this.changeTextsOn = this.changeTextsOn.bind(this);
     this.getEmailsOn = this.getEmailsOn.bind(this);
@@ -37,6 +37,7 @@ class AccountPage extends React.Component {
       textsOn: false,
       emailsOn: false,
       phoneNumber: '',
+      profilePic: ProfilePicture,
     };
     this.mounted = false;
   }
@@ -45,6 +46,7 @@ class AccountPage extends React.Component {
     this.mounted = true;
     this.getCurrentUsername();
     this.getCurrentPhoneNumber();
+    this.getCurrentProfilePicture();
     this.getTextsOn();
     this.getEmailsOn();
   }
@@ -61,6 +63,7 @@ class AccountPage extends React.Component {
     if (prevProps.store && this.props.store
       && this.props.store.account.uid !== prevProps.store.account.uid) {
       this.getCurrentUsername();
+      this.getCurrentProfilePicture();
       this.getCurrentPhoneNumber();
       this.getTextsOn();
       this.getEmailsOn();
@@ -83,6 +86,14 @@ class AccountPage extends React.Component {
     this.setState({
       phoneNumber: '123456789',
     });
+  }
+
+  /* Calls the function to get the url for the current profile picture and sets the state. */
+  getCurrentProfilePicture() {
+    // Comment out the following lines when not testing profile picture.
+    getProfilePicture(
+      (picture) => { this.mounted && this.setState({ profilePic: picture }); },
+    );
   }
 
   /* Calls the function to get current text notifications status and sets the state. */
@@ -146,9 +157,16 @@ class AccountPage extends React.Component {
     // TODO: Change the phone number in the database
   }
 
-  changeProfilePicture() {
-    console.log('Profile picture changed!');
-    // TODO: Change profile picture in the database
+  changeProfilePicture(file) {
+    // The following function changes the profile picture in the database.
+    changeProfilePicture(file)
+      .then(() => {
+        console.log('Profile Picture updated!');
+        this.getCurrentProfilePicture();
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
   }
 
   deleteAccount() {
@@ -166,19 +184,17 @@ class AccountPage extends React.Component {
       <div id="account-page">
         <Navbar />
         <br />
-        <img style={styles} id="profile-picture" src={ProfilePicture} alt="Profile" />
-        <ImageUploader
-          id="image-uploader"
-          style={styles}
-          withIcon={false}
-          withLabel={false}
-          buttonText="Change Profile Picture"
-          imgExtension={['.jpg', '.png']}
-          maxFileSize={5242880}
-          singleImage
-          onChange={this.changeProfilePicture}
-        />
+        <img style={styles} id="profile-picture" src={this.state.profilePic} alt="Profile" />
         <br />
+        <label htmlFor="image-uploader">
+          Change Profile Picture:
+          <input
+            type="file"
+            id="image-uploader"
+            accept="image/jpg,image/jpeg,image/png"
+            onChange={(event) => { this.changeProfilePicture(event.target.files[0]); }}
+          />
+        </label>
         <br />
         <form id="account-settings">
 
