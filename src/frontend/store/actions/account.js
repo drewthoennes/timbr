@@ -113,6 +113,17 @@ export function getUsername(cb, myStore) {
     .on('value', cb);
 }
 
+export function getProfilePicture(cb) {
+  const { account: { uid } } = store.getState();
+  if (!uid) {
+    return;
+  }
+
+  const pictureRef = firebase.storage().ref().child(`profile-pictures/${uid}`);
+  pictureRef.getDownloadURL()
+    .then(cb);
+}
+
 /* This function changes the texts status of the current user. */
 export function changeTextsOn(textsOn) {
   const { account: { uid } } = store.getState();
