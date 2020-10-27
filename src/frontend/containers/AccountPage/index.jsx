@@ -13,7 +13,7 @@ import Input from 'react-phone-number-input/input';
 import ImageUploader from 'react-images-upload';
 import map from '../../store/map';
 import './styles.scss';
-import { getUsername, getTextsOn, getEmailsOn, changeUsername, changeEmailsOn, changeTextsOn, logout } from '../../store/actions/account';
+import { getUsername, getPhoneNumber, getTextsOn, getEmailsOn, changeUsername, changeEmailsOn, changeTextsOn, logout } from '../../store/actions/account';
 import ProfilePicture from '../../assets/images/profile_picture.png';
 import Navbar from '../../components/Navbar';
 
@@ -80,9 +80,9 @@ class AccountPage extends React.Component {
 
   getCurrentPhoneNumber() {
     // TODO: Get the phone number from the database, hard coded for now
-    this.setState({
-      phoneNumber: '123456789',
-    });
+    getPhoneNumber(
+      (phoneNumber) => { this.mounted && this.setState({ phoneNumber: phoneNumber.val() }); },
+    );
   }
 
   /* Calls the function to get current text notifications status and sets the state. */

@@ -113,6 +113,45 @@ export function getUsername(cb, myStore) {
     .on('value', cb);
 }
 
+/* This function is used to get the phone number of the current user. */
+export function getPhoneNumber(cb) {
+  const { account: { uid } } = store.getState();
+  if (!uid) {
+    return;
+  }
+  firebase.database().ref().child('users').child(uid)
+    .child('phoneNumber')
+    .on('value', cb);
+}
+
+/* This function is used to change the phone number of the current user. */
+export function changePhoneNumber(phoneNumber) {
+  // checks if the phone number is taken by a different user
+  return firebase.database().ref('/users').orderByChild('phoneNumber').equalTo(phoneNumber)
+    .once('value')
+    .then((snapshot) => {
+      if (snapshot.val()) {
+        alert('Phone number taken! Please enter a different one.');
+        return Promise.reject();
+      }
+
+      const { uid } = firebase.auth().currentUser || { uid: '' };
+      if (!uid) {
+        throw new Error('No uid');
+      }
+
+      return firebase.database().ref(`users/${uid}`).once('value').then((user) => {
+        if (!user.exists()) {
+          throw new Error('Current user does not have an account');
+        }
+
+        return firebase.database().ref(`users/${uid}`).update({
+          phoneNumber,
+        });
+      });
+    });
+}
+
 /* This function changes the texts status of the current user. */
 export function changeTextsOn(textsOn) {
   const { account: { uid } } = store.getState();
