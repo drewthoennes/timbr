@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 
 import Navbar from '../../components/Navbar';
 
-import { setForeignUserPets } from '../../store/actions/pets';
+import { setForeignUserPets, getPlantName, getPlantWaterCycle, getPlantDescription, getPlantCarnivore, getPlantSciName, getPlantFeedFreq,  getPlantFertFreq, getPlantImageURL } from '../../store/actions/pets';
 import map from '../../store/map';
 import './styles.scss';
 
@@ -15,7 +15,26 @@ class PlantProfilePage extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.getSpeciesName = this.getSpeciesName.bind(this);
+    this.getPlantType = this.getPlantType.bind(this);
+    this.getWateringFreq = this.getWateringFreq.bind(this);
+    this.getDescription = this.getDescription.bind(this);
+    this.getCarnivore = this.getCarnivore.bind(this);
+    this.getSciName =  this.getSciName.bind(this);
+    this.getFeedFreq = this.getFeedFreq.bind(this);
+    this.getFertFreq = this.getFertFreq.bind(this);
+    this.getImageURL = this.getImageURL.bind(this);
+
+    this.state = {
+      speciesName: '',
+      scientificName: '',
+      waterFreq: 0,
+      description: '',
+      carn: false,
+      feedFreq: 0,
+      fertFreq: 0,
+      imageURL: '',
+    };
   }
 
   componentDidMount() {
@@ -24,18 +43,107 @@ class PlantProfilePage extends React.Component {
 
     console.log('Component did mount');
 
+    this.getSpeciesName();
+    this.getSciName();
+    this.getWateringFreq();
+    this.getDescription();
+    this.getCarnivore();
+    this.getFertFreq();
+    this.getFeedFreq();
+    this.getImageURL();
+
     if (!username) return Promise.resolve();
 
     return setForeignUserPets(username, id).catch(() => history.push(`/${ownUsername}`));
   }
 
-  render() {
+  getPlantType(){
     const { store: { users, pets, account: { username: ownUsername } } } = this.props;
     const { history, match: { params: { username, id } } } = this.props;
 
     let pet;
     if (username && username !== ownUsername) {
-      pet = users[username] ? users[username].pets[id] : { name: '' };
+      pet = users[username] ? users[username].pets[id] : { name: '', type: '' };
+    } else if (!pets[id]) {
+      history.push(`/${ownUsername}`);
+    } else {
+      pet = pets[id];
+    }
+    return pet.type;
+  }
+
+  getSpeciesName(){
+    let plantType;
+    plantType = this.getPlantType();
+    getPlantName(
+      (plant) => { this.setState({ speciesName: plant.val() }); }, plantType,
+    );
+  }
+
+  getSciName(){
+    let plantType;
+    plantType = this.getPlantType();
+    getPlantSciName(
+      (plant) => { this.setState({ scientificName: plant.val() }); }, plantType,
+    );
+  }
+
+  getWateringFreq() {
+    let plantType;
+    plantType = this.getPlantType();
+    getPlantWaterCycle(
+      (plant) => { this.setState({ waterFreq: plant.val() }); }, plantType,
+    );
+  }
+
+  getFeedFreq(){
+    let plantType;
+    plantType = this.getPlantType();
+    getPlantFeedFreq(
+      (plant) => { this.setState({ feedFreq: plant.val() }); }, plantType,
+    );
+  }
+
+  getFertFreq(){
+    let plantType;
+    plantType = this.getPlantType();
+    getPlantFertFreq(
+      (plant) => { this.setState({ fertFreq: plant.val() }); }, plantType,
+    );
+  }
+
+  getDescription(){
+    let plantType;
+    plantType = this.getPlantType();
+    getPlantDescription(
+      (plant) => { this.setState({ description: plant.val() }); }, plantType,
+    );
+  }
+
+  getCarnivore(){
+    let plantType;
+    plantType = this.getPlantType();
+    getPlantCarnivore(
+      (plant) => { this.setState({ carn: plant.val() }); }, plantType,
+    );
+  }
+
+  getImageURL(){
+    let plantType;
+    plantType = this.getPlantType();
+    getPlantImageURL(
+      (plant) => { this.setState({ imageURL: plant.val() }); }, plantType,
+    );
+  }
+
+  render() {
+    const { store: { users, pets, account: { username: ownUsername } } } = this.props;
+    const { history, match: { params: { username, id } } } = this.props;
+    const isCarnivorous = this.state.carn;
+
+    let pet;
+    if (username && username !== ownUsername) {
+      pet = users[username] ? users[username].pets[id] : { name: '', type: '' };
     } else if (!pets[id]) {
       history.push(`/${ownUsername}`);
     } else {
@@ -46,6 +154,20 @@ class PlantProfilePage extends React.Component {
       <div>
         <Navbar />
         <h1>{pet.name}</h1>
+        <img 
+          src={this.state.imageURL}
+          alt="new"
+        />
+        <h2>General Information</h2>
+        <p>{this.state.speciesName}</p>
+        <p><i>{this.state.scientificName}</i></p>
+        <p>{this.state.description}</p>
+        <p>
+          This plant {isCarnivorous ? 'is' : 'is not'} carnivorous.
+        </p>
+        <p>Water Schedule: {this.state.waterFreq} Days</p>
+        <p>Fertiliztion Schedule: {this.state.fertFreq} Days</p>
+        <p>Feed Schedule: {this.state.feedFreq} Days</p>
       </div>
     );
   }
