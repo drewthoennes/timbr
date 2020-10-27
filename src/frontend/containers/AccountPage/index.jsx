@@ -1,16 +1,20 @@
 /* eslint-disable no-console */
-/* eslint class-methods-use-this: ["error", { "exceptMethods": ["changeUsername"] }] */
+/* eslint-disable class-methods-use-this */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable no-unused-expressions */
+/* eslint-disable no-alert */
 
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Switch from 'react-switch';
+import Input from 'react-phone-number-input/input';
 import map from '../../store/map';
 import './styles.scss';
-import { getUsername, getTextsOn, getEmailsOn, changeUsername, changeEmailsOn, changeTextsOn } from '../../store/actions/account';
+import { getUsername, getProfilePicture, getTextsOn, getEmailsOn, changeUsername, changeEmailsOn, changeTextsOn, logout, changeProfilePicture } from '../../store/actions/account';
+import ProfilePicture from '../../assets/images/profile_picture.png';
+import Navbar from '../../components/Navbar';
 
 class AccountPage extends React.Component {
   constructor() {
@@ -18,15 +22,22 @@ class AccountPage extends React.Component {
 
     this.changeUsername = this.changeUsername.bind(this);
     this.getCurrentUsername = this.getCurrentUsername.bind(this);
+    this.getCurrentPhoneNumber = this.getCurrentPhoneNumber.bind(this);
+    this.getCurrentProfilePicture = this.getCurrentProfilePicture.bind(this);
     this.getTextsOn = this.getTextsOn.bind(this);
     this.changeTextsOn = this.changeTextsOn.bind(this);
     this.getEmailsOn = this.getEmailsOn.bind(this);
     this.changeEmailsOn = this.changeEmailsOn.bind(this);
+    this.changePhoneNumber = this.changePhoneNumber.bind(this);
+    this.changeProfilePicture = this.changeProfilePicture.bind(this);
+    this.deleteAccount = this.deleteAccount.bind(this);
 
     this.state = {
       username: 'timbr-user',
       textsOn: false,
       emailsOn: false,
+      phoneNumber: '',
+      profilePic: ProfilePicture,
     };
     this.mounted = false;
   }
@@ -34,6 +45,8 @@ class AccountPage extends React.Component {
   componentDidMount() {
     this.mounted = true;
     this.getCurrentUsername();
+    this.getCurrentPhoneNumber();
+    this.getCurrentProfilePicture();
     this.getTextsOn();
     this.getEmailsOn();
   }
@@ -50,6 +63,8 @@ class AccountPage extends React.Component {
     if (prevProps.store && this.props.store
       && this.props.store.account.uid !== prevProps.store.account.uid) {
       this.getCurrentUsername();
+      this.getCurrentProfilePicture();
+      this.getCurrentPhoneNumber();
       this.getTextsOn();
       this.getEmailsOn();
     }
@@ -63,6 +78,21 @@ class AccountPage extends React.Component {
   getCurrentUsername() {
     getUsername(
       (user) => { this.mounted && this.setState({ username: user.val() }); }, this.props.store,
+    );
+  }
+
+  getCurrentPhoneNumber() {
+    // TODO: Get the phone number from the database, hard coded for now
+    this.setState({
+      phoneNumber: '123456789',
+    });
+  }
+
+  /* Calls the function to get the url for the current profile picture and sets the state. */
+  getCurrentProfilePicture() {
+    // Comment out the following lines when not testing profile picture.
+    getProfilePicture(
+      (picture) => { this.mounted && this.setState({ profilePic: picture }); },
     );
   }
 
@@ -109,22 +139,63 @@ class AccountPage extends React.Component {
     this.getEmailsOn();
   }
 
-  render() {
-    const { history, store: { account: { username } } } = this.props;
+  changePhoneNumber() {
+    const number = document.getElementById('phone-number').value;
+    console.log(`Phone number entered: ${number}`);
 
+    // Error handling for phone number
+    // checking if the length is 14 to account for the formatting of the phone number
+    if (number.toString().length !== 14) {
+      document.getElementById('phone-error').innerHTML = 'Phone number invalid!';
+    } else {
+      document.getElementById('phone-error').innerHTML = '';
+      document.getElementById('phone-number').value = '';
+      this.setState({
+        phoneNumber: number,
+      });
+    }
+    // TODO: Change the phone number in the database
+  }
+
+  changeProfilePicture(file) {
+    // The following function changes the profile picture in the database.
+    changeProfilePicture(file)
+      .then(() => {
+        console.log('Profile Picture updated!');
+        this.getCurrentProfilePicture();
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  }
+
+  deleteAccount() {
+    alert('Account deleted.');
+    // TODO: This will be changed to a delete account function call.
+    logout();
+  }
+
+  render() {
+    const { history } = this.props;
+    const styles = {
+      width: '150px',
+    };
     return (
       <div id="account-page">
-        <h1>timbr Account Page!</h1>
-        <button
-          id="home"
-          type="button"
-          onClick={() => {
-            history.push(`/${username}`);
-          }}
-        >
-          Home
-        </button>
-
+        <Navbar />
+        <br />
+        <img style={styles} id="profile-picture" src={this.state.profilePic} alt="Profile" />
+        <br />
+        <label htmlFor="image-uploader">
+          Change Profile Picture:
+          <input
+            type="file"
+            id="image-uploader"
+            accept="image/jpg,image/jpeg,image/png"
+            onChange={(event) => { this.changeProfilePicture(event.target.files[0]); }}
+          />
+        </label>
+        <br />
         <form id="account-settings">
 
           <label htmlFor="text-switch">
@@ -160,6 +231,42 @@ class AccountPage extends React.Component {
             onClick={this.changeUsername}
           >
             Change Username
+          </button>
+          <p>
+            Current Phone Number:
+            {' '}
+            {this.state.phoneNumber}
+          </p>
+          +1
+          {' '}
+          <Input
+            placeholder="Enter phone number"
+            id="phone-number"
+            country="US"
+            onChange={() => {}}
+          />
+          <button
+            id="change-phone-number"
+            type="button"
+            onClick={this.changePhoneNumber}
+          >
+            Change Phone number
+          </button>
+          <p id="phone-error"> </p>
+          <button
+            id="change-password"
+            type="button"
+            onClick={() => history.push('/change-password')}
+          >
+            Change Password
+          </button>
+          <br />
+          <button
+            id="delete-account"
+            type="button"
+            onClick={this.deleteAccount}
+          >
+            Delete my timbr account
           </button>
         </form>
       </div>

@@ -20,8 +20,9 @@ export function createNewPet({ parent = '', type = '', name, ownedSince, birth, 
     ownedSince,
     birth,
     death,
-    created: Date.now(),
-    updated: Date.now(),
+    watered: { last: '0', streak: '0' },
+    fertilized: { last: '0', streak: '0' },
+    turned: { last: '0', streak: '0' },
   });
 }
 
@@ -92,4 +93,14 @@ export function getPlantImageURL(cb, type)  {
   firebase.database().ref().child('plants').child(type)
     .child('picture')
     .on('value', cb);
+}
+// updates last action and history based on the action
+export function addDate(petId, action, currDate) {
+  const { account: { uid } } = store.getState();
+  if (!uid) {
+    return Promise.resolve();
+  }
+  return Promise.all([
+    firebase.database().ref(`users/${uid}/pets/${petId}/${action}/history/`).child(currDate).set(true),
+    firebase.database().ref(`users/${uid}/pets/${petId}/${action}/last/`).set(currDate)]);
 }

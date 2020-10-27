@@ -7,6 +7,7 @@ export default {
   SET_ACCOUNT_LOADED: 'SET_ACCOUNT_LOADED',
   SET_PETS: 'SET_PETS',
   SET_FOREIGN_USER_PETS: 'SET_FOREIGN_USER_PETS',
+  SET_PLANTS: 'SET_PLANTS',
   REGISTER_WITH_TIMBR: 'Register with timbr',
   LOGIN_WITH_TIMBR: 'Login with timbr',
   LOGIN_WITH_GOOGLE: 'Login with Google',

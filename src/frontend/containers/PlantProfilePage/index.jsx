@@ -4,10 +4,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-
 import Navbar from '../../components/Navbar';
 
-import { setForeignUserPets, getPlantName, getPlantWaterCycle, getPlantDescription, getPlantCarnivore, getPlantSciName, getPlantFeedFreq,  getPlantFertFreq, getPlantImageURL } from '../../store/actions/pets';
+import { setForeignUserPets, addDate, getPlantName, getPlantWaterCycle, getPlantDescription, getPlantCarnivore, getPlantSciName, getPlantFeedFreq,  getPlantFertFreq, getPlantImageURL } from '../../store/actions/pets';
+
 import map from '../../store/map';
 import './styles.scss';
 
@@ -24,6 +24,9 @@ class PlantProfilePage extends React.Component {
     this.getFeedFreq = this.getFeedFreq.bind(this);
     this.getFertFreq = this.getFertFreq.bind(this);
     this.getImageURL = this.getImageURL.bind(this);
+    this.onWater = this.onWater.bind(this);
+    this.onFertilize = this.onFertilize.bind(this);
+    this.onRotate = this.onRotate.bind(this);
 
     this.state = {
       speciesName: '',
@@ -135,6 +138,26 @@ class PlantProfilePage extends React.Component {
       (plant) => { this.setState({ imageURL: plant.val() }); }, plantType,
     );
   }
+  
+  onWater() {
+    const { match: { params: { id } } } = this.props;
+    const today = new Date().toISOString().slice(0, 10);
+    addDate(id, 'watered', today);
+    console.log('id is', id);
+  }
+
+  onFertilize() {
+    const { match: { params: { id } } } = this.props;
+    const today = new Date().toISOString().slice(0, 10);
+    addDate(id, 'fertilized', today);
+  }
+
+  onRotate() {
+    const { match: { params: { id } } } = this.props;
+
+    const today = new Date().toISOString().slice(0, 10);
+    addDate(id, 'turned', today);
+  }
 
   render() {
     const { store: { users, pets, account: { username: ownUsername } } } = this.props;
@@ -168,6 +191,11 @@ class PlantProfilePage extends React.Component {
         <p>Water Schedule: {this.state.waterFreq} Days</p>
         <p>Fertiliztion Schedule: {this.state.fertFreq} Days</p>
         <p>Feed Schedule: {this.state.feedFreq} Days</p>
+        <div>
+          <button type="button" onClick={this.onWater}> Water </button>
+          <button type="button" onClick={this.onFertilize}> Fertilize </button>
+          <button type="button" onClick={this.onRotate}> Rotate </button>
+        </div>
       </div>
     );
   }
