@@ -6,8 +6,9 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Navbar from '../../components/Navbar';
 
-import { setForeignUserPets, addDate, getPlantName, getPlantWaterCycle, getPlantDescription, getPlantCarnivore, getPlantSciName, getPlantFeedFreq,  getPlantFertFreq, getPlantImageURL } from '../../store/actions/pets';
+import { setForeignUserPets, addDate } from '../../store/actions/pets';
 
+import { getPlantName, getPlantWaterCycle, getPlantDescription, getPlantCarnivore, getPlantSciName, getPlantFeedFreq,  getPlantFertFreq, getPlantImageURL } from '../../store/actions/plants';
 import map from '../../store/map';
 import './styles.scss';
 
