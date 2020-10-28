@@ -226,6 +226,24 @@ export function getEmailsOn(cb, myStore) {
     .on('value', cb);
 }
 
+/* This function is used to delete a user. */
+export function deleteAccount() {
+  const { account: { uid } } = store.getState();
+  const userRef = firebase.database().ref().child('users').child(uid);
+  const pictureRef = firebase.storage().ref().child('profile-pictures/' + uid);
+
+  return userRef.remove()
+    .then(() => {
+      pictureRef.delete()
+        .then(() => {
+          firebase.auth().currentUser.delete();
+        })
+    })
+    .catch((error) => {
+      console.log('Delete user error: ' + error.message);
+    });
+}
+
 export function changeProfilePicture(file) {
   const { account: { uid } } = store.getState();
   const storageRef = firebase.storage().ref();
