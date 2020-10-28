@@ -21,6 +21,7 @@ export function addToDatabase() {
   let username = 'timbr-user-';
   const textsOn = false;
   const emailsOn = false;
+  const phoneNumber = '+10000000000';
 
   // check if the user exists in the database
   return firebase.database().ref(`users/${uid}`).once('value', (user) => {
@@ -34,6 +35,7 @@ export function addToDatabase() {
         firebase.database().ref(`users/${uid}`).set({
           email,
           username,
+          phoneNumber,
           textsOn, // Stores a boolean value if the user has text notifications on or off
           emailsOn, // Stores a boolean value if the user has email notifications on or off
         });
@@ -125,9 +127,9 @@ export function getPhoneNumber(cb) {
 }
 
 /* This function is used to change the phone number of the current user. */
-export function changePhoneNumber(phoneNumber) {
+export function changePhoneNumber(number) {
   // checks if the phone number is taken by a different user
-  return firebase.database().ref('/users').orderByChild('phoneNumber').equalTo(phoneNumber)
+  return firebase.database().ref('/users').orderByChild('phoneNumber').equalTo(number)
     .once('value')
     .then((snapshot) => {
       if (snapshot.val()) {
@@ -145,6 +147,7 @@ export function changePhoneNumber(phoneNumber) {
           throw new Error('Current user does not have an account');
         }
 
+        const phoneNumber = `+1${number}`;
         return firebase.database().ref(`users/${uid}`).update({
           phoneNumber,
         });

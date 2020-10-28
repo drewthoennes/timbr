@@ -9,10 +9,9 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Switch from 'react-switch';
-import Input from 'react-phone-number-input/input';
 import map from '../../store/map';
 import './styles.scss';
-import { getUsername, getPhoneNumber, getProfilePicture, getTextsOn, getEmailsOn, changeUsername, changeEmailsOn, changeTextsOn, logout, changeProfilePicture } from '../../store/actions/account';
+import { getUsername, getPhoneNumber, getProfilePicture, getTextsOn, getEmailsOn, changeUsername, changePhoneNumber, changeEmailsOn, changeTextsOn, logout, changeProfilePicture } from '../../store/actions/account';
 import ProfilePicture from '../../assets/images/profile_picture.png';
 import Navbar from '../../components/Navbar';
 
@@ -140,21 +139,19 @@ class AccountPage extends React.Component {
   }
 
   changePhoneNumber() {
-    const number = document.getElementById('phone-number').value;
-    console.log(`Phone number entered: ${number}`);
+    // removes the leading zeroes
+    const number = parseInt(document.getElementById('phone-number').value, 10);
 
     // Error handling for phone number
-    // checking if the length is 14 to account for the formatting of the phone number
-    if (number.toString().length !== 14) {
+    if (number < 0 || number.toString().length !== 10) {
       document.getElementById('phone-error').innerHTML = 'Phone number invalid!';
-    } else {
-      document.getElementById('phone-error').innerHTML = '';
-      document.getElementById('phone-number').value = '';
-      this.setState({
-        phoneNumber: number,
-      });
+      return;
     }
-    // TODO: Change the phone number in the database
+    document.getElementById('phone-error').innerHTML = '';
+    changePhoneNumber(number);
+    /* Changes the phone number in the state. */
+    this.getCurrentPhoneNumber();
+    document.getElementById('phone-number').value = '';
   }
 
   changeProfilePicture(file) {
@@ -239,11 +236,10 @@ class AccountPage extends React.Component {
           </p>
           +1
           {' '}
-          <Input
+          <input
+            type="tel"
             placeholder="Enter phone number"
             id="phone-number"
-            country="US"
-            onChange={() => {}}
           />
           <button
             id="change-phone-number"
