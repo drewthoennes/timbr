@@ -174,11 +174,11 @@ export function changeTextsOn(textsOn) {
 export function getProfilePicture(cb) {
   const { account: { uid } } = store.getState();
   if (!uid) {
-    return;
+    return Promise.resolve();
   }
 
   const pictureRef = firebase.storage().ref().child(`profile-pictures/${uid}`);
-  pictureRef.getDownloadURL()
+  return pictureRef.getDownloadURL()
     .then(cb)
     .catch((error) => {
       // Do nothing if the user does not have a profile pic sent, the default one will be displayed.

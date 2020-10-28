@@ -36,6 +36,7 @@ class AccountPage extends React.Component {
       textsOn: false,
       emailsOn: false,
       phoneNumber: '',
+      phoneError: '',
       profilePic: ProfilePicture,
     };
     this.mounted = false;
@@ -91,7 +92,7 @@ class AccountPage extends React.Component {
   getCurrentProfilePicture() {
     // Comment out the following lines when not testing profile picture.
     getProfilePicture(
-      (picture) => { this.mounted && this.setState({ profilePic: picture }); },
+      (picture) => { picture && this.mounted && this.setState({ profilePic: picture }); },
     );
   }
 
@@ -144,10 +145,14 @@ class AccountPage extends React.Component {
 
     // Error handling for phone number
     if (number < 0 || number.toString().length !== 10) {
-      document.getElementById('phone-error').innerHTML = 'Phone number invalid!';
+      this.setState({
+        phoneError: 'Phone number invalid!',
+      });
       return;
     }
-    document.getElementById('phone-error').innerHTML = '';
+    this.setState({
+      phoneError: '',
+    });
     changePhoneNumber(number);
     /* Changes the phone number in the state. */
     this.getCurrentPhoneNumber();
@@ -248,7 +253,7 @@ class AccountPage extends React.Component {
           >
             Change Phone number
           </button>
-          <p id="phone-error"> </p>
+          <p id="phone-error">{this.state.phoneError}</p>
           <button
             id="change-password"
             type="button"
