@@ -81,7 +81,7 @@ class AccountPage extends React.Component {
   }
 
   getCurrentPhoneNumber() {
-    // TODO: Get the phone number from the database, hard coded for now
+    // Get the phone number from the database, hard coded for now
     getPhoneNumber(
       (phoneNumber) => { this.mounted && this.setState({ phoneNumber: phoneNumber.val() }); },
     );
