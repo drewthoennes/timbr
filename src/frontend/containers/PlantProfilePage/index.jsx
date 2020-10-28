@@ -81,7 +81,7 @@ class PlantProfilePage extends React.Component {
     if (username && username !== ownUsername) {
       pet = users[username] ? users[username].pets[id] : { name: '' };
     } else if (!pets[id]) {
-      history.push(`/${ownUsername}`);
+      history.push(`/notfound`);
     } else {
       pet = pets[id];
     }
