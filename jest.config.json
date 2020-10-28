@@ -7,7 +7,8 @@
     "\\.(css|scss)$": "./test/styles.js"
   },
   "moduleNameMapper": {
-    "react-images-upload": "<rootDir>/test/styles.js",
+    "^@fullcalendar\/": "identity-obj-proxy",
+    "^react-phone-number-input\/input": "identity-obj-proxy",
     ".+\\.(png|jpg|jpeg)$": "identity-obj-proxy"
   }
 }
