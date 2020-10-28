@@ -5,5 +5,8 @@
   "transform": {
     "^.+\\.jsx?$": "babel-jest",
     "\\.(css|scss)$": "./test/styles.js"
+  },
+  "moduleNameMapper": {
+    "^@fullcalendar\/": "identity-obj-proxy"
   }
 }
