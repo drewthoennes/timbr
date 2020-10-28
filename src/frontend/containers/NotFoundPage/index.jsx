@@ -1,11 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Button, Form } from 'react-bootstrap';
 import Navbar from '../../components/Navbar';
 import map from '../../store/map';
 
-function NotFoundPage(props) {
+function NotFoundPage() {
   return (
     <>
       <Navbar />
@@ -16,6 +15,6 @@ function NotFoundPage(props) {
         </div>
       </div>
     </>
-  )
+  );
 }
 export default connect(map)(withRouter(NotFoundPage));

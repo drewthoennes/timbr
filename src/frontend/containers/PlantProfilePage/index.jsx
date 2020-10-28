@@ -4,8 +4,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Navbar from '../../components/Navbar';
 import { Modal, Button } from 'react-bootstrap';
+import Navbar from '../../components/Navbar';
 
 import { setForeignUserPets, addDate, deletePet } from '../../store/actions/pets';
 
@@ -21,7 +21,7 @@ class PlantProfilePage extends React.Component {
     this.onDelete = this.onDelete.bind(this);
     this.showDeleteModal = this.showDeleteModal.bind(this);
     this.state = {
-      showDeleteModal: false
+      showDeleteModal: false,
     };
   }
 
@@ -40,7 +40,6 @@ class PlantProfilePage extends React.Component {
     const { match: { params: { id } } } = this.props;
     const today = new Date().toISOString().slice(0, 10);
     addDate(id, 'watered', today);
-    console.log('id is', id);
   }
 
   onFertilize() {
@@ -62,13 +61,14 @@ class PlantProfilePage extends React.Component {
     const {
       history,
       match: { params: { id } },
-      store: { account: { username: ownUsername }}
+      store: { account: { username: ownUsername } },
     } = this.props;
 
-    deletePet(id).then((snap) => {
+    deletePet(id).then(() => {
       history.push(`/${ownUsername}`);
     });
   }
+
   showDeleteModal(cond) {
     this.setState({ showDeleteModal: cond });
   }
@@ -81,11 +81,11 @@ class PlantProfilePage extends React.Component {
     if (username && username !== ownUsername) {
       pet = users[username] ? users[username].pets[id] : { name: '' };
     } else if (!pets[id]) {
-      history.push(`/notfound`);
+      history.push('/notfound');
     } else {
       pet = pets[id];
     }
-
+    const { showDeleteModal: show } = this.state;
     return (
       <div>
         <Navbar />
@@ -99,7 +99,7 @@ class PlantProfilePage extends React.Component {
           </div>
         </div>
 
-        <Modal show={this.state.showDeleteModal} onHide={() => this.showDeleteModal(false)}>
+        <Modal show={show} onHide={() => this.showDeleteModal(false)}>
           <Modal.Header closeButton>
             <Modal.Title>Delete {pet?.name}</Modal.Title>
           </Modal.Header>
