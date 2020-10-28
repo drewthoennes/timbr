@@ -113,6 +113,23 @@ export function getUsername(cb, myStore) {
     .on('value', cb);
 }
 
+export function getProfilePicture(cb) {
+  const { account: { uid } } = store.getState();
+  if (!uid) {
+    return;
+  }
+
+  const pictureRef = firebase.storage().ref().child(`profile-pictures/${uid}`);
+  pictureRef.getDownloadURL()
+    .then(cb)
+    .catch((error) => {
+      // Do nothing if the user does not have a profile pic sent, the default one will be displayed.
+      if (error.code !== 'storage/object-not-found') {
+        console.log(error.message);
+      }
+    });
+}
+
 /* This function changes the texts status of the current user. */
 export function changeTextsOn(textsOn) {
   const { account: { uid } } = store.getState();
@@ -165,6 +182,12 @@ export function getEmailsOn(cb, myStore) {
   firebase.database().ref().child('users').child(uid)
     .child('emailsOn')
     .on('value', cb);
+}
+
+export function changeProfilePicture(file) {
+  const { account: { uid } } = store.getState();
+  const storageRef = firebase.storage().ref();
+  return storageRef.child(`profile-pictures/${uid}`).put(file);
 }
 
 export function setUID(uid) {

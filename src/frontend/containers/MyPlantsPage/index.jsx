@@ -38,7 +38,7 @@ class MyPlantsPage extends React.Component {
   }
 
   render() {
-    const { store: { pets, account: { username } }, history } = this.props;
+    const { store: { pets, account: { username } } } = this.props;
     const plantCards = Object.entries(pets).map(([id, pet]) => (
       <span className="plant-link" key={id}>
         <Link to={`/${username}/${id}`}>
@@ -56,25 +56,6 @@ class MyPlantsPage extends React.Component {
         <Navbar />
         <div className="container">
           {plantCards}
-        </div>
-        <div className="container">
-          <button
-            id="account"
-            type="button"
-            onClick={() => {
-              history.push('/account');
-            }}
-          >
-            My Account
-          </button>
-
-          <button
-            id="logout"
-            type="button"
-            onClick={this.handleLogout}
-          >
-            Logout
-          </button>
         </div>
       </div>
     );
