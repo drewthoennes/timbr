@@ -5,8 +5,9 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Navbar from '../../components/Navbar';
+import { Modal, Button } from 'react-bootstrap';
 
-import { setForeignUserPets, addDate } from '../../store/actions/pets';
+import { setForeignUserPets, addDate, deletePet } from '../../store/actions/pets';
 
 import map from '../../store/map';
 import './styles.scss';
@@ -17,7 +18,10 @@ class PlantProfilePage extends React.Component {
     this.onWater = this.onWater.bind(this);
     this.onFertilize = this.onFertilize.bind(this);
     this.onRotate = this.onRotate.bind(this);
+    this.onDelete = this.onDelete.bind(this);
+    this.showDeleteModal = this.showDeleteModal.bind(this);
     this.state = {
+      showDeleteModal: false
     };
   }
 
@@ -52,6 +56,23 @@ class PlantProfilePage extends React.Component {
     addDate(id, 'turned', today);
   }
 
+  onDelete() {
+    this.showDeleteModal(false);
+
+    const {
+      history,
+      match: { params: { id } },
+      store: { account: { username: ownUsername }}
+    } = this.props;
+
+    deletePet(id).then((snap) => {
+      history.push(`/${ownUsername}`);
+    });
+  }
+  showDeleteModal(cond) {
+    this.setState({ showDeleteModal: cond });
+  }
+
   render() {
     const { store: { users, pets, account: { username: ownUsername } } } = this.props;
     const { history, match: { params: { username, id } } } = this.props;
@@ -68,12 +89,30 @@ class PlantProfilePage extends React.Component {
     return (
       <div>
         <Navbar />
-        <h1>{pet.name}</h1>
-        <div>
+        <div className="container">
+          <h1>{pet?.name}</h1>
           <button type="button" onClick={this.onWater}> Water </button>
           <button type="button" onClick={this.onFertilize}> Fertilize </button>
           <button type="button" onClick={this.onRotate}> Rotate </button>
+          <div className="container">
+            <button type="button" onClick={() => this.showDeleteModal(true)}> Delete </button>
+          </div>
         </div>
+
+        <Modal show={this.state.showDeleteModal} onHide={() => this.showDeleteModal(false)}>
+          <Modal.Header closeButton>
+            <Modal.Title>Delete {pet?.name}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Are you sure you want to delete {pet?.name}?</Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => this.showDeleteModal(false)}>
+              No
+            </Button>
+            <Button variant="primary" onClick={this.onDelete}>
+              Yes
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     );
   }
