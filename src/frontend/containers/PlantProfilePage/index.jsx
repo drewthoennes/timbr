@@ -66,9 +66,9 @@ class PlantProfilePage extends React.Component {
     const { match: { params: { id } } } = this.props;
     const { store: { pets } = {} } = this.props;
 
-    const wateredDates = Object.keys(pets[id].watered.history);
-    const fertilizedDates = Object.keys(pets[id].fertilized.history);
-    const turnedDates = Object.keys(pets[id].turned.history);
+    const wateredDates = Object.keys(pets[id].watered.history || {});
+    const fertilizedDates = Object.keys(pets[id].fertilized.history || {});
+    const turnedDates = Object.keys(pets[id].turned.history || {});
     // construct eventList with title and date
     const eventList = [];
     wateredDates.forEach((item) => {
