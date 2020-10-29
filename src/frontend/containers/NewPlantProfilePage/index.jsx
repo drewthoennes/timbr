@@ -40,8 +40,8 @@ class NewPlantProfilePage extends React.Component {
     const { name, birth, ownedSince } = this.state;
     createNewPet({
       name,
-      birth: new Date(birth ?? Date.now()),
-      ownedSince: new Date(ownedSince ?? Date.now()),
+      birth: birth.length ? birth : (new Date()).toISOString().split('T')[0],
+      ownedSince: ownedSince.length ? ownedSince : (new Date()).toISOString().split('T')[0],
     }).then((snap) => {
       const { history } = this.props;
       history.push(`/${username}/${snap.key}`);
