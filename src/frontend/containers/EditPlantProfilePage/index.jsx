@@ -18,7 +18,7 @@ class EditPlantProfilePage extends React.Component {
     } = this.props;
     const pet = pets[petId];
 
-    this.state = { currPet: {...pet}, pet: {...pet}, petId };
+    this.state = { currPet: { ...pet }, pet: { ...pet }, petId };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -106,6 +106,11 @@ EditPlantProfilePage.propTypes = {
       username: PropTypes.string,
     }),
     pets: PropTypes.object.isRequired,
+  }).isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.string,
+    }),
   }).isRequired,
 };
 export default connect(map)(withRouter(EditPlantProfilePage));
