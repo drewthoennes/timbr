@@ -22,6 +22,7 @@ export function addToDatabase() {
   const textsOn = false;
   const emailsOn = false;
   const phoneNumber = '+10000000000';
+  const profilePic = false;
 
   // check if the user exists in the database
   return firebase.database().ref(`users/${uid}`).once('value', (user) => {
@@ -38,6 +39,7 @@ export function addToDatabase() {
           phoneNumber,
           textsOn, // Stores a boolean value if the user has text notifications on or off
           emailsOn, // Stores a boolean value if the user has email notifications on or off
+          profilePic,
         });
       });
     }
@@ -177,15 +179,17 @@ export function getProfilePicture(cb) {
     return Promise.resolve();
   }
 
-  const pictureRef = firebase.storage().ref().child(`profile-pictures/${uid}`);
-  return pictureRef.getDownloadURL()
-    .then(cb)
-    .catch((error) => {
-      // Do nothing if the user does not have a profile pic sent, the default one will be displayed.
-      if (error.code !== 'storage/object-not-found') {
-        console.log(error.message);
-      }
-    });
+  return firebase.database().ref(`users/${uid}`).once('value', (user) => {
+    if (user.exists() && user.profilePic) {
+      const pictureRef = firebase.storage().ref().child(`profile-pictures/${uid}`);
+      pictureRef.getDownloadURL()
+        .then(cb)
+        .catch((error) => {
+          // Do nothing if the user does not have a profile pic sent
+          console.log(error.message);
+        });
+    }
+  });
 }
 
 /* This function is used to get the texts status of the current user. */
@@ -234,16 +238,18 @@ export function deleteAccount() {
 
   return firebase.auth().currentUser.delete()
     .then(() => {
-      userRef.remove()
-        .then(() => {
+      userRef.once('value', (user) => {
+        if (user.exists() && user.profilePic) {
           pictureRef.child(uid).delete()
             .catch((error) => {
               console.log(error.message);
             });
-        })
-        .catch((error) => {
-          console.log(error.message);
-        });
+        }
+        userRef.remove()
+          .catch((error) => {
+            console.log(error.message);
+          });
+      });
     })
     .catch((error) => {
       console.log(error.message);
