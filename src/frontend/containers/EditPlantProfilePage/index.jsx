@@ -32,7 +32,8 @@ class EditPlantProfilePage extends React.Component {
   }
 
   handleChange(e) {
-    this.setState({ pet: { [e.target.name]: e.target.value } });
+    const { pet } = this.state;
+    this.setState({ pet: { ...pet, [e.target.name]: e.target.value } });
   }
 
   handleSubmit(e) {
