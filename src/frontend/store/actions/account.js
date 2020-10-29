@@ -230,17 +230,23 @@ export function getEmailsOn(cb, myStore) {
 export function deleteAccount() {
   const { account: { uid } } = store.getState();
   const userRef = firebase.database().ref().child('users').child(uid);
-  const pictureRef = firebase.storage().ref().child('profile-pictures/' + uid);
+  const pictureRef = firebase.storage().ref().child('profile-pictures');
 
-  return userRef.remove()
+  return firebase.auth().currentUser.delete()
     .then(() => {
-      pictureRef.delete()
+      userRef.remove()
         .then(() => {
-          firebase.auth().currentUser.delete();
+          pictureRef.child(uid).delete()
+            .catch((error) => {
+              console.log(error.message);
+            });
         })
+        .catch((error) => {
+          console.log(error.message);
+        });
     })
     .catch((error) => {
-      console.log('Delete user error: ' + error.message);
+      console.log(error.message);
     });
 }
 

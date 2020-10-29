@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import Switch from 'react-switch';
 import map from '../../store/map';
 import './styles.scss';
-import { getUsername, getPhoneNumber, getProfilePicture, getTextsOn, getEmailsOn, changeUsername, changePhoneNumber, changeEmailsOn, changeTextsOn, logout, changeProfilePicture } from '../../store/actions/account';
+import { getUsername, getPhoneNumber, getProfilePicture, getTextsOn, getEmailsOn, changeUsername, changePhoneNumber, changeEmailsOn, changeTextsOn, changeProfilePicture, deleteAccount } from '../../store/actions/account';
 import ProfilePicture from '../../assets/images/profile_picture.png';
 import Navbar from '../../components/Navbar';
 
@@ -172,9 +172,10 @@ class AccountPage extends React.Component {
   }
 
   deleteAccount() {
-    alert('Account deleted.');
-    // TODO: This will be changed to a delete account function call.
-    logout();
+    deleteAccount()
+      .then(() => {
+        alert('Account deleted. We\'ll miss you!');
+      });
   }
 
   render() {
@@ -205,7 +206,7 @@ class AccountPage extends React.Component {
             <span>Text Notifications </span>
             <Switch
               onChange={this.changeTextsOn}
-              checked={this.state.textsOn}
+              checked={this.state.textsOn || false}
             />
           </label>
           <p>{'\n'}</p>
@@ -214,7 +215,7 @@ class AccountPage extends React.Component {
             <span>Email Notifications </span>
             <Switch
               onChange={this.changeEmailsOn}
-              checked={this.state.emailsOn}
+              checked={this.state.emailsOn || false}
             />
           </label>
           <p>
