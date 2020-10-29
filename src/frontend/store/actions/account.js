@@ -21,6 +21,7 @@ export function addToDatabase() {
   let username = 'timbr-user-';
   const textsOn = false;
   const emailsOn = false;
+  const phoneNumber = '+10000000000';
 
   // check if the user exists in the database
   return firebase.database().ref(`users/${uid}`).once('value', (user) => {
@@ -34,6 +35,7 @@ export function addToDatabase() {
         firebase.database().ref(`users/${uid}`).set({
           email,
           username,
+          phoneNumber,
           textsOn, // Stores a boolean value if the user has text notifications on or off
           emailsOn, // Stores a boolean value if the user has email notifications on or off
         });
@@ -113,20 +115,43 @@ export function getUsername(cb, myStore) {
     .on('value', cb);
 }
 
-export function getProfilePicture(cb) {
+/* This function is used to get the phone number of the current user. */
+export function getPhoneNumber(cb) {
   const { account: { uid } } = store.getState();
   if (!uid) {
     return;
   }
+  firebase.database().ref().child('users').child(uid)
+    .child('phoneNumber')
+    .on('value', cb);
+}
 
-  const pictureRef = firebase.storage().ref().child(`profile-pictures/${uid}`);
-  pictureRef.getDownloadURL()
-    .then(cb)
-    .catch((error) => {
-      // Do nothing if the user does not have a profile pic sent, the default one will be displayed.
-      if (error.code !== 'storage/object-not-found') {
-        console.log(error.message);
+/* This function is used to change the phone number of the current user. */
+export function changePhoneNumber(number) {
+  // checks if the phone number is taken by a different user
+  return firebase.database().ref('/users').orderByChild('phoneNumber').equalTo(number)
+    .once('value')
+    .then((snapshot) => {
+      if (snapshot.val()) {
+        alert('Phone number taken! Please enter a different one.');
+        return Promise.reject();
       }
+
+      const { uid } = firebase.auth().currentUser || { uid: '' };
+      if (!uid) {
+        throw new Error('No uid');
+      }
+
+      return firebase.database().ref(`users/${uid}`).once('value').then((user) => {
+        if (!user.exists()) {
+          throw new Error('Current user does not have an account');
+        }
+
+        const phoneNumber = `+1${number}`;
+        return firebase.database().ref(`users/${uid}`).update({
+          phoneNumber,
+        });
+      });
     });
 }
 
@@ -144,6 +169,23 @@ export function changeTextsOn(textsOn) {
       });
     }
   });
+}
+
+export function getProfilePicture(cb) {
+  const { account: { uid } } = store.getState();
+  if (!uid) {
+    return Promise.resolve();
+  }
+
+  const pictureRef = firebase.storage().ref().child(`profile-pictures/${uid}`);
+  return pictureRef.getDownloadURL()
+    .then(cb)
+    .catch((error) => {
+      // Do nothing if the user does not have a profile pic sent, the default one will be displayed.
+      if (error.code !== 'storage/object-not-found') {
+        console.log(error.message);
+      }
+    });
 }
 
 /* This function is used to get the texts status of the current user. */
