@@ -66,6 +66,20 @@ class PlantProfilePage extends React.Component {
     });
   }
 
+  onDelete() {
+    this.showDeleteModal(false);
+
+    const {
+      history,
+      match: { params: { id } },
+      store: { account: { username: ownUsername } },
+    } = this.props;
+
+    deletePet(id).then(() => {
+      history.push(`/${ownUsername}`);
+    });
+  }
+
   fetchEventList() {
     // fetches action history
     const { match: { params: { id } } } = this.props;
@@ -87,20 +101,6 @@ class PlantProfilePage extends React.Component {
     });
     this.setState({
       eventList,
-    });
-  }
-
-  onDelete() {
-    this.showDeleteModal(false);
-
-    const {
-      history,
-      match: { params: { id } },
-      store: { account: { username: ownUsername } },
-    } = this.props;
-
-    deletePet(id).then(() => {
-      history.push(`/${ownUsername}`);
     });
   }
 
