@@ -17,6 +17,7 @@ class PlantProfilePage extends React.Component {
     this.onWater = this.onWater.bind(this);
     this.onFertilize = this.onFertilize.bind(this);
     this.onRotate = this.onRotate.bind(this);
+    this.onEdit = this.onEdit.bind(this);
     this.fetchEventList = this.fetchEventList.bind(this);
     this.state = {
       eventList: [],
@@ -59,6 +60,15 @@ class PlantProfilePage extends React.Component {
     addDate(id, 'turned', today).then(() => {
       this.fetchEventList();
     });
+  }
+
+  onEdit() {
+    const {
+      history,
+      match: { params: { id: petId } },
+      store: { account: { username: userId } },
+    } = this.props;
+    history.push(`/${userId}/edit/${petId}`);
   }
 
   fetchEventList() {
@@ -107,6 +117,7 @@ class PlantProfilePage extends React.Component {
           <button type="button" onClick={this.onWater}> Water </button>
           <button type="button" onClick={this.onFertilize}> Fertilize </button>
           <button type="button" onClick={this.onRotate}> Rotate </button>
+          <button type="button" onClick={this.onEdit}> Edit </button>
         </div>
         <div id="calendar">
           <FullCalendar

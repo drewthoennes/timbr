@@ -13,6 +13,7 @@ import LoginPage from '../containers/LoginPage';
 import RegisterPage from '../containers/RegisterPage';
 import MyPlantsPage from '../containers/MyPlantsPage';
 import NewPlantProfilePage from '../containers/NewPlantProfilePage';
+import EditPlantProfilePage from '../containers/EditPlantProfilePage';
 import PlantProfilePage from '../containers/PlantProfilePage';
 import AccountPage from '../containers/AccountPage';
 import ForgetPasswordPage from '../containers/ForgetPasswordPage';
@@ -26,6 +27,7 @@ const router = (props) => (
       <Route exact path={`/${props.store.account.username}`} render={() => <MyPlantsPage />} />
       <Route exact path={`/${props.store.account.username}/new`} render={() => <NewPlantProfilePage />} />
       <Route exact path={`/${props.store.account.username}/:id`} render={() => <PlantProfilePage />} />
+      <Route exact path={`/${props.store.account.username}/edit/:id`} render={() => <EditPlantProfilePage />} />
       <Route path="/:username/:id" render={() => <PlantProfilePage />} />
       <Route path="/login" render={() => <LoginPage />} />
       <Route path="/register" render={() => <RegisterPage />} />

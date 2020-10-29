@@ -26,6 +26,12 @@ export function createNewPet({ parent = '', type = '', name, ownedSince, birth, 
   });
 }
 
+export function editPet(petId, newData) {
+  const uid = firebase.auth().currentUser?.uid;
+
+  return firebase.database().ref(`/users/${uid}/pets`).child(petId).update(newData);
+}
+
 export function setForeignUserPets(username, petId) {
   return firebase.database().ref('/users').orderByChild('username').equalTo(username)
     .once('value')
