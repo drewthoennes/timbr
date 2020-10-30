@@ -62,7 +62,7 @@ class AccountPage extends React.Component {
     this.getTextsOn();
     this.getEmailsOn();
 
-    // this function will set the canchangepassword and provider id in the state
+    // this function will set the canChangePassword and providerId in the state
     this.canChangePassword();
   }
 
@@ -202,7 +202,7 @@ class AccountPage extends React.Component {
     const fileSize = file.size / (1024 * 1024); // gets the file size in MB
     if (fileSize > 1) {
       this.setState({
-        pictureFeedback: 'File too large! Please upload a file less than 1 MB.',
+        pictureFeedback: 'File too large! Please upload a file of size less than 1 MB.',
       });
       return;
     }
@@ -283,7 +283,7 @@ class AccountPage extends React.Component {
             onChange={(event) => { this.changeProfilePicture(event.target.files[0]); }}
           />
         </label>
-        <p id="picture-error">{this.state.pictureFeedback}</p>
+        <p id="picture-feedback">{this.state.pictureFeedback}</p>
         <br />
         <form id="account-settings">
 
