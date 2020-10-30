@@ -12,9 +12,10 @@ import Switch from 'react-switch';
 import { Modal } from 'react-bootstrap';
 import map from '../../store/map';
 import './styles.scss';
-import { getUsername, getPhoneNumber, getProfilePicture, getTextsOn, getEmailsOn, changeUsername, changePhoneNumber, changeEmailsOn, changeTextsOn, changeProfilePicture, deleteAccount } from '../../store/actions/account';
+import { getUsername, getPhoneNumber, getProfilePicture, getTextsOn, getEmailsOn, getProviderId, changeUsername, changePhoneNumber, changeEmailsOn, changeTextsOn, changeProfilePicture, deleteAccount } from '../../store/actions/account';
 import ProfilePicture from '../../assets/images/profile_picture.png';
 import Navbar from '../../components/Navbar';
+import constants from '../../store/const';
 
 class AccountPage extends React.Component {
   constructor() {
@@ -42,8 +43,10 @@ class AccountPage extends React.Component {
       phoneError: '',
       profilePic: ProfilePicture,
       isModalOpen: false,
+      isOauthModalOpen: false,
       confirmPassword: '',
       reauthError: '',
+      providerId: '',
     };
     this.mounted = false;
   }
@@ -55,6 +58,7 @@ class AccountPage extends React.Component {
     this.getCurrentProfilePicture();
     this.getTextsOn();
     this.getEmailsOn();
+    this.getProvider();
   }
 
   componentDidUpdate(prevProps) {
@@ -114,6 +118,12 @@ class AccountPage extends React.Component {
     getEmailsOn(
       (user) => { this.mounted && this.setState({ emailsOn: user.val() }); }, this.props.store,
     );
+  }
+
+  getProvider() {
+    this.setState({
+      providerId: getProviderId(),
+    });
   }
 
   changeUsername() {
@@ -191,15 +201,28 @@ class AccountPage extends React.Component {
   }
 
   openModal() {
-    this.mounted && this.setState({
-      isModalOpen: true,
-      reauthError: '',
-    });
+    switch (this.state.providerId) {
+      case constants.FACEBOOK_PROVIDER_ID:
+      case constants.GOOGLE_PROVIDER_ID:
+        this.mounted && this.setState({
+          isOauthModalOpen: true,
+          reauthError: '',
+        });
+        break;
+      case constants.EMAIL_PROVIDER_ID:
+        this.mounted && this.setState({
+          isModalOpen: true,
+          reauthError: '',
+        });
+        break;
+      default:
+    }
   }
 
   closeModal() {
     this.mounted && this.setState({
       isModalOpen: false,
+      isOauthModalOpen: false,
     });
   }
 
@@ -295,35 +318,52 @@ class AccountPage extends React.Component {
           >
             Delete my timbr account
           </button>
-
-          <Modal show={this.state.isModalOpen} onHide={this.closeModal}>
-            <Modal.Header closeButton>
-              <Modal.Title>Confirm delete account</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <input
-                id="delete-password"
-                type="password"
-                placeholder="Re-enter password"
-                onChange={(event) => {
-                  if (this.mounted) {
-                    this.setState({ confirmPassword: event.target.value });
-                  }
-                }}
-              />
-            </Modal.Body>
-            <Modal.Footer>
-              <button
-                type="button"
-                id="confirm-password"
-                onClick={this.deleteAccount}
-              >
-                Confirm
-              </button>
-              <p id="error">{this.state.reauthError}</p>
-            </Modal.Footer>
-          </Modal>
         </form>
+
+        <Modal id="email-reauth" show={this.state.isModalOpen} onHide={this.closeModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Confirm delete account</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <input
+              id="delete-password"
+              type="password"
+              placeholder="Re-enter password"
+              onChange={(event) => {
+                if (this.mounted) {
+                  this.setState({ confirmPassword: event.target.value });
+                }
+              }}
+            />
+          </Modal.Body>
+          <Modal.Footer>
+            <button
+              type="button"
+              id="confirm-password"
+              onClick={this.deleteAccount}
+            >
+              Confirm
+            </button>
+            <p id="error">{this.state.reauthError}</p>
+          </Modal.Footer>
+        </Modal>
+
+        <Modal id="oauth-reauth" show={this.state.isOauthModalOpen} onHide={this.closeModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Are you sure you want to delete your account?</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <button
+              type="button"
+              onClick={this.deleteAccount}
+            >
+              Confirm Delete Account
+            </button>
+          </Modal.Body>
+          <Modal.Footer>
+            <p id="error">{this.state.reauthError}</p>
+          </Modal.Footer>
+        </Modal>
       </div>
     );
   }

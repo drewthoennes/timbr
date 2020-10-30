@@ -10,6 +10,11 @@ export function updateCounter(currentCounter) {
   firebase.database().ref().update({ counter: currentCounter + 1 });
 }
 
+/* This funciton is used to get the auth provider of the current user. */
+export function getProviderId() {
+  return firebase.auth().currentUser.providerData[0].providerId;
+}
+
 /* This method adds the current user to the database, if not already added. */
 export function addToDatabase() {
   const { uid, email } = firebase.auth().currentUser || { uid: '', email: '' };
@@ -48,12 +53,20 @@ export function addToDatabase() {
 
 export function reauthenticateUser(password) {
   const user = firebase.auth().currentUser;
-  const credentials = firebase.auth.EmailAuthProvider.credential(
-    user.email,
-    password,
-  );
 
-  return user.reauthenticateWithCredential(credentials);
+  switch (getProviderId()) {
+    case constants.FACEBOOK_PROVIDER_ID:
+      return user.reauthenticateWithPopup(facebookAuthProvider);
+    case constants.GOOGLE_PROVIDER_ID:
+      return user.reauthenticateWithPopup(googleAuthProvider);
+    case constants.EMAIL_PROVIDER_ID:
+      return user.reauthenticateWithCredential(firebase.auth.EmailAuthProvider.credential(
+        user.email,
+        password,
+      ));
+    default:
+  }
+  return Promise.resolve();
 }
 
 /* This method uses firebase auth to create a new user. */
