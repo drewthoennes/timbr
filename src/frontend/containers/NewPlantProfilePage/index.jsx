@@ -14,6 +14,11 @@ import map from '../../store/map';
 import { createNewPet } from '../../store/actions/pets';
 import './styles.scss';
 
+function getPlantsList() {
+  const list = ['alocasia-amazonica', 'asparagus-setaceus', 'aspidistra-elatior'];
+  return list;
+}
+
 class NewPlantProfilePage extends React.Component {
   constructor() {
     super();
@@ -25,7 +30,7 @@ class NewPlantProfilePage extends React.Component {
       type: '',
       dropdownOpen: false,
     };
-    this.getPlantsList = this.getPlantsList.bind(this);
+
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleDropdown = this.handleDropdown.bind(this);
@@ -37,11 +42,6 @@ class NewPlantProfilePage extends React.Component {
     if (!uid) {
       history.push('/login');
     }
-  }
-
-  getPlantsList() {
-    const list = ['alocasia-amazonica', 'asparagus-setaceus', 'aspidistra-elatior'];
-    return list;
   }
 
   handleChange(e) {
@@ -76,7 +76,7 @@ class NewPlantProfilePage extends React.Component {
 
   render() {
     const { name, birth, ownedSince } = this.state;
-    const plantList = this.getPlantsList();
+    const plantList = getPlantsList();
 
     return (
       <div id="new-plant-page">

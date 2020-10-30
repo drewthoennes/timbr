@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import Modal from 'react-modal';
 import 'popper.js';
-import 'bootswatch/dist/Minty/bootstrap.min.css';
+import 'bootswatch/dist/minty/bootstrap.min.css';
 import 'bootstrap/js/dist/button';
 import 'bootstrap/js/dist/dropdown';
 import 'bootstrap/js/dist/modal';
