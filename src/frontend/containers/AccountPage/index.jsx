@@ -43,6 +43,7 @@ class AccountPage extends React.Component {
       profilePic: ProfilePicture,
       isModalOpen: false,
       confirmPassword: '',
+      reauthError: '',
     };
     this.mounted = false;
   }
@@ -179,16 +180,20 @@ class AccountPage extends React.Component {
   deleteAccount() {
     deleteAccount(this.state.confirmPassword)
       .then(() => {
+        alert('Account deleted!');
         this.closeModal();
       })
       .catch((error) => {
-        alert(error.message);
+        this.mounted && this.setState({
+          reauthError: error.message,
+        });
       });
   }
 
   openModal() {
     this.mounted && this.setState({
       isModalOpen: true,
+      reauthError: '',
     });
   }
 
@@ -315,6 +320,7 @@ class AccountPage extends React.Component {
               >
                 Confirm
               </button>
+              <p id="error">{this.state.reauthError}</p>
             </Modal.Footer>
           </Modal>
         </form>

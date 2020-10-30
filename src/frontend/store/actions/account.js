@@ -247,24 +247,19 @@ export function deleteAccount(password) {
   const pictureRef = firebase.storage().ref().child('profile-pictures');
 
   return reauthenticateUser(password).then(() => {
-    firebase.auth().currentUser.delete()
+    userRef.once('value', (user) => {
+      if (user.exists() && user.val().profilePic) {
+        pictureRef.child(uid).delete()
+          .catch((error) => {
+            console.log(error.message);
+          });
+      }
+    })
       .then(() => {
-        userRef.once('value', (user) => {
-          if (user.exists() && user.profilePic) {
-            pictureRef.child(uid).delete()
-              .catch((error) => {
-                console.log(error.message);
-              });
-          }
-          userRef.remove()
-            .then(() => alert('Account Deleted.'))
-            .catch((error) => {
-              console.log(error.message);
-            });
-        });
-      })
-      .catch((error) => {
-        console.log(error.message);
+        userRef.remove()
+          .then(() => {
+            firebase.auth().currentUser.delete();
+          });
       });
   });
 }
