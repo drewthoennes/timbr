@@ -50,6 +50,9 @@ class NewPlantProfilePage extends React.Component {
 
   render() {
     const { name, birth, ownedSince } = this.state;
+    const today = (new Date()).toISOString().split('T')[0];
+    const past = new Date((new Date().getFullYear() - 50)).toISOString().split('T')[0];
+
     return (
       <div id="new-plant-page">
         <Navbar />
@@ -72,8 +75,8 @@ class NewPlantProfilePage extends React.Component {
             <Form.Control
               name="birth"
               type="date"
-              min={new Date((new Date().getFullYear() - 50).toString()).toISOString().split('T')[0]}
-              max={(new Date(new Date().getTime() - 86400000)).toISOString().split('T')[0]}
+              min={past}
+              max={today}
               value={birth}
               onChange={this.handleChange}
             />
@@ -83,9 +86,8 @@ class NewPlantProfilePage extends React.Component {
             <Form.Control
               name="ownedSince"
               type="date"
-              min={new Date(birth.length
-                ? birth : (new Date().getFullYear() - 50).toString()).toISOString().split('T')[0]}
-              max={(new Date(new Date().getTime() - 86400000)).toISOString().split('T')[0]}
+              min={birth.length ? birth : past}
+              max={today}
               value={ownedSince}
               onChange={this.handleChange}
             />

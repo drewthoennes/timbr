@@ -9,11 +9,13 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Switch from 'react-switch';
+import { Modal } from 'react-bootstrap';
 import map from '../../store/map';
 import './styles.scss';
-import { getUsername, getPhoneNumber, getProfilePicture, getTextsOn, getEmailsOn, changeUsername, changePhoneNumber, changeEmailsOn, changeTextsOn, logout, changeProfilePicture } from '../../store/actions/account';
+import { getUsername, getPhoneNumber, getProfilePicture, getTextsOn, getEmailsOn, getProviderId, changeUsername, changePhoneNumber, changeEmailsOn, changeTextsOn, changeProfilePicture, deleteAccount } from '../../store/actions/account';
 import ProfilePicture from '../../assets/images/profile_picture.png';
 import Navbar from '../../components/Navbar';
+import constants from '../../store/const';
 
 class AccountPage extends React.Component {
   constructor() {
@@ -30,6 +32,8 @@ class AccountPage extends React.Component {
     this.changePhoneNumber = this.changePhoneNumber.bind(this);
     this.changeProfilePicture = this.changeProfilePicture.bind(this);
     this.deleteAccount = this.deleteAccount.bind(this);
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
 
     this.state = {
       username: 'timbr-user',
@@ -38,6 +42,11 @@ class AccountPage extends React.Component {
       phoneNumber: '',
       phoneError: '',
       profilePic: ProfilePicture,
+      isModalOpen: false,
+      isOauthModalOpen: false,
+      confirmPassword: '',
+      reauthError: '',
+      providerId: '',
     };
     this.mounted = false;
   }
@@ -49,6 +58,7 @@ class AccountPage extends React.Component {
     this.getCurrentProfilePicture();
     this.getTextsOn();
     this.getEmailsOn();
+    this.getProvider();
   }
 
   componentDidUpdate(prevProps) {
@@ -99,15 +109,21 @@ class AccountPage extends React.Component {
   /* Calls the function to get current text notifications status and sets the state. */
   getTextsOn() {
     getTextsOn(
-      (user) => { this.setState({ textsOn: user.val() }); }, this.props.store,
+      (user) => { this.mounted && this.setState({ textsOn: user.val() }); }, this.props.store,
     );
   }
 
   /* Calls the function to get current email notifications status and sets the state. */
   getEmailsOn() {
     getEmailsOn(
-      (user) => { this.setState({ emailsOn: user.val() }); }, this.props.store,
+      (user) => { this.mounted && this.setState({ emailsOn: user.val() }); }, this.props.store,
     );
+  }
+
+  getProvider() {
+    this.setState({
+      providerId: getProviderId(),
+    });
   }
 
   changeUsername() {
@@ -172,9 +188,42 @@ class AccountPage extends React.Component {
   }
 
   deleteAccount() {
-    alert('Account deleted.');
-    // TODO: This will be changed to a delete account function call.
-    logout();
+    deleteAccount(this.state.confirmPassword)
+      .then(() => {
+        alert('Account deleted!');
+        this.closeModal();
+      })
+      .catch((error) => {
+        this.mounted && this.setState({
+          reauthError: error.message,
+        });
+      });
+  }
+
+  openModal() {
+    switch (this.state.providerId) {
+      case constants.FACEBOOK_PROVIDER_ID:
+      case constants.GOOGLE_PROVIDER_ID:
+        this.mounted && this.setState({
+          isOauthModalOpen: true,
+          reauthError: '',
+        });
+        break;
+      case constants.EMAIL_PROVIDER_ID:
+        this.mounted && this.setState({
+          isModalOpen: true,
+          reauthError: '',
+        });
+        break;
+      default:
+    }
+  }
+
+  closeModal() {
+    this.mounted && this.setState({
+      isModalOpen: false,
+      isOauthModalOpen: false,
+    });
   }
 
   render() {
@@ -205,7 +254,7 @@ class AccountPage extends React.Component {
             <span>Text Notifications </span>
             <Switch
               onChange={this.changeTextsOn}
-              checked={this.state.textsOn}
+              checked={this.state.textsOn || false}
             />
           </label>
           <p>{'\n'}</p>
@@ -214,7 +263,7 @@ class AccountPage extends React.Component {
             <span>Email Notifications </span>
             <Switch
               onChange={this.changeEmailsOn}
-              checked={this.state.emailsOn}
+              checked={this.state.emailsOn || false}
             />
           </label>
           <p>
@@ -265,11 +314,56 @@ class AccountPage extends React.Component {
           <button
             id="delete-account"
             type="button"
-            onClick={this.deleteAccount}
+            onClick={this.openModal}
           >
             Delete my timbr account
           </button>
         </form>
+
+        <Modal id="email-reauth" show={this.state.isModalOpen} onHide={this.closeModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Confirm delete account</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <input
+              id="delete-password"
+              type="password"
+              placeholder="Re-enter password"
+              onChange={(event) => {
+                if (this.mounted) {
+                  this.setState({ confirmPassword: event.target.value });
+                }
+              }}
+            />
+          </Modal.Body>
+          <Modal.Footer>
+            <button
+              type="button"
+              id="confirm-password"
+              onClick={this.deleteAccount}
+            >
+              Confirm
+            </button>
+            <p id="error">{this.state.reauthError}</p>
+          </Modal.Footer>
+        </Modal>
+
+        <Modal id="oauth-reauth" show={this.state.isOauthModalOpen} onHide={this.closeModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Are you sure you want to delete your account?</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <button
+              type="button"
+              onClick={this.deleteAccount}
+            >
+              Confirm Delete Account
+            </button>
+          </Modal.Body>
+          <Modal.Footer>
+            <p id="error">{this.state.reauthError}</p>
+          </Modal.Footer>
+        </Modal>
       </div>
     );
   }

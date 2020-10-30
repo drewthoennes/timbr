@@ -48,7 +48,8 @@ class EditPlantProfilePage extends React.Component {
 
   render() {
     const { pet, currPet } = this.state;
-
+    const today = (new Date()).toISOString().split('T')[0];
+    const past = new Date((new Date().getFullYear() - 50)).toISOString().split('T')[0];
     return (
       <>
         <Navbar />
@@ -72,8 +73,8 @@ class EditPlantProfilePage extends React.Component {
               <Form.Control
                 name="birth"
                 type="date"
-                min={new Date((new Date().getFullYear() - 50).toString()).toISOString().split('T')[0]}
-                max={(new Date(new Date().getTime() - 86400000)).toISOString().split('T')[0]}
+                min={past}
+                max={today}
                 value={pet.birth}
                 onChange={this.handleChange}
               />
@@ -83,9 +84,8 @@ class EditPlantProfilePage extends React.Component {
               <Form.Control
                 name="ownedSince"
                 type="date"
-                min={new Date(pet.birth?.length
-                  ? pet.birth : (new Date().getFullYear() - 50).toString()).toISOString().split('T')[0]}
-                max={(new Date(new Date().getTime() - 86400000)).toISOString().split('T')[0]}
+                min={pet.birth?.length ? pet.birth : past}
+                max={today}
                 value={pet.ownedSince}
                 onChange={this.handleChange}
               />

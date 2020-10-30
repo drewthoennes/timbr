@@ -15,6 +15,16 @@ class RegisterPage extends React.Component {
     super();
 
     this.handleRegister = this.handleRegister.bind(this);
+
+    this.state = {
+      email: '',
+      password: '',
+    };
+    this.mounted = false;
+  }
+
+  componentDidMount() {
+    this.mounted = true;
   }
 
   componentDidUpdate() {
@@ -24,15 +34,19 @@ class RegisterPage extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
   handleRegister(e) {
     e.preventDefault();
     const { history } = this.props;
+    const { email, password } = this.state;
 
     /* This method handles registration of a new user by sending the user credentials to the
         corresponding function and redirecting to the login page. */
     const credentials = {
-      email: document.getElementById('email').value,
-      password: btoa(document.getElementById('password').value),
+      email, password,
     };
 
     // Redirects to the login page if registration successful. Else, displays the error message.
@@ -66,12 +80,14 @@ class RegisterPage extends React.Component {
             id="email"
             type="text"
             placeholder="Email"
+            onChange={(event) => { this.setState({ email: event.target.value }); }}
           />
 
           <input
             id="password"
             type="password"
             placeholder="Password"
+            onChange={(event) => { this.setState({ password: event.target.value }); }}
           />
 
           <button type="submit">Register</button>

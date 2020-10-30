@@ -32,6 +32,13 @@ export function editPet(petId, newData) {
   return firebase.database().ref(`/users/${uid}/pets`).child(petId).update(newData);
 }
 
+/* eslint-disable-next-line object-curly-newline */
+export function deletePet(petId) {
+  const uid = firebase.auth().currentUser?.uid;
+
+  return firebase.database().ref(`/users/${uid}/pets`).child(petId).remove();
+}
+
 export function setForeignUserPets(username, petId) {
   return firebase.database().ref('/users').orderByChild('username').equalTo(username)
     .once('value')
