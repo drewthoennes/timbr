@@ -49,6 +49,7 @@ class AccountPage extends React.Component {
       reauthError: '',
       providerId: '',
       canChangePassword: false,
+      pictureFeedback: '',
     };
     this.mounted = false;
   }
@@ -193,15 +194,33 @@ class AccountPage extends React.Component {
     document.getElementById('phone-number').value = '';
   }
 
+  // The following function changes the profile picture in the database.
   changeProfilePicture(file) {
-    // The following function changes the profile picture in the database.
+    if (!file) {
+      return;
+    }
+    const fileSize = file.size / (1024 * 1024); // gets the file size in MB
+    if (fileSize > 1) {
+      this.setState({
+        pictureFeedback: 'File too large! Please upload a file less than 1 MB.',
+      });
+      return;
+    }
     changeProfilePicture(file)
       .then(() => {
-        console.log('Profile Picture updated!');
         this.getCurrentProfilePicture();
+        if (this.mounted) {
+          this.setState({
+            pictureFeedback: 'Profile picture updated!',
+          });
+        }
       })
       .catch((error) => {
-        console.error(error.message);
+        if (this.mounted) {
+          this.setState({
+            pictureFeedback: error.message,
+          });
+        }
       });
   }
 
@@ -264,6 +283,7 @@ class AccountPage extends React.Component {
             onChange={(event) => { this.changeProfilePicture(event.target.files[0]); }}
           />
         </label>
+        <p id="picture-error">{this.state.pictureFeedback}</p>
         <br />
         <form id="account-settings">
 
