@@ -79,6 +79,29 @@ class PlantProfilePage extends React.Component {
     });
   }
 
+  onEdit() {
+    const {
+      history,
+      match: { params: { id: petId } },
+      store: { account: { username: userId } },
+    } = this.props;
+    history.push(`/${userId}/edit/${petId}`);
+  }
+
+  onDelete() {
+    this.showDeleteModal(false);
+
+    const {
+      history,
+      match: { params: { id } },
+      store: { account: { username: ownUsername } },
+    } = this.props;
+
+    deletePet(id).then(() => {
+      history.push(`/${ownUsername}`);
+    });
+  }
+
   getPlantType() {
     const { store: { users, pets, account: { username: ownUsername } } } = this.props;
     const { history, match: { params: { username, id } } } = this.props;
@@ -120,29 +143,6 @@ class PlantProfilePage extends React.Component {
     getPlantDetails(
       (plant) => { this.setState({ imageURL: plant.val() }); }, plantType, 'picture',
     );
-  }
-  
-  onEdit() {
-    const {
-      history,
-      match: { params: { id: petId } },
-      store: { account: { username: userId } },
-    } = this.props;
-    history.push(`/${userId}/edit/${petId}`);
-  }
-
-  onDelete() {
-    this.showDeleteModal(false);
-
-    const {
-      history,
-      match: { params: { id } },
-      store: { account: { username: ownUsername } },
-    } = this.props;
-
-    deletePet(id).then(() => {
-      history.push(`/${ownUsername}`);
-    });
   }
 
   fetchEventList() {
