@@ -90,30 +90,6 @@ class PlantProfilePage extends React.Component {
     });
   }
 
-  fetchEventList() {
-    // fetches action history
-    const { match: { params: { id } } } = this.props;
-    const { store: { pets } = {} } = this.props;
-
-    const wateredDates = Object.keys(pets[id].watered.history || {});
-    const fertilizedDates = Object.keys(pets[id].fertilized.history || {});
-    const turnedDates = Object.keys(pets[id].turned.history || {});
-    // construct eventList with title and date
-    const eventList = [];
-    wateredDates.forEach((item) => {
-      eventList.push({ title: 'watered 💦', date: `${item}` });
-    });
-    fertilizedDates.forEach((item) => {
-      eventList.push({ title: 'fertilized 🌱', date: `${item}` });
-    });
-    turnedDates.forEach((item) => {
-      eventList.push({ title: 'turned 💃', date: `${item}` });
-    });
-    this.setState({
-      eventList,
-    });
-  }
-
   getPlantType() {
     const { store: { users, pets, account: { username: ownUsername } } } = this.props;
     const { history, match: { params: { username, id } } } = this.props;
@@ -183,6 +159,30 @@ class PlantProfilePage extends React.Component {
     getPlantImageURL(
       (plant) => { this.setState({ imageURL: plant.val() }); }, plantType,
     );
+  }
+
+  fetchEventList() {
+    // fetches action history
+    const { match: { params: { id } } } = this.props;
+    const { store: { pets } = {} } = this.props;
+
+    const wateredDates = Object.keys(pets[id].watered.history || {});
+    const fertilizedDates = Object.keys(pets[id].fertilized.history || {});
+    const turnedDates = Object.keys(pets[id].turned.history || {});
+    // construct eventList with title and date
+    const eventList = [];
+    wateredDates.forEach((item) => {
+      eventList.push({ title: 'watered 💦', date: `${item}` });
+    });
+    fertilizedDates.forEach((item) => {
+      eventList.push({ title: 'fertilized 🌱', date: `${item}` });
+    });
+    turnedDates.forEach((item) => {
+      eventList.push({ title: 'turned 💃', date: `${item}` });
+    });
+    this.setState({
+      eventList,
+    });
   }
 
   render() {
