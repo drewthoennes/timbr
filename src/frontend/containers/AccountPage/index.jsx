@@ -42,7 +42,7 @@ class AccountPage extends React.Component {
       phoneError: '',
       profilePic: ProfilePicture,
       isModalOpen: false,
-      // confirmPassword: '',
+      confirmPassword: '',
     };
     this.mounted = false;
   }
@@ -177,9 +177,12 @@ class AccountPage extends React.Component {
   }
 
   deleteAccount() {
-    deleteAccount()
+    deleteAccount(this.state.confirmPassword)
       .then(() => {
         this.closeModal();
+      })
+      .catch((error) => {
+        alert(error.message);
       });
   }
 
@@ -297,11 +300,11 @@ class AccountPage extends React.Component {
                 id="delete-password"
                 type="password"
                 placeholder="Re-enter password"
-               /* onChange={(event) => {
+                onChange={(event) => {
                   if (this.mounted) {
                     this.setState({ confirmPassword: event.target.value });
                   }
-                }} */
+                }}
               />
             </Modal.Body>
             <Modal.Footer>

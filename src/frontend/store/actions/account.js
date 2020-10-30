@@ -46,6 +46,16 @@ export function addToDatabase() {
   });
 }
 
+export function reauthenticateUser(password) {
+  const user = firebase.auth().currentUser;
+  const credentials = firebase.auth.EmailAuthProvider.credential(
+    user.email,
+    password,
+  );
+
+  return user.reauthenticateWithCredential(credentials);
+}
+
 /* This method uses firebase auth to create a new user. */
 export function registerWithTimbr(credentials) {
   return firebase.auth().createUserWithEmailAndPassword(credentials.email, credentials.password)
@@ -231,30 +241,32 @@ export function getEmailsOn(cb, myStore) {
 }
 
 /* This function is used to delete a user. */
-export function deleteAccount() {
+export function deleteAccount(password) {
   const { account: { uid } } = store.getState();
   const userRef = firebase.database().ref().child('users').child(uid);
   const pictureRef = firebase.storage().ref().child('profile-pictures');
 
-  return firebase.auth().currentUser.delete()
-    .then(() => {
-      userRef.once('value', (user) => {
-        if (user.exists() && user.profilePic) {
-          pictureRef.child(uid).delete()
+  return reauthenticateUser(password).then(() => {
+    firebase.auth().currentUser.delete()
+      .then(() => {
+        userRef.once('value', (user) => {
+          if (user.exists() && user.profilePic) {
+            pictureRef.child(uid).delete()
+              .catch((error) => {
+                console.log(error.message);
+              });
+          }
+          userRef.remove()
+            .then(() => alert('Account Deleted.'))
             .catch((error) => {
               console.log(error.message);
             });
-        }
-        userRef.remove()
-          .then(() => alert('Account Deleted.'))
-          .catch((error) => {
-            console.log(error.message);
-          });
+        });
+      })
+      .catch((error) => {
+        console.log(error.message);
       });
-    })
-    .catch((error) => {
-      console.log(error.message);
-    });
+  });
 }
 
 export function changeProfilePicture(file) {
