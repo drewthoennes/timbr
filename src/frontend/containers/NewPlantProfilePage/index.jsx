@@ -14,11 +14,6 @@ import map from '../../store/map';
 import { createNewPet } from '../../store/actions/pets';
 import './styles.scss';
 
-function getPlantsList() {
-  const list = ['alocasia-amazonica', 'asparagus-setaceus', 'aspidistra-elatior'];
-  return list;
-}
-
 class NewPlantProfilePage extends React.Component {
   constructor() {
     super();
@@ -75,8 +70,9 @@ class NewPlantProfilePage extends React.Component {
   }
 
   render() {
+    const { store: { plants } } = this.props;
     const { name, birth, ownedSince } = this.state;
-    const plantList = getPlantsList();
+    const plantList = Object.keys(plants);
     const today = (new Date()).toISOString().split('T')[0];
     const past = new Date((new Date().getFullYear() - 50)).toISOString().split('T')[0];
 
@@ -153,6 +149,7 @@ NewPlantProfilePage.propTypes = {
       username: PropTypes.string,
     }),
     pets: PropTypes.object.isRequired,
+    plants: PropTypes.object.isRequired,
   }).isRequired,
 };
 export default connect(map)(withRouter(NewPlantProfilePage));
