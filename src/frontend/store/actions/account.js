@@ -232,6 +232,12 @@ export function changeProfilePicture(file) {
   return storageRef.child(`profile-pictures/${uid}`).put(file);
 }
 
+/* This function sends a reset password email to the given email. */
+export function forgotPassword(email) {
+  const auth = firebase.auth();
+  return auth.sendPasswordResetEmail(email);
+}
+
 export function setUID(uid) {
   store.dispatch({
     type: constants.SET_UID,
