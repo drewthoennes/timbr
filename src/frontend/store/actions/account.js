@@ -234,9 +234,8 @@ export function changeProfilePicture(file) {
 
 /* This function sends a reset password email to the given email. */
 export function forgotPassword(email) {
-  console.log(`Email to be sent to ${email}`);
-  // send email
-  return Promise.resolve();
+  const auth = firebase.auth();
+  return auth.sendPasswordResetEmail(email);
 }
 
 export function setUID(uid) {

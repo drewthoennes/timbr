@@ -16,6 +16,16 @@ class ForgetPasswordPage extends React.Component {
       email: '',
       error: '',
     };
+
+    this.mounted = false;
+  }
+
+  componentDidMount() {
+    this.mounted = true;
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   sendResetEmail() {
@@ -24,13 +34,15 @@ class ForgetPasswordPage extends React.Component {
 
     forgotPassword(email)
       .then(() => {
-        alert(`Email successfully sent to ${email}`);
+        alert(`Password reset email successfully sent to ${email}.`);
         history.push('/login');
       })
       .catch((error) => {
-        this.setState({
-          error: error.message,
-        });
+        if (this.mounted) {
+          this.setState({
+            error: error.message,
+          });
+        }
       });
   }
 
@@ -39,7 +51,7 @@ class ForgetPasswordPage extends React.Component {
     return (
       <div id="forget-password-page">
         <h1>timbr Forget Password Page!</h1>
-        <form id="password-reset-form" onSubmit={this.sendResetEmail}>
+        <form id="password-reset-form">
           <input
             id="email"
             type="text"
@@ -47,7 +59,8 @@ class ForgetPasswordPage extends React.Component {
             onChange={(event) => { this.setState({ email: event.target.value }); }}
           />
           <button
-            type="submit"
+            type="button"
+            onClick={this.sendResetEmail}
           >
             Send Password Reset Email
           </button>
