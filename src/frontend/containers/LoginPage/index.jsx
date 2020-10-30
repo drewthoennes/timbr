@@ -16,6 +16,11 @@ class LoginPage extends React.Component {
     super();
 
     this.handleAuth = this.handleAuth.bind(this);
+
+    this.state = {
+      email: '',
+      password: '',
+    };
   }
 
   componentDidUpdate() {
@@ -28,9 +33,9 @@ class LoginPage extends React.Component {
   /* This method handles login by sending user credentials to the corresponding function
     and redirecting to the home page. */
   handleAuth(option) {
+    const { email, password } = this.state;
     const credentials = {
-      email: document.getElementById('email').value,
-      password: btoa(document.getElementById('password').value),
+      email, password,
     };
 
     try {
@@ -77,12 +82,14 @@ class LoginPage extends React.Component {
             id="email"
             type="text"
             placeholder="Email"
+            onChange={(event) => { this.setState({ email: event.target.value }); }}
           />
 
           <input
             id="password"
             type="password"
             placeholder="Password"
+            onChange={(event) => { this.setState({ password: event.target.value }); }}
           />
 
           <button type="submit">Login</button>
@@ -115,6 +122,12 @@ class LoginPage extends React.Component {
           onClick={() => history.push('/register')}
         >
           Not a user? Register with timbr here.
+        </button>
+        <button
+          type="button"
+          onClick={() => history.push('/forget-password')}
+        >
+          Forgot your password? Reset it here.
         </button>
       </div>
     );

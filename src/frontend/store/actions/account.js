@@ -10,6 +10,11 @@ export function updateCounter(currentCounter) {
   firebase.database().ref().update({ counter: currentCounter + 1 });
 }
 
+/* This funciton is used to get the auth provider of the current user. */
+export function getProviderId() {
+  return firebase.auth().currentUser.providerData[0].providerId;
+}
+
 /* This method adds the current user to the database, if not already added. */
 export function addToDatabase() {
   const { uid, email } = firebase.auth().currentUser || { uid: '', email: '' };
@@ -21,6 +26,8 @@ export function addToDatabase() {
   let username = 'timbr-user-';
   const textsOn = false;
   const emailsOn = false;
+  const phoneNumber = '+10000000000';
+  const profilePic = false;
 
   // check if the user exists in the database
   return firebase.database().ref(`users/${uid}`).once('value', (user) => {
@@ -34,12 +41,32 @@ export function addToDatabase() {
         firebase.database().ref(`users/${uid}`).set({
           email,
           username,
+          phoneNumber,
           textsOn, // Stores a boolean value if the user has text notifications on or off
           emailsOn, // Stores a boolean value if the user has email notifications on or off
+          profilePic,
         });
       });
     }
   });
+}
+
+export function reauthenticateUser(password) {
+  const user = firebase.auth().currentUser;
+
+  switch (getProviderId()) {
+    case constants.FACEBOOK_PROVIDER_ID:
+      return user.reauthenticateWithPopup(facebookAuthProvider);
+    case constants.GOOGLE_PROVIDER_ID:
+      return user.reauthenticateWithPopup(googleAuthProvider);
+    case constants.EMAIL_PROVIDER_ID:
+      return user.reauthenticateWithCredential(firebase.auth.EmailAuthProvider.credential(
+        user.email,
+        password,
+      ));
+    default:
+  }
+  return Promise.resolve();
 }
 
 /* This method uses firebase auth to create a new user. */
@@ -113,6 +140,46 @@ export function getUsername(cb, myStore) {
     .on('value', cb);
 }
 
+/* This function is used to get the phone number of the current user. */
+export function getPhoneNumber(cb) {
+  const { account: { uid } } = store.getState();
+  if (!uid) {
+    return;
+  }
+  firebase.database().ref().child('users').child(uid)
+    .child('phoneNumber')
+    .on('value', cb);
+}
+
+/* This function is used to change the phone number of the current user. */
+export function changePhoneNumber(number) {
+  // checks if the phone number is taken by a different user
+  return firebase.database().ref('/users').orderByChild('phoneNumber').equalTo(number)
+    .once('value')
+    .then((snapshot) => {
+      if (snapshot.val()) {
+        alert('Phone number taken! Please enter a different one.');
+        return Promise.reject();
+      }
+
+      const { uid } = firebase.auth().currentUser || { uid: '' };
+      if (!uid) {
+        throw new Error('No uid');
+      }
+
+      return firebase.database().ref(`users/${uid}`).once('value').then((user) => {
+        if (!user.exists()) {
+          throw new Error('Current user does not have an account');
+        }
+
+        const phoneNumber = `+1${number}`;
+        return firebase.database().ref(`users/${uid}`).update({
+          phoneNumber,
+        });
+      });
+    });
+}
+
 /* This function changes the texts status of the current user. */
 export function changeTextsOn(textsOn) {
   const { account: { uid } } = store.getState();
@@ -125,6 +192,25 @@ export function changeTextsOn(textsOn) {
       firebase.database().ref(`users/${uid}`).update({
         textsOn,
       });
+    }
+  });
+}
+
+export function getProfilePicture(cb) {
+  const { account: { uid } } = store.getState();
+  if (!uid) {
+    return Promise.resolve();
+  }
+
+  return firebase.database().ref(`users/${uid}`).once('value', (user) => {
+    if (user.exists() && user.val().profilePic) {
+      const pictureRef = firebase.storage().ref().child(`profile-pictures/${uid}`);
+      pictureRef.getDownloadURL()
+        .then(cb)
+        .catch((error) => {
+          // Do nothing if the user does not have a profile pic sent
+          console.log(error.message);
+        });
     }
   });
 }
@@ -165,6 +251,52 @@ export function getEmailsOn(cb, myStore) {
   firebase.database().ref().child('users').child(uid)
     .child('emailsOn')
     .on('value', cb);
+}
+
+/* This function is used to delete a user. */
+export function deleteAccount(password) {
+  const { account: { uid } } = store.getState();
+  const userRef = firebase.database().ref().child('users').child(uid);
+  const pictureRef = firebase.storage().ref().child('profile-pictures');
+
+  return reauthenticateUser(password).then(() => {
+    userRef.once('value', (user) => {
+      if (user.exists() && user.val().profilePic) {
+        pictureRef.child(uid).delete()
+          .catch((error) => {
+            console.log(error.message);
+          });
+      }
+    })
+      .then(() => {
+        userRef.remove()
+          .then(() => {
+            firebase.auth().currentUser.delete();
+          });
+      });
+  });
+}
+
+export function changeProfilePicture(file) {
+  const { account: { uid } } = store.getState();
+  const storageRef = firebase.storage().ref();
+
+  return storageRef.child(`profile-pictures/${uid}`).put(file)
+    .then(() => {
+      firebase.database().ref(`users/${uid}`).once('value', (user) => {
+        if (user.exists()) {
+          firebase.database().ref(`users/${uid}`).update({
+            profilePic: true,
+          });
+        }
+      });
+    });
+}
+
+/* This function sends a reset password email to the given email. */
+export function forgotPassword(email) {
+  const auth = firebase.auth();
+  return auth.sendPasswordResetEmail(email);
 }
 
 export function setUID(uid) {
