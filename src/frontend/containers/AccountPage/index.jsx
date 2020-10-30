@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Switch from 'react-switch';
+import { Modal } from 'react-bootstrap';
 import map from '../../store/map';
 import './styles.scss';
 import { getUsername, getPhoneNumber, getProfilePicture, getTextsOn, getEmailsOn, changeUsername, changePhoneNumber, changeEmailsOn, changeTextsOn, changeProfilePicture, deleteAccount } from '../../store/actions/account';
@@ -30,6 +31,8 @@ class AccountPage extends React.Component {
     this.changePhoneNumber = this.changePhoneNumber.bind(this);
     this.changeProfilePicture = this.changeProfilePicture.bind(this);
     this.deleteAccount = this.deleteAccount.bind(this);
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
 
     this.state = {
       username: 'timbr-user',
@@ -38,6 +41,8 @@ class AccountPage extends React.Component {
       phoneNumber: '',
       phoneError: '',
       profilePic: ProfilePicture,
+      isModalOpen: false,
+      // confirmPassword: '',
     };
     this.mounted = false;
   }
@@ -99,14 +104,14 @@ class AccountPage extends React.Component {
   /* Calls the function to get current text notifications status and sets the state. */
   getTextsOn() {
     getTextsOn(
-      (user) => { this.setState({ textsOn: user.val() }); }, this.props.store,
+      (user) => { this.mounted && this.setState({ textsOn: user.val() }); }, this.props.store,
     );
   }
 
   /* Calls the function to get current email notifications status and sets the state. */
   getEmailsOn() {
     getEmailsOn(
-      (user) => { this.setState({ emailsOn: user.val() }); }, this.props.store,
+      (user) => { this.mounted && this.setState({ emailsOn: user.val() }); }, this.props.store,
     );
   }
 
@@ -174,8 +179,20 @@ class AccountPage extends React.Component {
   deleteAccount() {
     deleteAccount()
       .then(() => {
-        alert('Account deleted. We\'ll miss you!');
+        this.closeModal();
       });
+  }
+
+  openModal() {
+    this.mounted && this.setState({
+      isModalOpen: true,
+    });
+  }
+
+  closeModal() {
+    this.mounted && this.setState({
+      isModalOpen: false,
+    });
   }
 
   render() {
@@ -266,10 +283,37 @@ class AccountPage extends React.Component {
           <button
             id="delete-account"
             type="button"
-            onClick={this.deleteAccount}
+            onClick={this.openModal}
           >
             Delete my timbr account
           </button>
+
+          <Modal show={this.state.isModalOpen} onHide={this.closeModal}>
+            <Modal.Header closeButton>
+              <Modal.Title>Confirm delete account</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <input
+                id="delete-password"
+                type="password"
+                placeholder="Re-enter password"
+               /* onChange={(event) => {
+                  if (this.mounted) {
+                    this.setState({ confirmPassword: event.target.value });
+                  }
+                }} */
+              />
+            </Modal.Body>
+            <Modal.Footer>
+              <button
+                type="button"
+                id="confirm-password"
+                onClick={this.deleteAccount}
+              >
+                Confirm
+              </button>
+            </Modal.Footer>
+          </Modal>
         </form>
       </div>
     );

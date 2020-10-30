@@ -180,7 +180,7 @@ export function getProfilePicture(cb) {
   }
 
   return firebase.database().ref(`users/${uid}`).once('value', (user) => {
-    if (user.exists() && user.profilePic) {
+    if (user.exists() && user.val().profilePic) {
       const pictureRef = firebase.storage().ref().child(`profile-pictures/${uid}`);
       pictureRef.getDownloadURL()
         .then(cb)
@@ -246,6 +246,7 @@ export function deleteAccount() {
             });
         }
         userRef.remove()
+          .then(() => alert('Account Deleted.'))
           .catch((error) => {
             console.log(error.message);
           });
@@ -259,7 +260,17 @@ export function deleteAccount() {
 export function changeProfilePicture(file) {
   const { account: { uid } } = store.getState();
   const storageRef = firebase.storage().ref();
-  return storageRef.child(`profile-pictures/${uid}`).put(file);
+
+  return storageRef.child(`profile-pictures/${uid}`).put(file)
+    .then(() => {
+      firebase.database().ref(`users/${uid}`).once('value', (user) => {
+        if (user.exists()) {
+          firebase.database().ref(`users/${uid}`).update({
+            profilePic: true,
+          });
+        }
+      });
+    });
 }
 
 export function setUID(uid) {
