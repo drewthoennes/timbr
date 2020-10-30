@@ -10,7 +10,7 @@ import Navbar from '../../components/Navbar';
 
 import { setForeignUserPets, addDate } from '../../store/actions/pets';
 
-import { getPlantName, getPlantWaterCycle, getPlantDescription, getPlantCarnivore, getPlantSciName, getPlantFeedFreq, getPlantFertFreq, getPlantImageURL } from '../../store/actions/plants';
+import { getPlantDetails } from '../../store/actions/plants';
 import map from '../../store/map';
 import './styles.scss';
 
@@ -18,15 +18,6 @@ class PlantProfilePage extends React.Component {
   constructor(props) {
     super(props);
 
-    this.getSpeciesName = this.getSpeciesName.bind(this);
-    this.getPlantType = this.getPlantType.bind(this);
-    this.getWateringFreq = this.getWateringFreq.bind(this);
-    this.getDescription = this.getDescription.bind(this);
-    this.getCarnivore = this.getCarnivore.bind(this);
-    this.getSciName = this.getSciName.bind(this);
-    this.getFeedFreq = this.getFeedFreq.bind(this);
-    this.getFertFreq = this.getFertFreq.bind(this);
-    this.getImageURL = this.getImageURL.bind(this);
     this.onWater = this.onWater.bind(this);
     this.onFertilize = this.onFertilize.bind(this);
     this.onRotate = this.onRotate.bind(this);
@@ -51,14 +42,7 @@ class PlantProfilePage extends React.Component {
 
     console.log('Component did mount');
 
-    this.getSpeciesName();
-    this.getSciName();
-    this.getWateringFreq();
-    this.getDescription();
-    this.getCarnivore();
-    this.getFertFreq();
-    this.getFeedFreq();
-    this.getImageURL();
+    this.getPlantDetails();
     this.fetchEventList();
 
     if (!username) return Promise.resolve();
@@ -105,59 +89,31 @@ class PlantProfilePage extends React.Component {
     return pet.type;
   }
 
-  getSpeciesName() {
+  getPlantDetails() {
     const plantType = this.getPlantType();
-    getPlantName(
-      (plant) => { this.setState({ speciesName: plant.val() }); }, plantType,
+    getPlantDetails(
+      (plant) => { this.setState({ speciesName: plant.val() }); }, plantType, 'name',
     );
-  }
-
-  getSciName() {
-    const plantType = this.getPlantType();
-    getPlantSciName(
-      (plant) => { this.setState({ scientificName: plant.val() }); }, plantType,
+    getPlantDetails(
+      (plant) => { this.setState({ scientificName: plant.val() }); }, plantType, 'scientificName',
     );
-  }
-
-  getWateringFreq() {
-    const plantType = this.getPlantType();
-    getPlantWaterCycle(
-      (plant) => { this.setState({ waterFreq: plant.val() }); }, plantType,
+    getPlantDetails(
+      (plant) => { this.setState({ waterFreq: plant.val() }); }, plantType, 'waterFreq',
     );
-  }
-
-  getFeedFreq() {
-    const plantType = this.getPlantType();
-    getPlantFeedFreq(
-      (plant) => { this.setState({ feedFreq: plant.val() }); }, plantType,
+    getPlantDetails(
+      (plant) => { this.setState({ feedFreq: plant.val() }); }, plantType, 'feedFreq',
     );
-  }
-
-  getFertFreq() {
-    const plantType = this.getPlantType();
-    getPlantFertFreq(
-      (plant) => { this.setState({ fertFreq: plant.val() }); }, plantType,
+    getPlantDetails(
+      (plant) => { this.setState({ fertFreq: plant.val() }); }, plantType, 'fertFreq',
     );
-  }
-
-  getDescription() {
-    const plantType = this.getPlantType();
-    getPlantDescription(
-      (plant) => { this.setState({ description: plant.val() }); }, plantType,
+    getPlantDetails(
+      (plant) => { this.setState({ description: plant.val() }); }, plantType, 'description',
     );
-  }
-
-  getCarnivore() {
-    const plantType = this.getPlantType();
-    getPlantCarnivore(
-      (plant) => { this.setState({ carn: plant.val() }); }, plantType,
+    getPlantDetails(
+      (plant) => { this.setState({ carn: plant.val() }); }, plantType, 'carnivore',
     );
-  }
-
-  getImageURL() {
-    const plantType = this.getPlantType();
-    getPlantImageURL(
-      (plant) => { this.setState({ imageURL: plant.val() }); }, plantType,
+    getPlantDetails(
+      (plant) => { this.setState({ imageURL: plant.val() }); }, plantType, 'picture',
     );
   }
 
