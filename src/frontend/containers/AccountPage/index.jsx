@@ -9,10 +9,9 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Switch from 'react-switch';
-import Input from 'react-phone-number-input/input';
 import map from '../../store/map';
 import './styles.scss';
-import { getUsername, getProfilePicture, getTextsOn, getEmailsOn, changeUsername, changeEmailsOn, changeTextsOn, logout, changeProfilePicture } from '../../store/actions/account';
+import { getUsername, getPhoneNumber, getProfilePicture, getTextsOn, getEmailsOn, changeUsername, changePhoneNumber, changeEmailsOn, changeTextsOn, logout, changeProfilePicture } from '../../store/actions/account';
 import ProfilePicture from '../../assets/images/profile_picture.png';
 import Navbar from '../../components/Navbar';
 
@@ -37,6 +36,7 @@ class AccountPage extends React.Component {
       textsOn: false,
       emailsOn: false,
       phoneNumber: '',
+      phoneError: '',
       profilePic: ProfilePicture,
     };
     this.mounted = false;
@@ -82,17 +82,17 @@ class AccountPage extends React.Component {
   }
 
   getCurrentPhoneNumber() {
-    // TODO: Get the phone number from the database, hard coded for now
-    this.setState({
-      phoneNumber: '123456789',
-    });
+    // Get the phone number from the database, hard coded for now
+    getPhoneNumber(
+      (phoneNumber) => { this.mounted && this.setState({ phoneNumber: phoneNumber.val() }); },
+    );
   }
 
   /* Calls the function to get the url for the current profile picture and sets the state. */
   getCurrentProfilePicture() {
     // Comment out the following lines when not testing profile picture.
     getProfilePicture(
-      (picture) => { this.mounted && this.setState({ profilePic: picture }); },
+      (picture) => { picture && this.mounted && this.setState({ profilePic: picture }); },
     );
   }
 
@@ -140,21 +140,23 @@ class AccountPage extends React.Component {
   }
 
   changePhoneNumber() {
-    const number = document.getElementById('phone-number').value;
-    console.log(`Phone number entered: ${number}`);
+    // removes the leading zeroes
+    const number = parseInt(document.getElementById('phone-number').value, 10);
 
     // Error handling for phone number
-    // checking if the length is 14 to account for the formatting of the phone number
-    if (number.toString().length !== 14) {
-      document.getElementById('phone-error').innerHTML = 'Phone number invalid!';
-    } else {
-      document.getElementById('phone-error').innerHTML = '';
-      document.getElementById('phone-number').value = '';
+    if (number < 0 || number.toString().length !== 10) {
       this.setState({
-        phoneNumber: number,
+        phoneError: 'Phone number invalid!',
       });
+      return;
     }
-    // TODO: Change the phone number in the database
+    this.setState({
+      phoneError: '',
+    });
+    changePhoneNumber(number);
+    /* Changes the phone number in the state. */
+    this.getCurrentPhoneNumber();
+    document.getElementById('phone-number').value = '';
   }
 
   changeProfilePicture(file) {
@@ -239,11 +241,10 @@ class AccountPage extends React.Component {
           </p>
           +1
           {' '}
-          <Input
+          <input
+            type="tel"
             placeholder="Enter phone number"
             id="phone-number"
-            country="US"
-            onChange={() => {}}
           />
           <button
             id="change-phone-number"
@@ -252,7 +253,7 @@ class AccountPage extends React.Component {
           >
             Change Phone number
           </button>
-          <p id="phone-error"> </p>
+          <p id="phone-error">{this.state.phoneError}</p>
           <button
             id="change-password"
             type="button"

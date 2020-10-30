@@ -55,5 +55,6 @@ export function addDate(petId, action, currDate) {
   }
   return Promise.all([
     firebase.database().ref(`users/${uid}/pets/${petId}/${action}/history/`).child(currDate).set(true),
-    firebase.database().ref(`users/${uid}/pets/${petId}/${action}/last/`).set(currDate)]);
+    firebase.database().ref(`users/${uid}/pets/${petId}/${action}/last/`).set(currDate),
+  ]);
 }

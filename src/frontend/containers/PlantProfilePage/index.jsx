@@ -3,6 +3,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
 import PropTypes from 'prop-types';
 import Navbar from '../../components/Navbar';
 
@@ -28,6 +30,7 @@ class PlantProfilePage extends React.Component {
     this.onWater = this.onWater.bind(this);
     this.onFertilize = this.onFertilize.bind(this);
     this.onRotate = this.onRotate.bind(this);
+    this.fetchEventList = this.fetchEventList.bind(this);
 
     this.state = {
       speciesName: '',
@@ -38,6 +41,7 @@ class PlantProfilePage extends React.Component {
       feedFreq: 0,
       fertFreq: 0,
       imageURL: '',
+      eventList: [],
     };
   }
 
@@ -55,6 +59,7 @@ class PlantProfilePage extends React.Component {
     this.getFertFreq();
     this.getFeedFreq();
     this.getImageURL();
+    this.fetchEventList();
 
     if (!username) return Promise.resolve();
 
@@ -64,21 +69,49 @@ class PlantProfilePage extends React.Component {
   onWater() {
     const { match: { params: { id } } } = this.props;
     const today = new Date().toISOString().slice(0, 10);
-    addDate(id, 'watered', today);
-    console.log('id is', id);
+    addDate(id, 'watered', today).then(() => {
+      this.fetchEventList();
+    });
   }
 
   onFertilize() {
-    const { match: { params: { id } } } = this.props;
     const today = new Date().toISOString().slice(0, 10);
-    addDate(id, 'fertilized', today);
+    const { match: { params: { id } } } = this.props;
+    addDate(id, 'fertilized', today).then(() => {
+      this.fetchEventList();
+    });
   }
 
   onRotate() {
     const { match: { params: { id } } } = this.props;
-
     const today = new Date().toISOString().slice(0, 10);
-    addDate(id, 'turned', today);
+    addDate(id, 'turned', today).then(() => {
+      this.fetchEventList();
+    });
+  }
+
+  fetchEventList() {
+    // fetches action history
+    const { match: { params: { id } } } = this.props;
+    const { store: { pets } = {} } = this.props;
+
+    const wateredDates = Object.keys(pets[id].watered.history || {});
+    const fertilizedDates = Object.keys(pets[id].fertilized.history || {});
+    const turnedDates = Object.keys(pets[id].turned.history || {});
+    // construct eventList with title and date
+    const eventList = [];
+    wateredDates.forEach((item) => {
+      eventList.push({ title: 'watered 💦', date: `${item}` });
+    });
+    fertilizedDates.forEach((item) => {
+      eventList.push({ title: 'fertilized 🌱', date: `${item}` });
+    });
+    turnedDates.forEach((item) => {
+      eventList.push({ title: 'turned 💃', date: `${item}` });
+    });
+    this.setState({
+      eventList,
+    });
   }
 
   getPlantType() {
@@ -156,7 +189,7 @@ class PlantProfilePage extends React.Component {
     const { store: { users, pets, account: { username: ownUsername } } } = this.props;
     const { history, match: { params: { username, id } } } = this.props;
     const { speciesName, scientificName, description, carn,
-      imageURL, waterFreq, fertFreq, feedFreq } = this.state;
+      imageURL, waterFreq, fertFreq, feedFreq, eventList } = this.state;
     let pet;
     if (username && username !== ownUsername) {
       pet = users[username] ? users[username].pets[id] : { name: '', type: '' };
@@ -207,6 +240,14 @@ class PlantProfilePage extends React.Component {
           <button type="button" onClick={this.onWater}> Water </button>
           <button type="button" onClick={this.onFertilize}> Fertilize </button>
           <button type="button" onClick={this.onRotate}> Rotate </button>
+        </div>
+        <div id="calendar">
+          <FullCalendar
+            plugins={[dayGridPlugin]}
+            initialView="dayGridMonth"
+            weekends
+            events={eventList}
+          />
         </div>
       </div>
     );

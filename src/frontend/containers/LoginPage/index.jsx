@@ -16,6 +16,11 @@ class LoginPage extends React.Component {
     super();
 
     this.handleAuth = this.handleAuth.bind(this);
+
+    this.state = {
+      email: '',
+      password: '',
+    };
   }
 
   componentDidUpdate() {
@@ -28,9 +33,9 @@ class LoginPage extends React.Component {
   /* This method handles login by sending user credentials to the corresponding function
     and redirecting to the home page. */
   handleAuth(option) {
+    const { email, password } = this.state;
     const credentials = {
-      email: document.getElementById('email').value,
-      password: btoa(document.getElementById('password').value),
+      email, password,
     };
 
     try {
@@ -66,87 +71,64 @@ class LoginPage extends React.Component {
     return (
       <div id="login-page">
         <h1>timbr Login Page!</h1>
+        <form
+          id="login-form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            this.handleAuth(constants.LOGIN_WITH_TIMBR);
+          }}
+        >
+          <input
+            id="email"
+            type="text"
+            placeholder="Email"
+            onChange={(event) => { this.setState({ email: event.target.value }); }}
+          />
 
-        <div className="row">
-          <div className="col-sm-6">
-            <div className="card">
-              <div className="card-body">
+          <input
+            id="password"
+            type="password"
+            placeholder="Password"
+            onChange={(event) => { this.setState({ password: event.target.value }); }}
+          />
 
-                <h5 className="card-title">Log In With timbr</h5>
-                <p className="card-text">Login card.</p>
+          <button type="submit">Login</button>
+        </form>
 
-                <button
-                  id="Facebook"
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    this.handleAuth(constants.LOGIN_WITH_FACEBOOK);
-                  }}
-                >
-                  Sign in with Facebook
-                </button>
+        <button
+          id="Facebook"
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            this.handleAuth(constants.LOGIN_WITH_FACEBOOK);
+          }}
+        >
+          Sign in with Facebook
+        </button>
 
-                <button
-                  id="Google"
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    this.handleAuth(constants.LOGIN_WITH_GOOGLE);
-                  }}
-                >
-                  Sign in with Google
-                </button>
-
-                <form
-                  id="login-form"
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    this.handleAuth(constants.LOGIN_WITH_TIMBR);
-                  }}
-                >
-                  <div className="form-group">
-                    <input
-                      id="email"
-                      className="form-control"
-                      type="text"
-                      placeholder="Email"
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <input
-                      id="password"
-                      className="form-control"
-                      type="password"
-                      placeholder="Password"
-                    />
-                  </div>
-
-                  <button type="submit" className="btn btn-primary">Login</button>
-                </form>
-                <p id="error" />
-              </div>
-            </div>
-          </div>
-          <div className="col-sm-6">
-            <div className="card">
-              <div className="card-body">
-                <h5 className="card-title">Sign-Up With timbr</h5>
-                <p className="card-text">Don't have an account yet? Sign up now.</p>
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={() => history.push('/register')}
-                >
-                  Not a user? Register with timbr here.
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
+        <button
+          id="Google"
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            this.handleAuth(constants.LOGIN_WITH_GOOGLE);
+          }}
+        >
+          Sign in with Google
+        </button>
+        <p id="error" />
+        <button
+          type="button"
+          onClick={() => history.push('/register')}
+        >
+          Not a user? Register with timbr here.
+        </button>
+        <button
+          type="button"
+          onClick={() => history.push('/forget-password')}
+        >
+          Forgot your password? Reset it here.
+        </button>
       </div>
     );
   }
