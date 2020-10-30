@@ -55,8 +55,8 @@ class NewPlantProfilePage extends React.Component {
     const { name, birth, ownedSince, type } = this.state;
     createNewPet({
       name,
-      birth: new Date(birth ?? Date.now()),
-      ownedSince: new Date(ownedSince ?? Date.now()),
+      birth: birth.length ? birth : (new Date()).toISOString().split('T')[0],
+      ownedSince: ownedSince.length ? ownedSince : (new Date()).toISOString().split('T')[0],
       type,
     }).then((snap) => {
       const { history } = this.props;
@@ -77,6 +77,8 @@ class NewPlantProfilePage extends React.Component {
   render() {
     const { name, birth, ownedSince } = this.state;
     const plantList = getPlantsList();
+    const today = (new Date()).toISOString().split('T')[0];
+    const past = new Date((new Date().getFullYear() - 50)).toISOString().split('T')[0];
 
     return (
       <div id="new-plant-page">
@@ -100,8 +102,8 @@ class NewPlantProfilePage extends React.Component {
             <Form.Control
               name="birth"
               type="date"
-              min={new Date((new Date().getFullYear() - 50).toString()).toISOString().split('T')[0]}
-              max={(new Date(new Date().getTime() - 86400000)).toISOString().split('T')[0]}
+              min={past}
+              max={today}
               value={birth}
               onChange={this.handleChange}
             />
@@ -112,9 +114,8 @@ class NewPlantProfilePage extends React.Component {
             <Form.Control
               name="ownedSince"
               type="date"
-              min={new Date(birth.length
-                ? birth : (new Date().getFullYear() - 50).toString()).toISOString().split('T')[0]}
-              max={(new Date(new Date().getTime() - 86400000)).toISOString().split('T')[0]}
+              min={birth.length ? birth : past}
+              max={today}
               value={ownedSince}
               onChange={this.handleChange}
             />

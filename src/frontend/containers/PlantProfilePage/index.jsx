@@ -6,9 +6,10 @@ import { withRouter } from 'react-router-dom';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import PropTypes from 'prop-types';
+import { Modal, Button } from 'react-bootstrap';
 import Navbar from '../../components/Navbar';
 
-import { setForeignUserPets, addDate } from '../../store/actions/pets';
+import { setForeignUserPets, addDate, deletePet } from '../../store/actions/pets';
 
 import { getPlantDetails } from '../../store/actions/plants';
 import map from '../../store/map';
@@ -21,6 +22,9 @@ class PlantProfilePage extends React.Component {
     this.onWater = this.onWater.bind(this);
     this.onFertilize = this.onFertilize.bind(this);
     this.onRotate = this.onRotate.bind(this);
+    this.onEdit = this.onEdit.bind(this);
+    this.onDelete = this.onDelete.bind(this);
+    this.showDeleteModal = this.showDeleteModal.bind(this);
     this.fetchEventList = this.fetchEventList.bind(this);
 
     this.state = {
@@ -32,6 +36,7 @@ class PlantProfilePage extends React.Component {
       feedFreq: 0,
       fertFreq: 0,
       imageURL: '',
+      showDeleteModal: false,
       eventList: [],
     };
   }
@@ -116,6 +121,29 @@ class PlantProfilePage extends React.Component {
       (plant) => { this.setState({ imageURL: plant.val() }); }, plantType, 'picture',
     );
   }
+  
+  onEdit() {
+    const {
+      history,
+      match: { params: { id: petId } },
+      store: { account: { username: userId } },
+    } = this.props;
+    history.push(`/${userId}/edit/${petId}`);
+  }
+
+  onDelete() {
+    this.showDeleteModal(false);
+
+    const {
+      history,
+      match: { params: { id } },
+      store: { account: { username: ownUsername } },
+    } = this.props;
+
+    deletePet(id).then(() => {
+      history.push(`/${ownUsername}`);
+    });
+  }
 
   fetchEventList() {
     // fetches action history
@@ -141,6 +169,10 @@ class PlantProfilePage extends React.Component {
     });
   }
 
+  showDeleteModal(cond) {
+    this.setState({ showDeleteModal: cond });
+  }
+
   render() {
     const { store: { users, pets, account: { username: ownUsername } } } = this.props;
     const { history, match: { params: { username, id } } } = this.props;
@@ -150,11 +182,11 @@ class PlantProfilePage extends React.Component {
     if (username && username !== ownUsername) {
       pet = users[username] ? users[username].pets[id] : { name: '', type: '' };
     } else if (!pets[id]) {
-      history.push(`/${ownUsername}`);
+      history.push('/notfound');
     } else {
       pet = pets[id];
     }
-
+    const { showDeleteModal: show } = this.state;
     return (
       <div>
         <Navbar />
@@ -192,10 +224,15 @@ class PlantProfilePage extends React.Component {
           {' '}
           Days
         </p>
-        <div>
+        <div className="container">
+          <h1>{pet?.name}</h1>
           <button type="button" onClick={this.onWater}> Water </button>
           <button type="button" onClick={this.onFertilize}> Fertilize </button>
           <button type="button" onClick={this.onRotate}> Rotate </button>
+          <div className="container">
+            <button type="button" onClick={this.onEdit}> Edit </button>
+            <button type="button" onClick={() => this.showDeleteModal(true)}> Delete </button>
+          </div>
         </div>
         <div id="calendar">
           <FullCalendar
@@ -205,6 +242,21 @@ class PlantProfilePage extends React.Component {
             events={eventList}
           />
         </div>
+
+        <Modal show={show} onHide={() => this.showDeleteModal(false)}>
+          <Modal.Header closeButton>
+            <Modal.Title>Delete {pet?.name}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Are you sure you want to delete {pet?.name}?</Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => this.showDeleteModal(false)}>
+              No
+            </Button>
+            <Button variant="primary" onClick={this.onDelete}>
+              Yes
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     );
   }
