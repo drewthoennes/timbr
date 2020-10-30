@@ -26,6 +26,12 @@ export function createNewPet({ parent = '', type = '', name, ownedSince, birth, 
   });
 }
 
+export function editPet(petId, newData) {
+  const uid = firebase.auth().currentUser?.uid;
+
+  return firebase.database().ref(`/users/${uid}/pets`).child(petId).update(newData);
+}
+
 /* eslint-disable-next-line object-curly-newline */
 export function deletePet(petId) {
   const uid = firebase.auth().currentUser?.uid;

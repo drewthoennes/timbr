@@ -20,6 +20,7 @@ class PlantProfilePage extends React.Component {
     this.onWater = this.onWater.bind(this);
     this.onFertilize = this.onFertilize.bind(this);
     this.onRotate = this.onRotate.bind(this);
+    this.onEdit = this.onEdit.bind(this);
     this.onDelete = this.onDelete.bind(this);
     this.showDeleteModal = this.showDeleteModal.bind(this);
     this.fetchEventList = this.fetchEventList.bind(this);
@@ -64,6 +65,15 @@ class PlantProfilePage extends React.Component {
     addDate(id, 'turned', today).then(() => {
       this.fetchEventList();
     });
+  }
+
+  onEdit() {
+    const {
+      history,
+      match: { params: { id: petId } },
+      store: { account: { username: userId } },
+    } = this.props;
+    history.push(`/${userId}/edit/${petId}`);
   }
 
   onDelete() {
@@ -130,6 +140,7 @@ class PlantProfilePage extends React.Component {
           <button type="button" onClick={this.onFertilize}> Fertilize </button>
           <button type="button" onClick={this.onRotate}> Rotate </button>
           <div className="container">
+            <button type="button" onClick={this.onEdit}> Edit </button>
             <button type="button" onClick={() => this.showDeleteModal(true)}> Delete </button>
           </div>
         </div>
