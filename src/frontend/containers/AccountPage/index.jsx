@@ -34,6 +34,7 @@ class AccountPage extends React.Component {
     this.deleteAccount = this.deleteAccount.bind(this);
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.canChangePassword = this.canChangePassword.bind(this);
 
     this.state = {
       username: 'timbr-user',
@@ -47,6 +48,7 @@ class AccountPage extends React.Component {
       confirmPassword: '',
       reauthError: '',
       providerId: '',
+      canChangePassword: false,
     };
     this.mounted = false;
   }
@@ -58,7 +60,9 @@ class AccountPage extends React.Component {
     this.getCurrentProfilePicture();
     this.getTextsOn();
     this.getEmailsOn();
-    this.getProvider();
+
+    // this function will set the canchangepassword and provider id in the state
+    this.canChangePassword();
   }
 
   componentDidUpdate(prevProps) {
@@ -82,6 +86,14 @@ class AccountPage extends React.Component {
 
   componentWillUnmount() {
     this.mounted = false;
+  }
+
+  getProvider() {
+    const providerId = getProviderId();
+    this.setState({
+      providerId,
+    });
+    return providerId;
   }
 
   /* Calls the function to get current username and sets the state. */
@@ -120,10 +132,16 @@ class AccountPage extends React.Component {
     );
   }
 
-  getProvider() {
-    this.setState({
-      providerId: getProviderId(),
-    });
+  canChangePassword() {
+    switch (this.getProvider()) {
+      case constants.EMAIL_PROVIDER_ID:
+        this.setState({ canChangePassword: true });
+        break;
+      case constants.GOOGLE_PROVIDER_ID:
+      case constants.FACEBOOK_PROVIDER_ID:
+      default:
+        this.setState({ canChangePassword: false });
+    }
   }
 
   changeUsername() {
@@ -306,6 +324,7 @@ class AccountPage extends React.Component {
           <button
             id="change-password"
             type="button"
+            style={{ visibility: this.state.canChangePassword ? 'visible' : 'hidden' }}
             onClick={() => history.push('/change-password')}
           >
             Change Password
@@ -328,6 +347,7 @@ class AccountPage extends React.Component {
             <input
               id="delete-password"
               type="password"
+              autoComplete="on"
               placeholder="Re-enter password"
               onChange={(event) => {
                 if (this.mounted) {
