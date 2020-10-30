@@ -5,38 +5,66 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import map from '../../store/map';
+import { forgotPassword } from '../../store/actions/account';
 
 class ForgetPasswordPage extends React.Component {
   constructor() {
     super();
 
     this.sendResetEmail = this.sendResetEmail.bind(this);
+    this.state = {
+      email: '',
+      error: '',
+    };
+
+    this.mounted = false;
+  }
+
+  componentDidMount() {
+    this.mounted = true;
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   sendResetEmail() {
-    const email = document.getElementById('email').value;
-    // TODO: Invoke firebase to send email
-    alert(`Email successfully sent to ${email}`);
+    const { email } = this.state;
     const { history } = this.props;
-    history.push('/login');
+
+    forgotPassword(email)
+      .then(() => {
+        alert(`Password reset email successfully sent to ${email}.`);
+        history.push('/login');
+      })
+      .catch((error) => {
+        if (this.mounted) {
+          this.setState({
+            error: error.message,
+          });
+        }
+      });
   }
 
   render() {
+    const { error } = this.state;
     return (
       <div id="forget-password-page">
         <h1>timbr Forget Password Page!</h1>
-        <form id="password-reset-form" onSubmit={this.sendResetEmail}>
+        <form id="password-reset-form">
           <input
             id="email"
             type="text"
             placeholder="Email address"
+            onChange={(event) => { this.setState({ email: event.target.value }); }}
           />
           <button
-            type="submit"
+            type="button"
+            onClick={this.sendResetEmail}
           >
             Send Password Reset Email
           </button>
-          <p id="error">Error: Account does not exist! (Conditional on user input, hardcoded for now)</p>
+          <p id="error">{ error }</p>
         </form>
       </div>
     );
