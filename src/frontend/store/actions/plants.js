@@ -45,13 +45,13 @@ export function getPlantDescription(cb, type) {
     .on('value', cb);
 }
 
-export function getPlantCarnivore(cb, type)  {
+export function getPlantCarnivore(cb, type) {
   firebase.database().ref().child('plants').child(type)
     .child('carnivore')
     .on('value', cb);
 }
 
-export function getPlantImageURL(cb, type)  {
+export function getPlantImageURL(cb, type) {
   firebase.database().ref().child('plants').child(type)
     .child('picture')
     .on('value', cb);

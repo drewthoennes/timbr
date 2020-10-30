@@ -3,15 +3,15 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Button, Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import Navbar from '../../components/Navbar';
-import map from '../../store/map';
-import { createNewPet } from '../../store/actions/pets';
 import {
   Dropdown,
   DropdownToggle,
   DropdownMenu,
-  DropdownItem
+  DropdownItem,
 } from 'reactstrap';
+import Navbar from '../../components/Navbar';
+import map from '../../store/map';
+import { createNewPet } from '../../store/actions/pets';
 import './styles.scss';
 
 class NewPlantProfilePage extends React.Component {
@@ -25,7 +25,7 @@ class NewPlantProfilePage extends React.Component {
       type: '',
       dropdownOpen: false,
     };
-
+    this.getPlantsList = this.getPlantsList.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleDropdown = this.handleDropdown.bind(this);
@@ -37,6 +37,11 @@ class NewPlantProfilePage extends React.Component {
     if (!uid) {
       history.push('/login');
     }
+  }
+
+  getPlantsList() {
+    const list = ['alocasia-amazonica', 'asparagus-setaceus', 'aspidistra-elatior'];
+    return list;
   }
 
   handleChange(e) {
@@ -59,24 +64,19 @@ class NewPlantProfilePage extends React.Component {
     });
   }
 
-  handleDropdown(e){
-    this.setState({type: e.currentTarget.textContent});
+  handleDropdown(e) {
+    this.setState({ type: e.currentTarget.textContent });
   }
 
   toggleDropdown() {
-    this.setState(prevState => ({
-      dropdownOpen: !prevState.dropdownOpen
+    this.setState((prevState) => ({
+      dropdownOpen: !prevState.dropdownOpen,
     }));
-  }
-
-  getPlantsList() {
-    let list = ['alocasia-amazonica', 'asparagus-setaceus', 'aspidistra-elatior'];
-    return list;
   }
 
   render() {
     const { name, birth, ownedSince } = this.state;
-    let plantList = this.getPlantsList();
+    const plantList = this.getPlantsList();
 
     return (
       <div id="new-plant-page">
@@ -122,12 +122,14 @@ class NewPlantProfilePage extends React.Component {
 
           <Form.Group controlId="type">
             <Form.Label>Plant's Type:</Form.Label>
-            <Dropdown name="type" isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown} >
+            { /* eslint-disable-next-line react/destructuring-assignment */}
+            <Dropdown name="type" isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
               <DropdownToggle caret id="size-dropdown">
+                { /* eslint-disable-next-line react/destructuring-assignment */}
                 {this.state.type}
               </DropdownToggle>
               <DropdownMenu>
-                {plantList.map(plant => (
+                {plantList.map((plant) => (
                   <DropdownItem onClick={this.handleDropdown}>{plant}</DropdownItem>
                 ))}
               </DropdownMenu>

@@ -67,19 +67,18 @@ class LoginPage extends React.Component {
       <div id="login-page">
         <h1>timbr Login Page!</h1>
 
-        <div class="row">
-          <div class="col-sm-6">
-            <div class="card">
-              <div class="card-body">
-                
+        <div className="row">
+          <div className="col-sm-6">
+            <div className="card">
+              <div className="card-body">
 
-                <h5 class="card-title">Log In With timbr</h5>
-                <p class="card-text">Login card.</p>
+                <h5 className="card-title">Log In With timbr</h5>
+                <p className="card-text">Login card.</p>
 
                 <button
                   id="Facebook"
                   type="button"
-                  class="btn btn-primary"
+                  className="btn btn-primary"
                   onClick={(e) => {
                     e.preventDefault();
                     this.handleAuth(constants.LOGIN_WITH_FACEBOOK);
@@ -91,7 +90,7 @@ class LoginPage extends React.Component {
                 <button
                   id="Google"
                   type="button"
-                  class="btn btn-primary"
+                  className="btn btn-primary"
                   onClick={(e) => {
                     e.preventDefault();
                     this.handleAuth(constants.LOGIN_WITH_GOOGLE);
@@ -107,38 +106,38 @@ class LoginPage extends React.Component {
                     this.handleAuth(constants.LOGIN_WITH_TIMBR);
                   }}
                 >
-                  <div class="form-group">
+                  <div className="form-group">
                     <input
                       id="email"
-                      class="form-control"
+                      className="form-control"
                       type="text"
                       placeholder="Email"
                     />
                   </div>
 
-                  <div class="form-group">
+                  <div className="form-group">
                     <input
                       id="password"
-                      class="form-control"
+                      className="form-control"
                       type="password"
                       placeholder="Password"
                     />
                   </div>
 
-                  <button type="submit" class="btn btn-primary">Login</button>
+                  <button type="submit" className="btn btn-primary">Login</button>
                 </form>
                 <p id="error" />
               </div>
             </div>
           </div>
-          <div class="col-sm-6">
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title">Sign-Up With timbr</h5>
-                <p class="card-text">Don't have an account yet? Sign up now.</p>
+          <div className="col-sm-6">
+            <div className="card">
+              <div className="card-body">
+                <h5 className="card-title">Sign-Up With timbr</h5>
+                <p className="card-text">Don't have an account yet? Sign up now.</p>
                 <button
                   type="button"
-                  class="btn btn-primary"
+                  className="btn btn-primary"
                   onClick={() => history.push('/register')}
                 >
                   Not a user? Register with timbr here.
@@ -147,8 +146,6 @@ class LoginPage extends React.Component {
             </div>
           </div>
         </div>
-
-
 
       </div>
     );

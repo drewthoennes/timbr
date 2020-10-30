@@ -8,7 +8,7 @@ import Navbar from '../../components/Navbar';
 
 import { setForeignUserPets, addDate } from '../../store/actions/pets';
 
-import { getPlantName, getPlantWaterCycle, getPlantDescription, getPlantCarnivore, getPlantSciName, getPlantFeedFreq,  getPlantFertFreq, getPlantImageURL } from '../../store/actions/plants';
+import { getPlantName, getPlantWaterCycle, getPlantDescription, getPlantCarnivore, getPlantSciName, getPlantFeedFreq, getPlantFertFreq, getPlantImageURL } from '../../store/actions/plants';
 import map from '../../store/map';
 import './styles.scss';
 
@@ -21,7 +21,7 @@ class PlantProfilePage extends React.Component {
     this.getWateringFreq = this.getWateringFreq.bind(this);
     this.getDescription = this.getDescription.bind(this);
     this.getCarnivore = this.getCarnivore.bind(this);
-    this.getSciName =  this.getSciName.bind(this);
+    this.getSciName = this.getSciName.bind(this);
     this.getFeedFreq = this.getFeedFreq.bind(this);
     this.getFertFreq = this.getFertFreq.bind(this);
     this.getImageURL = this.getImageURL.bind(this);
@@ -61,85 +61,6 @@ class PlantProfilePage extends React.Component {
     return setForeignUserPets(username, id).catch(() => history.push(`/${ownUsername}`));
   }
 
-  getPlantType(){
-    const { store: { users, pets, account: { username: ownUsername } } } = this.props;
-    const { history, match: { params: { username, id } } } = this.props;
-
-    let pet;
-    if (username && username !== ownUsername) {
-      pet = users[username] ? users[username].pets[id] : { name: '', type: '' };
-    } else if (!pets[id]) {
-      history.push(`/${ownUsername}`);
-    } else {
-      pet = pets[id];
-    }
-    return pet.type;
-  }
-
-  getSpeciesName(){
-    let plantType;
-    plantType = this.getPlantType();
-    getPlantName(
-      (plant) => { this.setState({ speciesName: plant.val() }); }, plantType,
-    );
-  }
-
-  getSciName(){
-    let plantType;
-    plantType = this.getPlantType();
-    getPlantSciName(
-      (plant) => { this.setState({ scientificName: plant.val() }); }, plantType,
-    );
-  }
-
-  getWateringFreq() {
-    let plantType;
-    plantType = this.getPlantType();
-    getPlantWaterCycle(
-      (plant) => { this.setState({ waterFreq: plant.val() }); }, plantType,
-    );
-  }
-
-  getFeedFreq(){
-    let plantType;
-    plantType = this.getPlantType();
-    getPlantFeedFreq(
-      (plant) => { this.setState({ feedFreq: plant.val() }); }, plantType,
-    );
-  }
-
-  getFertFreq(){
-    let plantType;
-    plantType = this.getPlantType();
-    getPlantFertFreq(
-      (plant) => { this.setState({ fertFreq: plant.val() }); }, plantType,
-    );
-  }
-
-  getDescription(){
-    let plantType;
-    plantType = this.getPlantType();
-    getPlantDescription(
-      (plant) => { this.setState({ description: plant.val() }); }, plantType,
-    );
-  }
-
-  getCarnivore(){
-    let plantType;
-    plantType = this.getPlantType();
-    getPlantCarnivore(
-      (plant) => { this.setState({ carn: plant.val() }); }, plantType,
-    );
-  }
-
-  getImageURL(){
-    let plantType;
-    plantType = this.getPlantType();
-    getPlantImageURL(
-      (plant) => { this.setState({ imageURL: plant.val() }); }, plantType,
-    );
-  }
-  
   onWater() {
     const { match: { params: { id } } } = this.props;
     const today = new Date().toISOString().slice(0, 10);
@@ -160,11 +81,82 @@ class PlantProfilePage extends React.Component {
     addDate(id, 'turned', today);
   }
 
+  getPlantType() {
+    const { store: { users, pets, account: { username: ownUsername } } } = this.props;
+    const { history, match: { params: { username, id } } } = this.props;
+
+    let pet;
+    if (username && username !== ownUsername) {
+      pet = users[username] ? users[username].pets[id] : { name: '', type: '' };
+    } else if (!pets[id]) {
+      history.push(`/${ownUsername}`);
+    } else {
+      pet = pets[id];
+    }
+    return pet.type;
+  }
+
+  getSpeciesName() {
+    const plantType = this.getPlantType();
+    getPlantName(
+      (plant) => { this.setState({ speciesName: plant.val() }); }, plantType,
+    );
+  }
+
+  getSciName() {
+    const plantType = this.getPlantType();
+    getPlantSciName(
+      (plant) => { this.setState({ scientificName: plant.val() }); }, plantType,
+    );
+  }
+
+  getWateringFreq() {
+    const plantType = this.getPlantType();
+    getPlantWaterCycle(
+      (plant) => { this.setState({ waterFreq: plant.val() }); }, plantType,
+    );
+  }
+
+  getFeedFreq() {
+    const plantType = this.getPlantType();
+    getPlantFeedFreq(
+      (plant) => { this.setState({ feedFreq: plant.val() }); }, plantType,
+    );
+  }
+
+  getFertFreq() {
+    const plantType = this.getPlantType();
+    getPlantFertFreq(
+      (plant) => { this.setState({ fertFreq: plant.val() }); }, plantType,
+    );
+  }
+
+  getDescription() {
+    const plantType = this.getPlantType();
+    getPlantDescription(
+      (plant) => { this.setState({ description: plant.val() }); }, plantType,
+    );
+  }
+
+  getCarnivore() {
+    const plantType = this.getPlantType();
+    getPlantCarnivore(
+      (plant) => { this.setState({ carn: plant.val() }); }, plantType,
+    );
+  }
+
+  getImageURL() {
+    const plantType = this.getPlantType();
+    getPlantImageURL(
+      (plant) => { this.setState({ imageURL: plant.val() }); }, plantType,
+    );
+  }
+
   render() {
     const { store: { users, pets, account: { username: ownUsername } } } = this.props;
     const { history, match: { params: { username, id } } } = this.props;
-    const isCarnivorous = this.state.carn;
-
+    const { speciesName, scientificName, description, carn,
+      imageURL, waterFreq, fertFreq, feedFreq } = this.state;
     let pet;
     if (username && username !== ownUsername) {
       pet = users[username] ? users[username].pets[id] : { name: '', type: '' };
@@ -178,20 +170,39 @@ class PlantProfilePage extends React.Component {
       <div>
         <Navbar />
         <h1>{pet.name}</h1>
-        <img 
-          src={this.state.imageURL}
+        <img
+          src={imageURL}
           alt="new"
         />
         <h2>General Information</h2>
-        <p>{this.state.speciesName}</p>
-        <p><i>{this.state.scientificName}</i></p>
-        <p>{this.state.description}</p>
+        <p>{speciesName}</p>
+        <p><i>{scientificName}</i></p>
+        <p>{description}</p>
         <p>
-          This plant {isCarnivorous ? 'is' : 'is not'} carnivorous.
+          This plant
+          {' '}
+          {carn ? 'is' : 'is not'}
+          {' '}
+          carnivorous.
         </p>
-        <p>Water Schedule: {this.state.waterFreq} Days</p>
-        <p>Fertiliztion Schedule: {this.state.fertFreq} Days</p>
-        <p>Feed Schedule: {this.state.feedFreq} Days</p>
+        <p>
+          Water Schedule:
+          {waterFreq}
+          {' '}
+          Days
+        </p>
+        <p>
+          Fertiliztion Schedule:
+          {fertFreq}
+          {' '}
+          Days
+        </p>
+        <p>
+          Feed Schedule:
+          {feedFreq}
+          {' '}
+          Days
+        </p>
         <div>
           <button type="button" onClick={this.onWater}> Water </button>
           <button type="button" onClick={this.onFertilize}> Fertilize </button>
