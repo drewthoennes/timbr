@@ -293,6 +293,13 @@ export function changeProfilePicture(file) {
     });
 }
 
+/* This function is used to change a user's password. */
+export function changePassword(newpwd) {
+  const user = firebase.auth().currentUser;
+
+  return user.updatePassword(newpwd);
+}
+
 /* This function sends a reset password email to the given email. */
 export function forgotPassword(email) {
   const auth = firebase.auth();
