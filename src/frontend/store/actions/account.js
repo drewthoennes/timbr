@@ -306,6 +306,12 @@ export function forgotPassword(email) {
   return auth.sendPasswordResetEmail(email);
 }
 
+/* This function gets the sign in method for the given email. */
+export function getSignInMethod(email) {
+  const auth = firebase.auth();
+  return auth.fetchSignInMethodsForEmail(email);
+}
+
 export function setUID(uid) {
   store.dispatch({
     type: constants.SET_UID,
