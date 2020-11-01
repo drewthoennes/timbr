@@ -22,7 +22,7 @@ class NewPlantProfilePage extends React.Component {
       name: '',
       birth: '',
       ownedSince: '',
-      type: '',
+      type: 'alocasia-amazonica',
       dropdownOpen: false,
     };
 
@@ -96,6 +96,7 @@ class NewPlantProfilePage extends React.Component {
           <Form.Group controlId="birth">
             <Form.Label>Plant's birthday:</Form.Label>
             <Form.Control
+              required
               name="birth"
               type="date"
               min={past}
@@ -108,6 +109,7 @@ class NewPlantProfilePage extends React.Component {
           <Form.Group controlId="ownedSince">
             <Form.Label>I've owned this plant since:</Form.Label>
             <Form.Control
+              required
               name="ownedSince"
               type="date"
               min={birth.length ? birth : past}
@@ -125,7 +127,7 @@ class NewPlantProfilePage extends React.Component {
                 { /* eslint-disable-next-line react/destructuring-assignment */}
                 {this.state.type}
               </DropdownToggle>
-              <DropdownMenu>
+              <DropdownMenu required>
                 {plantList.map((plant) => (
                   <DropdownItem onClick={this.handleDropdown}>{plant}</DropdownItem>
                 ))}

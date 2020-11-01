@@ -201,7 +201,7 @@ class PlantProfilePage extends React.Component {
           Species Name
           {' '}
           {speciesName}
-          </p>
+        </p>
         <p>
           Species Name
           {' '}
