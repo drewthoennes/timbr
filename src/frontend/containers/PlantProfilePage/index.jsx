@@ -193,33 +193,49 @@ class PlantProfilePage extends React.Component {
         <h1>{pet.name}</h1>
         <img
           src={imageURL}
+          className="photo"
           alt="new"
         />
         <h2>General Information</h2>
-        <p>{speciesName}</p>
-        <p><i>{scientificName}</i></p>
+        <p>
+          Species Name
+          {' '}
+          {speciesName}
+          </p>
+        <p>
+          Species Name
+          {' '}
+          <i>{scientificName}</i>
+        </p>
         <p>{description}</p>
         <p>
-          This plant
-          {' '}
-          {carn ? 'is' : 'is not'}
-          {' '}
-          carnivorous.
-        </p>
-        <p>
           Water Schedule:
+          {' '}
           {waterFreq}
           {' '}
           Days
         </p>
         <p>
-          Fertiliztion Schedule:
+          Fertilization Schedule:
+          {' '}
           {fertFreq}
           {' '}
           Days
         </p>
         <p>
+          This plant
+          {' '}
+          {carn ? 'is' : 'is not'}
+          {' '}
+          carnivorous and hence you
+          {' '}
+          {carn ? 'must not' : 'must'}
+          {' '}
+          feed it.
+        </p>
+        <p>
           Feed Schedule:
+          {' '}
           {feedFreq}
           {' '}
           Days
