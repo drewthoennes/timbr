@@ -33,7 +33,7 @@ class PlantProfilePage extends React.Component {
       waterFreq: 0,
       description: '',
       carn: false,
-      feedFreq: 0,
+      feedFreq: '',
       fertFreq: 0,
       imageURL: '',
       showDeleteModal: false,
@@ -138,7 +138,7 @@ class PlantProfilePage extends React.Component {
       (plant) => { this.setState({ description: plant.val() }); }, plantType, 'description',
     );
     getPlantDetails(
-      (plant) => { this.setState({ carn: plant.val() }); }, plantType, 'carnivore',
+      (plant) => { this.setState({ carn: plant.val() }); }, plantType, 'carnivorous',
     );
     getPlantDetails(
       (plant) => { this.setState({ imageURL: plant.val() }); }, plantType, 'picture',
@@ -225,23 +225,21 @@ class PlantProfilePage extends React.Component {
         <p>
           This plant
           {' '}
+          {carn}
           {carn ? 'is' : 'is not'}
           {' '}
           carnivorous and hence you
           {' '}
-          {carn ? 'must not' : 'must'}
+          {carn ? 'must' : 'must not'}
           {' '}
           feed it.
         </p>
         <p>
-          Feed Schedule:
-          {' '}
-          {feedFreq}
-          {' '}
-          Days
+          {carn ? 'Feed Schedule: ' : ''}
+          {carn ? feedFreq : ''}
+          {carn ? ' Days' : ''}
         </p>
         <div className="container">
-          <h1>{pet?.name}</h1>
           <button type="button" onClick={this.onWater}> Water </button>
           <button type="button" onClick={this.onFertilize}> Fertilize </button>
           <button type="button" onClick={this.onRotate}> Rotate </button>
