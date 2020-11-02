@@ -26,7 +26,7 @@ export function addToDatabase() {
   let username = 'timbr-user-';
   const textsOn = false;
   const emailsOn = false;
-  const phoneNumber = constants.SET_PHONE_NUMBER;
+  const phoneNumber = constants.DEFAULT_PHONE_NUMBER;
   const profilePic = false;
 
   // check if the user exists in the database
