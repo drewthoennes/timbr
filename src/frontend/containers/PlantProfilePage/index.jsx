@@ -180,7 +180,7 @@ class PlantProfilePage extends React.Component {
       imageURL, waterFreq, fertFreq, feedFreq, eventList } = this.state;
     let pet;
     if (username && username !== ownUsername) {
-      pet = users[username] ? users[username].pets[id] : { name: '', type: '' };
+      pet = users[username] ? users[username].pets[id] : { name: '', type: '', birth: '', ownedSince: '' };
     } else if (!pets[id]) {
       history.push('/notfound');
     } else {
@@ -198,12 +198,12 @@ class PlantProfilePage extends React.Component {
         />
         <h2>General Information</h2>
         <p>
-          Species Name
+          Species Name:
           {' '}
           {speciesName}
         </p>
         <p>
-          Species Name
+          Scientific Name:
           {' '}
           <i>{scientificName}</i>
         </p>
@@ -238,6 +238,24 @@ class PlantProfilePage extends React.Component {
           {carn ? 'Feed Schedule: ' : ''}
           {carn ? feedFreq : ''}
           {carn ? ' Days' : ''}
+        </p>
+        <p>
+          <i>{pet.name}</i>
+          {' '}
+          was born on
+          {' '}
+          {pet.birth}
+          .
+        </p>
+        <p>
+          You have owned
+          {' '}
+          <i>{pet.name}</i>
+          {' '}
+          since
+          {' '}
+          {pet.ownedSince}
+          .
         </p>
         <div className="container">
           <button type="button" onClick={this.onWater}> Water </button>
