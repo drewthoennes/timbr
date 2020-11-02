@@ -31,12 +31,10 @@ function sendNotificationText(userPhoneNumber, textContent) {
     from: process.env.PHONE_NUMBER, // From a valid Twilio number
   })
     .then((message) => console.log(message.sid));
-  
 }
 
 // set up Email alerts
 function sendNotificationEmail(emailAddress, textContent) {
-  
   transporter.sendMail(mailOptions(emailAddress, textContent), (error, info) => {
     if (error) {
       console.log(error);
@@ -44,18 +42,16 @@ function sendNotificationEmail(emailAddress, textContent) {
       console.log(`Email sent: ${info.response}`, `email sent to ${emailAddress}`);
     }
   });
-  
 }
 
 // sendReminder
-function sendReminder(textsOn, emailsOn, userEmail,userPhoneNumber,reminder, plantName) {
-  console.log("parameters are: userEmail",userEmail,"pNum",userPhoneNumber,"reminder",reminder,"plantName is",plantName)
+function sendReminder(textsOn, emailsOn, userEmail, userPhoneNumber, reminder, plantName) {
   const textBody = `Hello from timbr,\nThis is a friendly reminder to ${reminder} your plant ${plantName} 🌱`;
   if (emailsOn === true && process.env.SEND_EMAILS === 'true') {
     sendNotificationEmail(userEmail, textBody); // send email notification
   }
 
-  if (textsOn === true && process.env.SEND_TEXTS === 'true' && userPhoneNumber!='+11111111111') {
+  if (textsOn === true && process.env.SEND_TEXTS === 'true' && userPhoneNumber !== '+11111111111') {
     sendNotificationText(userPhoneNumber, textBody);// send text notification
   }
 }
@@ -79,6 +75,7 @@ cron.schedule('0 11 * * *', () => {
           const plantName = e.val().name;
 
           let lastDate = '';
+          let freq = 0;
           const species = e.val().type;
 
           reminders.forEach((reminder) => {
@@ -86,14 +83,15 @@ cron.schedule('0 11 * * *', () => {
               case 'water':
                 lastDate = e.val().watered;
                 admin.database().ref(`/plants/${species}/waterFreq`).once('value', (data) => {
-                  const freq = data.val();
+                  freq = data.val();
                   if (typeof (lastDate) !== 'undefined' && freq != null) {
                     const lastActionDate = new Date(lastDate.last);
 
                     const diffTime = Math.abs(new Date() - lastActionDate);
                     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
                     if (diffDays >= freq) {
-                      sendReminder(textsOn, emailsOn, userEmail,userPhoneNumber,reminder, plantName);
+                      /* eslint-disable-next-line max-len */
+                      sendReminder(textsOn, emailsOn, userEmail, userPhoneNumber, reminder, plantName);
                     }
                   }
                 });
@@ -103,47 +101,49 @@ cron.schedule('0 11 * * *', () => {
               case 'fertilize':
                 lastDate = e.val().fertilized;
                 admin.database().ref(`/plants/${species}/fertFreq`).once('value', (data) => {
-                  const freq = data.val();
+                  freq = data.val();
                   if (typeof (lastDate) !== 'undefined' && freq != null) {
                     const lastActionDate = new Date(lastDate.last);
                     const diffTime = Math.abs(new Date() - lastActionDate);
                     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
                     if (diffDays >= freq) {
-                      sendReminder(textsOn, emailsOn, userEmail,userPhoneNumber,reminder, plantName);
-                      
+                      /* eslint-disable-next-line max-len */
+                      sendReminder(textsOn, emailsOn, userEmail, userPhoneNumber, reminder, plantName);
                     }
                   }
                 });
                 break;
               case 'rotate':
                 lastDate = e.val().turned;
-                const freq = 7;
+                freq = 7;
                 if (typeof (lastDate) !== 'undefined' && freq != null) {
                   const lastActionDate = new Date(lastDate.last);
                   const diffTime = Math.abs(new Date() - lastActionDate);
                   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
                   if (diffDays >= freq) {
-                    sendReminder(textsOn, emailsOn, userEmail,userPhoneNumber,reminder, plantName);
-                    
+                    /* eslint-disable-next-line max-len */
+                    sendReminder(textsOn, emailsOn, userEmail, userPhoneNumber, reminder, plantName);
                   }
                 }
                 break;
               case 'feed':
                 admin.database().ref(`/plants/${species}/feedFreq`).once('value', (data) => {
                   if (data.val()) { // the plant is carnivorous
-                    const freq = data.val();
+                    freq = data.val();
                     lastDate = e.val().fed;
                     if (typeof (lastDate) !== 'undefined' && freq != null) {
                       const lastActionDate = new Date(lastDate.last);
                       const diffTime = Math.abs(new Date() - lastActionDate);
                       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
                       if (diffDays >= freq) {
-                        sendReminder(textsOn, emailsOn, userEmail,userPhoneNumber,reminder, plantName);
-              
+                        /* eslint-disable-next-line max-len */
+                        sendReminder(textsOn, emailsOn, userEmail, userPhoneNumber, reminder, plantName);
                       }
                     }
                   }
                 });
+                break;
+              default:
                 break;
             }// switch case
           });
