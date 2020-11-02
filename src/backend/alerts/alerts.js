@@ -49,16 +49,29 @@ function sendNotificationEmail(emailAddress, textContent) {
   // });//cron task 2
 }
 
-// Fetch the user's email and send an email to everyone registered on the database.
-const reminders = ['water', 'fertilize', 'rotate'];
+// sendReminder
+function sendReminder(textsOn, emailsOn, userEmail,userPhoneNumber,reminder, plantName) {
+  console.log("parameters are: userEmail",userEmail,"pNum",phoneNumber,"reminder",reminder,"plantName is",plantName)
+  const textBody = `Hello from timbr,\nThis is a friendly reminder to ${reminder} your plant ${plantName} 🌱`;
+  if (emailsOn === true && process.env.SEND_EMAILS === 'true') {
+    sendNotificationEmail(userEmail, textBody); // send email notification
+  }
 
-// Schedule for texts and emails every 10 minutes
-cron.schedule('*/10 * * * *', () => {
+  if (textsOn === true && process.env.SEND_TEXTS === 'true') {
+    sendNotificationText(userPhoneNumber, textBody);// send text notification
+  }
+}
+
+// Fetch the user's email and send an email to everyone registered on the database.
+const reminders = ['water', 'fertilize', 'rotate', 'feed'];
+
+// Runs cron everyday at 11:00 am
+cron.schedule('0 11 * * *', () => {
   const plantsRef = admin.database().ref('/users/');
   plantsRef.once('value', (snapshot0) => {
     snapshot0.forEach((snapshot1) => {
       const userEmail = snapshot1.val().email;
-
+      const userPhoneNumber = snapshot1.val().phoneNumber;
       // Check to see status of texts and emails
       const { textsOn } = snapshot1.val();
       const { emailsOn } = snapshot1.val();
@@ -66,18 +79,75 @@ cron.schedule('*/10 * * * *', () => {
       snapshot1.forEach((snapshot2) => {
         snapshot2.forEach((e) => {
           const plantName = e.val().name;
-          const userPhoneNumber = '+17657759145';
 
-          reminders.forEach((r) => {
-            const textBody = `Hello from timbr,\nThis is a friendly reminder to ${r} ${plantName} 🌱`;
+          let lastDate = '';
+          const species = e.val().type;
 
-            if (emailsOn === true && process.env.SEND_EMAILS === 'true') {
-              sendNotificationEmail(userEmail, textBody); // send email notification
-            }
+          reminders.forEach((reminder) => {
+            switch (reminder) {
+              case 'water':
+                lastDate = e.val().watered;
+                admin.database().ref(`/plants/${species}/waterFreq`).once('value', (data) => {
+                  const freq = data.val();
+                  if (typeof (lastDate) !== 'undefined' && freq != null) {
+                    const lastActionDate = new Date(lastDate.last);
 
-            if (textsOn === true && process.env.SEND_TEXTS === 'true') {
-              sendNotificationText(userPhoneNumber, textBody);// send text notification
-            }
+                    const diffTime = Math.abs(new Date() - lastActionDate);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    if (diffDays >= freq) {
+                      sendReminder(textsOn, emailsOn, userEmail,userPhoneNumber,reminder, plantName);
+                    }
+                  }
+                });
+
+                break;
+
+              case 'fertilize':
+                lastDate = e.val().fertilized;
+                admin.database().ref(`/plants/${species}/fertFreq`).once('value', (data) => {
+                  const freq = data.val();
+                  if (typeof (lastDate) !== 'undefined' && freq != null) {
+                    const lastActionDate = new Date(lastDate.last);
+                    const diffTime = Math.abs(new Date() - lastActionDate);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    if (diffDays >= freq) {
+                      sendReminder(textsOn, emailsOn, userEmail,userPhoneNumber,reminder, plantName);
+                      
+                    }
+                  }
+                });
+                break;
+              case 'rotate':
+                lastDate = e.val().turned;
+                const freq = 7;
+                if (typeof (lastDate) !== 'undefined' && freq != null) {
+                  const lastActionDate = new Date(lastDate.last);
+                  const diffTime = Math.abs(new Date() - lastActionDate);
+                  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                  if (diffDays >= freq) {
+                    sendReminder(textsOn, emailsOn, userEmail,userPhoneNumber,reminder, plantName);
+                    
+                  }
+                }
+                break;
+              case 'feed':
+                admin.database().ref(`/plants/${species}/feedFreq`).once('value', (data) => {
+                  if (data.val()) { // the plant is carnivorous
+                    const freq = data.val();
+                    lastDate = e.val().fed;
+                    if (typeof (lastDate) !== 'undefined' && freq != null) {
+                      const lastActionDate = new Date(lastDate.last);
+                      const diffTime = Math.abs(new Date() - lastActionDate);
+                      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                      if (diffDays >= freq) {
+                        sendReminder(textsOn, emailsOn, userEmail,userPhoneNumber,reminder, plantName);
+              
+                      }
+                    }
+                  }
+                });
+                break;
+            }// switch case
           });
         });
       });
