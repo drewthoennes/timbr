@@ -64,8 +64,7 @@ class RegisterPage extends React.Component {
 
     const { history } = this.props;
     const { email, password, oauthDenied } = this.state;
-
-    if (email.includes('@gmail.com') && !oauthDenied) {
+    if (email.match(/^[\w.+-]+@gmail\.com$/) && !oauthDenied) {
       this.openModal();
       return;
     }
