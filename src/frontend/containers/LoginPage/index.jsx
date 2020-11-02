@@ -69,10 +69,9 @@ class LoginPage extends React.Component {
   render() {
     const { history } = this.props;
     return (
-      <div id="login-page" class="mt-5">
-        <h1 class="text-center mb-5">timbr Login Page!</h1>
-        <div class="row ml-4 mr-4">
-        <div class="col-sm-6">
+      <div id="login-page">
+        <div class="row h-100 ml-4 mr-4">
+        <div class="col-sm-6 my-auto">
             <div class="card h-100 border-primary">
               <div class="card-body text-center">
               <button
@@ -132,7 +131,7 @@ class LoginPage extends React.Component {
         </form>
         <button
           type="button"
-          class="btn btn-primary"
+          class="btn btn-link"
           onClick={() => history.push('/forget-password')}
         >
           Forgot your password? Reset it here.
@@ -141,9 +140,9 @@ class LoginPage extends React.Component {
         </div>
         </div>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-6 my-auto">
             <div class="card h-100 border-primary">
-              <div class="card-body text-center">
+              <div class="card-body text-center my-auto">
         <button
           type="button"
           class="btn btn-primary"
