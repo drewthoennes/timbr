@@ -69,35 +69,16 @@ class LoginPage extends React.Component {
   render() {
     const { history } = this.props;
     return (
-      <div id="login-page">
-        <h1>timbr Login Page!</h1>
-        <form
-          id="login-form"
-          onSubmit={(e) => {
-            e.preventDefault();
-            this.handleAuth(constants.LOGIN_WITH_TIMBR);
-          }}
-        >
-          <input
-            id="email"
-            type="text"
-            placeholder="Email"
-            onChange={(event) => { this.setState({ email: event.target.value }); }}
-          />
-
-          <input
-            id="password"
-            type="password"
-            placeholder="Password"
-            onChange={(event) => { this.setState({ password: event.target.value }); }}
-          />
-
-          <button type="submit">Login</button>
-        </form>
-
-        <button
+      <div id="login-page" class="mt-5">
+        <h1 class="text-center mb-5">timbr Login Page!</h1>
+        <div class="row ml-4 mr-4">
+        <div class="col-sm-6">
+            <div class="card h-100 border-primary">
+              <div class="card-body text-center">
+              <button
           id="Facebook"
           type="button"
+          class="btn btn-primary"
           onClick={(e) => {
             e.preventDefault();
             this.handleAuth(constants.LOGIN_WITH_FACEBOOK);
@@ -105,10 +86,10 @@ class LoginPage extends React.Component {
         >
           Sign in with Facebook
         </button>
-
         <button
           id="Google"
           type="button"
+          class="btn btn-primary"
           onClick={(e) => {
             e.preventDefault();
             this.handleAuth(constants.LOGIN_WITH_GOOGLE);
@@ -116,19 +97,64 @@ class LoginPage extends React.Component {
         >
           Sign in with Google
         </button>
-        <p id="error" />
-        <button
-          type="button"
-          onClick={() => history.push('/register')}
+        
+        <form
+          id="login-form"
+          class="mt-3 mb-3"
+          onSubmit={(e) => {
+            e.preventDefault();
+            this.handleAuth(constants.LOGIN_WITH_TIMBR);
+          }}
         >
-          Not a user? Register with timbr here.
-        </button>
+          <fieldset>
+          <div class="form-group">
+          <input
+            id="email"
+            type="email"
+            class="form-control"
+            placeholder="Enter email"
+            onChange={(event) => { this.setState({ email: event.target.value }); }}
+          />
+          </div>
+          <div class="form-group">
+          <input
+            id="password"
+            type="password"
+            class="form-control"
+            placeholder="Password"
+            onChange={(event) => { this.setState({ password: event.target.value }); }}
+          />
+          </div>
+
+          <button type="submit" class="btn btn-primary">Login</button>
+          </fieldset>
+        </form>
         <button
           type="button"
+          class="btn btn-primary"
           onClick={() => history.push('/forget-password')}
         >
           Forgot your password? Reset it here.
         </button>
+        <p id="error" />
+        </div>
+        </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="card h-100 border-primary">
+              <div class="card-body text-center">
+        <button
+          type="button"
+          class="btn btn-primary"
+          onClick={() => history.push('/register')}
+        >
+          Not a user? Register with timbr here.
+        </button>
+        
+        </div>
+        </div>
+        </div>
+      </div>
       </div>
     );
   }
