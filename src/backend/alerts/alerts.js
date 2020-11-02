@@ -24,20 +24,19 @@ function sendNotificationText(userPhoneNumber, textContent) {
   const accountSid = process.env.TWILIO_SID;
   const authToken = process.env.TWILIO_AUTHTOKEN;
   const client = new Twilio(accountSid, authToken);
-  // cron.schedule('*/1 * * * *', function() {
+
   client.messages.create({
     body: textContent,
     to: userPhoneNumber, // Text this number
     from: process.env.PHONE_NUMBER, // From a valid Twilio number
   })
     .then((message) => console.log(message.sid));
-  // console.log('running a cron sms task every 10 minutes');
-  // });//cron task 2
+  
 }
 
 // set up Email alerts
 function sendNotificationEmail(emailAddress, textContent) {
-  // cron.schedule('*/1 * * * *', function() {
+  
   transporter.sendMail(mailOptions(emailAddress, textContent), (error, info) => {
     if (error) {
       console.log(error);
@@ -45,19 +44,18 @@ function sendNotificationEmail(emailAddress, textContent) {
       console.log(`Email sent: ${info.response}`, `email sent to ${emailAddress}`);
     }
   });
-  // console.log('running a cron email task every 10 minutes');
-  // });//cron task 2
+  
 }
 
 // sendReminder
 function sendReminder(textsOn, emailsOn, userEmail,userPhoneNumber,reminder, plantName) {
-  console.log("parameters are: userEmail",userEmail,"pNum",phoneNumber,"reminder",reminder,"plantName is",plantName)
+  console.log("parameters are: userEmail",userEmail,"pNum",userPhoneNumber,"reminder",reminder,"plantName is",plantName)
   const textBody = `Hello from timbr,\nThis is a friendly reminder to ${reminder} your plant ${plantName} 🌱`;
   if (emailsOn === true && process.env.SEND_EMAILS === 'true') {
     sendNotificationEmail(userEmail, textBody); // send email notification
   }
 
-  if (textsOn === true && process.env.SEND_TEXTS === 'true') {
+  if (textsOn === true && process.env.SEND_TEXTS === 'true' && userPhoneNumber!='+11111111111') {
     sendNotificationText(userPhoneNumber, textBody);// send text notification
   }
 }
