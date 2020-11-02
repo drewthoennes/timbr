@@ -23,7 +23,7 @@ export function addToDatabase() {
     return Promise.resolve();
   }
 
-  let username = 'timbr-user-';
+  let username = constants.USERNAME_PREFIX;
   const textsOn = false;
   const emailsOn = false;
   const phoneNumber = '+10000000000';
