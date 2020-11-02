@@ -23,7 +23,7 @@ export function addToDatabase() {
     return Promise.resolve();
   }
 
-  let username = 'timbr-user-';
+  let username = constants.USERNAME_PREFIX;
   const textsOn = false;
   const emailsOn = false;
   const phoneNumber = constants.DEFAULT_PHONE_NUMBER;
@@ -304,6 +304,12 @@ export function changePassword(newpwd) {
 export function forgotPassword(email) {
   const auth = firebase.auth();
   return auth.sendPasswordResetEmail(email);
+}
+
+/* This function gets the sign in method for the given email. */
+export function getSignInMethod(email) {
+  const auth = firebase.auth();
+  return auth.fetchSignInMethodsForEmail(email);
 }
 
 export function setUID(uid) {

@@ -12,6 +12,7 @@ firebase.auth().onAuthStateChanged((user) => {
     const userRef = firebase.database().ref(`/users/${uid}`);
 
     userRef.on('value', (snapshot) => {
+      if (!snapshot.val()) return;
       const { username, email, textsOn, emailsOn, pets } = snapshot.val();
 
       Promise.all([
