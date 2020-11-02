@@ -7,6 +7,7 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import map from '../../store/map';
 import Navbar from '../../components/Navbar';
+import { changePassword, reauthenticateUser } from '../../store/actions/account';
 
 class ChangePasswordPage extends React.Component {
   constructor() {
@@ -17,24 +18,50 @@ class ChangePasswordPage extends React.Component {
       currentpwd: '',
       newpwd: '',
       confirmpwd: '',
+      error: '',
     };
+    this.mounted = false;
+  }
+
+  componentDidMount() {
+    this.mounted = true;
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   changePassword() {
-    const { newpwd, confirmpwd } = this.state;
+    const { history } = this.props;
+    const { newpwd, confirmpwd, currentpwd } = this.state;
     if (newpwd !== confirmpwd) {
-      document.getElementById('error').innerHTML = "Passwords don't match";
+      this.setState({
+        error: 'Passwords don\'t match.',
+      });
       return;
     }
 
-    // TODO: Change pwd in the db
-
-    alert('Password changed!');
-    const { history } = this.props;
-    history.push('/account');
+    reauthenticateUser(currentpwd).then(() => {
+      changePassword(newpwd)
+        .then(() => {
+          alert('Password changed!');
+          history.push('/account');
+        })
+        .catch((error) => {
+          if (this.mounted) {
+            this.setState({ error: error.message });
+          }
+        });
+    })
+      .catch((error) => {
+        if (this.mounted) {
+          this.setState({ error: error.message });
+        }
+      });
   }
 
   render() {
+    const { error } = this.state;
     return (
       <div id="change-password-page">
         <Navbar />
@@ -42,6 +69,7 @@ class ChangePasswordPage extends React.Component {
           <input
             id="current-pwd"
             type="password"
+            autoComplete="on"
             placeholder="Current Password"
             onChange={(event) => this.setState({
               currentpwd: event.target.value,
@@ -50,6 +78,7 @@ class ChangePasswordPage extends React.Component {
           <input
             id="new-pwd"
             type="password"
+            autoComplete="on"
             placeholder="New Password"
             onChange={(event) => this.setState({
               newpwd: event.target.value,
@@ -58,6 +87,7 @@ class ChangePasswordPage extends React.Component {
           <input
             id="confirm-pwd"
             type="password"
+            autoComplete="on"
             placeholder="Confirm New Password"
             onChange={(event) => this.setState({
               confirmpwd: event.target.value,
@@ -70,7 +100,7 @@ class ChangePasswordPage extends React.Component {
           >
             Change Password
           </button>
-          <p id="error">Error: Password incorrect! (Conditional on user input, hardcoded for now)</p>
+          <p id="error">{error}</p>
         </form>
       </div>
     );

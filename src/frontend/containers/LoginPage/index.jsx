@@ -121,6 +121,7 @@ class LoginPage extends React.Component {
             id="password"
             type="password"
             class="form-control"
+            autoComplete="on"
             placeholder="Password"
             onChange={(event) => { this.setState({ password: event.target.value }); }}
           />

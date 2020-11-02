@@ -26,7 +26,7 @@ export function addToDatabase() {
   let username = 'timbr-user-';
   const textsOn = false;
   const emailsOn = false;
-  const phoneNumber = '+10000000000';
+  const phoneNumber = constants.DEFAULT_PHONE_NUMBER;
   const profilePic = false;
 
   // check if the user exists in the database
@@ -291,6 +291,13 @@ export function changeProfilePicture(file) {
         }
       });
     });
+}
+
+/* This function is used to change a user's password. */
+export function changePassword(newpwd) {
+  const user = firebase.auth().currentUser;
+
+  return user.updatePassword(newpwd);
 }
 
 /* This function sends a reset password email to the given email. */
