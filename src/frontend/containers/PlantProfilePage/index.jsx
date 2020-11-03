@@ -203,77 +203,71 @@ class PlantProfilePage extends React.Component {
     return (
       <div>
         <Navbar />
-        <h1>{pet.name}</h1>
-        <img
-          src={imageURL}
-          className="photo"
-          alt="new"
-        />
-        <h2>General Information</h2>
-        <p>
-          Species Name:
-          {' '}
-          {speciesName}
-        </p>
-        <p>
-          Scientific Name:
-          {' '}
-          <i>{scientificName}</i>
-        </p>
-        <p>{description}</p>
-        <p>
-          Water Schedule:
-          {' '}
-          {waterFreq}
-          {' '}
-          Days
-        </p>
-        <p>
-          Fertilization Schedule:
-          {' '}
-          {fertFreq}
-          {' '}
-          Days
-        </p>
-        <p>
-          This plant
-          {' '}
-          {carn}
-          {carn ? 'is' : 'is not'}
-          {' '}
-          carnivorous and hence you
-          {' '}
-          {carn ? 'must' : 'must not'}
-          {' '}
-          feed it.
-        </p>
-        <p>
-          {carn ? 'Feed Schedule: ' : ''}
-          {carn ? feedFreq : ''}
-          {carn ? ' Days' : ''}
-        </p>
-        <p>
-          <i>{pet.name}</i>
-          {' '}
-          was born on
-          {' '}
-          {pet.birth}
-          .
-        </p>
-        <p>
-          You have owned
-          {' '}
-          <i>{pet.name}</i>
-          {' '}
-          since
-          {' '}
-          {pet.ownedSince}
-          .
-        </p>
+
         <div className="container">
           <h1>{pet?.name}</h1>
           <img style={{width: '150px'}} id="profile-picture" src={profilePic} alt="Profile" />
-          <br/>
+          <h2>General Information</h2>
+          <p>
+            Species Name:
+            {' '}
+            {speciesName}
+          </p>
+          <p>
+            Scientific Name:
+            {' '}
+            <i>{scientificName}</i>
+          </p>
+          <p>{description}</p>
+          <p>
+            Water Schedule:
+            {' '}
+            {waterFreq}
+            {' '}
+            Days
+          </p>
+          <p>
+            Fertilization Schedule:
+            {' '}
+            {fertFreq}
+            {' '}
+            Days
+          </p>
+          <p>
+            This plant
+            {' '}
+            {carn}
+            {carn ? 'is' : 'is not'}
+            {' '}
+            carnivorous and hence you
+            {' '}
+            {carn ? 'must' : 'must not'}
+            {' '}
+            feed it.
+          </p>
+          <p>
+            {carn ? 'Feed Schedule: ' : ''}
+            {carn ? feedFreq : ''}
+            {carn ? ' Days' : ''}
+          </p>
+          <p>
+            <i>{pet.name}</i>
+            {' '}
+            was born on
+            {' '}
+            {pet.birth}
+            .
+          </p>
+          <p>
+            You have owned
+            {' '}
+            <i>{pet.name}</i>
+            {' '}
+            since
+            {' '}
+            {pet.ownedSince}
+            .
+          </p>
           <button type="button" onClick={this.onWater}> Water </button>
           <button type="button" onClick={this.onFertilize}> Fertilize </button>
           <button type="button" onClick={this.onRotate}> Rotate </button>

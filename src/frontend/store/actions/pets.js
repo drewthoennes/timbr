@@ -81,11 +81,7 @@ export function getPetProfilePicture(petId, callback) {
   return firebase.database().ref(`users/${uid}/pets/${petId}`).once('value', (pet) => {
     if (pet.exists() && pet.val().profilePic) {
       const pictureRef = firebase.storage().ref().child(`pets/profile-pictures/${petId}`);
-      pictureRef.getDownloadURL()
-        .then(callback)
-        .catch((error) => {
-          console.log(error.message);
-        });
+      pictureRef.getDownloadURL().then(callback);
     }
   });
 }
@@ -107,4 +103,23 @@ export function setPetProfilePicture(petId, file) {
         }
       });
     });
+}
+
+export function removePetProfilePicture(petId) {
+  const { account: { uid } } = store.getState();
+  if (!uid) {
+    return Promise.resolve();
+  }
+  const storageRef = firebase.storage().ref();
+
+  return storageRef.child(`pets/profile-pictures/${petId}`).delete()
+  .then(() => {
+    firebase.database().ref(`users/${uid}/pets/${petId}`).once('value', (pet) => {
+      if (pet.exists()) {
+        firebase.database().ref(`users/${uid}/pets/${petId}`).update({
+          profilePic: false,
+        });
+      }
+    });
+  });
 }

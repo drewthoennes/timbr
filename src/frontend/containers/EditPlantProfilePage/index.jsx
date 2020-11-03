@@ -6,7 +6,7 @@ import ProfilePicture from '../../assets/images/profile_picture.png';
 import PropTypes from 'prop-types';
 import Navbar from '../../components/Navbar';
 import map from '../../store/map';
-import { editPet, getPetProfilePicture, setPetProfilePicture } from '../../store/actions/pets';
+import { editPet, getPetProfilePicture, setPetProfilePicture, removePetProfilePicture } from '../../store/actions/pets';
 import './styles.scss';
 
 class EditPlantProfilePage extends React.Component {
@@ -29,6 +29,7 @@ class EditPlantProfilePage extends React.Component {
 
     this.getProfilePicture = this.getProfilePicture.bind(this);
     this.setProfilePicture = this.setProfilePicture.bind(this);
+    this.removeProfilePicture = this.removeProfilePicture.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -89,6 +90,26 @@ class EditPlantProfilePage extends React.Component {
     }
   }
 
+  removeProfilePicture() {
+    const { match: { params: { id } } } = this.props;
+
+    removePetProfilePicture(id)
+    .then(() => {
+      this.setState({
+        profilePic: ProfilePicture,
+        pictureValidationState: 'success',
+        pictureFeedback: 'Profile picture removed.',
+      });
+    })
+    .catch((error) => {
+      console.log(error.message);
+      this.setState({
+        pictureValidationState: 'error',
+        pictureFeedback: 'There was an error removing your picture. Please try again.',
+      });
+    });
+  }
+
   handleChange(e) {
     const { pet } = this.state;
     this.setState({ pet: { ...pet, [e.target.name]: e.target.value } });
@@ -121,7 +142,7 @@ class EditPlantProfilePage extends React.Component {
             <Form.Group
               controlId="profilePic"
               validationstate={pictureValidationState}>
-              <Form.Label>Set Profile Picture:</Form.Label>
+              <Form.Label>{profilePic === ProfilePicture ? 'Add' : 'Set'} Profile Picture:</Form.Label>
               <br/>
               <img style={{width: '150px'}} id="profile-picture" src={profilePic} alt="Profile" />
               <Form.Control
@@ -130,6 +151,15 @@ class EditPlantProfilePage extends React.Component {
                 accept="image/jpg,image/jpeg,image/png"
                 onChange={(event) => { this.setProfilePicture(event.target.files[0]); }}
               />
+              { profilePic !== ProfilePicture && (<>
+                <Button
+                  className="btn btn-danger"
+                  style={{marginTop: '10px', marginBottom: '10px'}}
+                  onClick={(event) => { this.removeProfilePicture(); }}>
+                  Remove Picture
+                </Button>
+                <br/>
+              </>)}
               <FormControl.Feedback />
                 <Form.Label className={`text-${pictureValidationState === 'error' ? 'danger' : pictureValidationState}`}>
                   {pictureFeedback}
