@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Button, Form, FormControl, HelpBlock } from 'react-bootstrap';
-import ProfilePicture from '../../assets/images/profile_picture.png';
+import ProfilePicture from '../../assets/images/pet_profile_picture.png';
 import PropTypes from 'prop-types';
 import Navbar from '../../components/Navbar';
 import map from '../../store/map';

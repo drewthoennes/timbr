@@ -7,7 +7,7 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import PropTypes from 'prop-types';
 import { Modal, Button } from 'react-bootstrap';
-import ProfilePicture from '../../assets/images/profile_picture.png';
+import ProfilePicture from '../../assets/images/pet_profile_picture.png';
 import Navbar from '../../components/Navbar';
 
 import { setForeignUserPets, getPetProfilePicture, addDate, deletePet } from '../../store/actions/pets';
