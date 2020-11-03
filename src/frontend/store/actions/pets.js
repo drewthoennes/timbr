@@ -113,13 +113,13 @@ export function removePetProfilePicture(petId) {
   const storageRef = firebase.storage().ref();
 
   return storageRef.child(`pets/profile-pictures/${petId}`).delete()
-  .then(() => {
-    firebase.database().ref(`users/${uid}/pets/${petId}`).once('value', (pet) => {
-      if (pet.exists()) {
-        firebase.database().ref(`users/${uid}/pets/${petId}`).update({
-          profilePic: false,
-        });
-      }
+    .then(() => {
+      firebase.database().ref(`users/${uid}/pets/${petId}`).once('value', (pet) => {
+        if (pet.exists()) {
+          firebase.database().ref(`users/${uid}/pets/${petId}`).update({
+            profilePic: false,
+          });
+        }
+      });
     });
-  });
 }

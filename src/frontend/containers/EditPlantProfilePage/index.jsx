@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Button, Form, FormControl, HelpBlock } from 'react-bootstrap';
-import ProfilePicture from '../../assets/images/pet_profile_picture.png';
+import { Button, Form, FormControl } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import ProfilePicture from '../../assets/images/pet_profile_picture.png';
 import Navbar from '../../components/Navbar';
 import map from '../../store/map';
 import { editPet, getPetProfilePicture, setPetProfilePicture, removePetProfilePicture } from '../../store/actions/pets';
@@ -48,10 +48,7 @@ class EditPlantProfilePage extends React.Component {
 
   getProfilePicture() {
     const { match: { params: { id } } } = this.props;
-    getPetProfilePicture(id, (picture) => {
-        picture && this.setState({ profilePic: picture });
-      }
-    );
+    getPetProfilePicture(id, (picture) => picture && this.setState({ profilePic: picture }));
   }
 
   setProfilePicture(file) {
@@ -69,24 +66,21 @@ class EditPlantProfilePage extends React.Component {
       });
       return;
     }
-    if (file && pictureValidationState != 'error') {
+    if (file && pictureValidationState !== 'error') {
       setPetProfilePicture(id, file)
-      .then(() => {
-        console.log('set it!');
-        this.setState({
-          profilePic: file,
-          pictureValidationState: 'success',
-          pictureFeedback: 'Profile picture updated!',
+        .then(() => {
+          this.setState({
+            profilePic: file,
+            pictureValidationState: 'success',
+            pictureFeedback: 'Profile picture updated!',
+          });
+        })
+        .catch(() => {
+          this.setState({
+            pictureValidationState: 'error',
+            pictureFeedback: 'There was an error uploading your picture. Please try again.',
+          });
         });
-      })
-      .catch((error) => {
-        console.log('ded it!', error);
-        this.setState({
-          pictureFeedback: error.message,
-          pictureValidationState: 'error',
-          pictureFeedback: 'There was an error uploading your picture. Please try again.',
-        });
-      });
     }
   }
 
@@ -94,20 +88,19 @@ class EditPlantProfilePage extends React.Component {
     const { match: { params: { id } } } = this.props;
 
     removePetProfilePicture(id)
-    .then(() => {
-      this.setState({
-        profilePic: ProfilePicture,
-        pictureValidationState: 'success',
-        pictureFeedback: 'Profile picture removed.',
+      .then(() => {
+        this.setState({
+          profilePic: ProfilePicture,
+          pictureValidationState: 'success',
+          pictureFeedback: 'Profile picture removed.',
+        });
+      })
+      .catch(() => {
+        this.setState({
+          pictureValidationState: 'error',
+          pictureFeedback: 'There was an error removing your picture. Please try again.',
+        });
       });
-    })
-    .catch((error) => {
-      console.log(error.message);
-      this.setState({
-        pictureValidationState: 'error',
-        pictureFeedback: 'There was an error removing your picture. Please try again.',
-      });
-    });
   }
 
   handleChange(e) {
@@ -123,7 +116,7 @@ class EditPlantProfilePage extends React.Component {
       history,
       store: { account: { username } },
     } = this.props;
-    const { pet, profilePic, pictureValidationState } = this.state;
+    const { pet } = this.state;
     editPet(id, pet).then(() => {
       history.push(`/${username}/${id}`);
     });
@@ -141,29 +134,33 @@ class EditPlantProfilePage extends React.Component {
           <Form onSubmit={this.handleSubmit}>
             <Form.Group
               controlId="profilePic"
-              validationstate={pictureValidationState}>
+              validationstate={pictureValidationState}
+            >
               <Form.Label>{profilePic === ProfilePicture ? 'Add' : 'Set'} Profile Picture:</Form.Label>
-              <br/>
-              <img style={{width: '150px'}} id="profile-picture" src={profilePic} alt="Profile" />
+              <br />
+              <img style={{ width: '150px' }} id="profile-picture" src={profilePic} alt="Profile" />
               <Form.Control
                 name="profilePic"
                 type="file"
                 accept="image/jpg,image/jpeg,image/png"
                 onChange={(event) => { this.setProfilePicture(event.target.files[0]); }}
               />
-              { profilePic !== ProfilePicture && (<>
-                <Button
-                  className="btn btn-danger"
-                  style={{marginTop: '10px', marginBottom: '10px'}}
-                  onClick={(event) => { this.removeProfilePicture(); }}>
-                  Remove Picture
-                </Button>
-                <br/>
-              </>)}
+              { profilePic !== ProfilePicture && (
+                <>
+                  <Button
+                    className="btn btn-danger"
+                    style={{ marginTop: '10px', marginBottom: '10px' }}
+                    onClick={() => { this.removeProfilePicture(); }}
+                  >
+                    Remove Picture
+                  </Button>
+                  <br />
+                </>
+              )}
               <FormControl.Feedback />
-                <Form.Label className={`text-${pictureValidationState === 'error' ? 'danger' : pictureValidationState}`}>
-                  {pictureFeedback}
-                </Form.Label>
+              <Form.Label className={`text-${pictureValidationState === 'error' ? 'danger' : pictureValidationState}`}>
+                {pictureFeedback}
+              </Form.Label>
             </Form.Group>
 
             <Form.Group controlId="name">

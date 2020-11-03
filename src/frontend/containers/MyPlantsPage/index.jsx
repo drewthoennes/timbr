@@ -2,8 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import { Card } from 'react-bootstrap';
-import ProfilePicture from '../../assets/images/pet_profile_picture.png';
 import PropTypes from 'prop-types';
+import ProfilePicture from '../../assets/images/pet_profile_picture.png';
 import Navbar from '../../components/Navbar';
 import map from '../../store/map';
 import './styles.scss';
@@ -40,11 +40,11 @@ class MyPlantsPage extends React.Component {
   getProfilePictures() {
     const { store: { pets } } = this.props;
     const { profilePics } = this.state;
-    for (let id in pets)
-    getPetProfilePicture(id, (picture) => {
+    Object.keys(pets).forEach((id) => {
+      getPetProfilePicture(id, (picture) => {
         this.setState({ profilePics: { ...profilePics, [id]: picture } });
-      }
-    );
+      });
+    });
   }
 
   handleLogout(e) {

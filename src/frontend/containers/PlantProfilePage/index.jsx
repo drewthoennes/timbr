@@ -37,9 +37,7 @@ class PlantProfilePage extends React.Component {
       carn: false,
       feedFreq: '',
       fertFreq: 0,
-      imageURL: '',
       showDeleteModal: false,
-      currentProfilePic: ProfilePicture,
       profilePic: null,
       eventList: [],
     };
@@ -58,14 +56,6 @@ class PlantProfilePage extends React.Component {
     if (!username) return Promise.resolve();
 
     return setForeignUserPets(username, id).catch(() => history.push(`/${ownUsername}`));
-  }
-
-  getProfilePicture() {
-    const { match: { params: { id } } } = this.props;
-    getPetProfilePicture(id, (picture) => {
-        picture && this.setState({ profilePic: picture });
-      }
-    );
   }
 
   onWater() {
@@ -115,6 +105,11 @@ class PlantProfilePage extends React.Component {
     });
   }
 
+  getProfilePicture() {
+    const { match: { params: { id } } } = this.props;
+    getPetProfilePicture(id, (picture) => picture && this.setState({ profilePic: picture }));
+  }
+
   getPlantType() {
     const { store: { users, pets, account: { username: ownUsername } } } = this.props;
     const { history, match: { params: { username, id } } } = this.props;
@@ -153,9 +148,6 @@ class PlantProfilePage extends React.Component {
     getPlantDetails(
       (plant) => { this.setState({ carn: plant.val() }); }, plantType, 'carnivorous',
     );
-    getPlantDetails(
-      (plant) => { this.setState({ imageURL: plant.val() }); }, plantType, 'picture',
-    );
   }
 
   fetchEventList() {
@@ -190,7 +182,7 @@ class PlantProfilePage extends React.Component {
     const { store: { users, pets, account: { username: ownUsername } } } = this.props;
     const { history, match: { params: { username, id } } } = this.props;
     const { speciesName, scientificName, description, carn,
-      imageURL, waterFreq, fertFreq, feedFreq, eventList, profilePic } = this.state;
+      waterFreq, fertFreq, feedFreq, eventList, profilePic } = this.state;
     let pet;
     if (username && username !== ownUsername) {
       pet = users[username] ? users[username].pets[id] : { name: '', type: '', birth: '', ownedSince: '' };
@@ -206,7 +198,7 @@ class PlantProfilePage extends React.Component {
 
         <div className="container">
           <h1>{pet?.name}</h1>
-          <img style={{width: '150px'}} id="profile-picture" src={profilePic} alt="Profile" />
+          <img style={{ width: '150px' }} id="profile-picture" src={profilePic ?? ProfilePicture} alt="Profile" />
           <h2>General Information</h2>
           <p>
             Species Name:
