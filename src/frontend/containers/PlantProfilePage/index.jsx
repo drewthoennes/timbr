@@ -12,12 +12,14 @@ import Navbar from '../../components/Navbar';
 
 import { setForeignUserPets, getPetProfilePicture, addDate, deletePet } from '../../store/actions/pets';
 
+import { getPlantDetails } from '../../store/actions/plants';
 import map from '../../store/map';
 import './styles.scss';
 
 class PlantProfilePage extends React.Component {
   constructor(props) {
     super(props);
+
     this.onWater = this.onWater.bind(this);
     this.onFertilize = this.onFertilize.bind(this);
     this.onRotate = this.onRotate.bind(this);
@@ -26,7 +28,16 @@ class PlantProfilePage extends React.Component {
     this.showDeleteModal = this.showDeleteModal.bind(this);
     this.getProfilePicture = this.getProfilePicture.bind(this);
     this.fetchEventList = this.fetchEventList.bind(this);
+
     this.state = {
+      speciesName: '',
+      scientificName: '',
+      waterFreq: 0,
+      description: '',
+      carn: false,
+      feedFreq: '',
+      fertFreq: 0,
+      imageURL: '',
       showDeleteModal: false,
       currentProfilePic: ProfilePicture,
       profilePic: null,
@@ -38,6 +49,9 @@ class PlantProfilePage extends React.Component {
     const { match: { params: { username, id } } } = this.props;
     const { history, store: { account: { username: ownUsername } } } = this.props;
 
+    console.log('Component did mount');
+
+    this.getPlantDetails();
     this.fetchEventList();
     this.getProfilePicture();
 
@@ -101,6 +115,49 @@ class PlantProfilePage extends React.Component {
     });
   }
 
+  getPlantType() {
+    const { store: { users, pets, account: { username: ownUsername } } } = this.props;
+    const { history, match: { params: { username, id } } } = this.props;
+
+    let pet;
+    if (username && username !== ownUsername) {
+      pet = users[username] ? users[username].pets[id] : { name: '', type: '' };
+    } else if (!pets[id]) {
+      history.push(`/${ownUsername}`);
+    } else {
+      pet = pets[id];
+    }
+    return pet.type;
+  }
+
+  getPlantDetails() {
+    const plantType = this.getPlantType();
+    getPlantDetails(
+      (plant) => { this.setState({ speciesName: plant.val() }); }, plantType, 'name',
+    );
+    getPlantDetails(
+      (plant) => { this.setState({ scientificName: plant.val() }); }, plantType, 'scientificName',
+    );
+    getPlantDetails(
+      (plant) => { this.setState({ waterFreq: plant.val() }); }, plantType, 'waterFreq',
+    );
+    getPlantDetails(
+      (plant) => { this.setState({ feedFreq: plant.val() }); }, plantType, 'feedFreq',
+    );
+    getPlantDetails(
+      (plant) => { this.setState({ fertFreq: plant.val() }); }, plantType, 'fertFreq',
+    );
+    getPlantDetails(
+      (plant) => { this.setState({ description: plant.val() }); }, plantType, 'description',
+    );
+    getPlantDetails(
+      (plant) => { this.setState({ carn: plant.val() }); }, plantType, 'carnivorous',
+    );
+    getPlantDetails(
+      (plant) => { this.setState({ imageURL: plant.val() }); }, plantType, 'picture',
+    );
+  }
+
   fetchEventList() {
     // fetches action history
     const { match: { params: { id } } } = this.props;
@@ -132,10 +189,11 @@ class PlantProfilePage extends React.Component {
   render() {
     const { store: { users, pets, account: { username: ownUsername } } } = this.props;
     const { history, match: { params: { username, id } } } = this.props;
-    const { eventList, profilePic } = this.state;
+    const { speciesName, scientificName, description, carn,
+      imageURL, waterFreq, fertFreq, feedFreq, eventList, profilePic } = this.state;
     let pet;
     if (username && username !== ownUsername) {
-      pet = users[username] ? users[username].pets[id] : { name: '' };
+      pet = users[username] ? users[username].pets[id] : { name: '', type: '', birth: '', ownedSince: '' };
     } else if (!pets[id]) {
       history.push('/notfound');
     } else {
@@ -145,6 +203,73 @@ class PlantProfilePage extends React.Component {
     return (
       <div>
         <Navbar />
+        <h1>{pet.name}</h1>
+        <img
+          src={imageURL}
+          className="photo"
+          alt="new"
+        />
+        <h2>General Information</h2>
+        <p>
+          Species Name:
+          {' '}
+          {speciesName}
+        </p>
+        <p>
+          Scientific Name:
+          {' '}
+          <i>{scientificName}</i>
+        </p>
+        <p>{description}</p>
+        <p>
+          Water Schedule:
+          {' '}
+          {waterFreq}
+          {' '}
+          Days
+        </p>
+        <p>
+          Fertilization Schedule:
+          {' '}
+          {fertFreq}
+          {' '}
+          Days
+        </p>
+        <p>
+          This plant
+          {' '}
+          {carn}
+          {carn ? 'is' : 'is not'}
+          {' '}
+          carnivorous and hence you
+          {' '}
+          {carn ? 'must' : 'must not'}
+          {' '}
+          feed it.
+        </p>
+        <p>
+          {carn ? 'Feed Schedule: ' : ''}
+          {carn ? feedFreq : ''}
+          {carn ? ' Days' : ''}
+        </p>
+        <p>
+          <i>{pet.name}</i>
+          {' '}
+          was born on
+          {' '}
+          {pet.birth}
+          .
+        </p>
+        <p>
+          You have owned
+          {' '}
+          <i>{pet.name}</i>
+          {' '}
+          since
+          {' '}
+          {pet.ownedSince}
+          .
+        </p>
         <div className="container">
           <h1>{pet?.name}</h1>
           <img style={{width: '150px'}} id="profile-picture" src={profilePic} alt="Profile" />

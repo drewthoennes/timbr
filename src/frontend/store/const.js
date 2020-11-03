@@ -17,4 +17,5 @@ export default {
   LOGIN_WITH_GOOGLE: 'Login with Google',
   LOGIN_WITH_FACEBOOK: 'Login with Facebook',
   LOGOUT: 'Logout',
+  USERNAME_PREFIX: 'timbr-user-',
 };
