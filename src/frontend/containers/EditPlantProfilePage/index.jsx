@@ -1,11 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, FormControl, HelpBlock } from 'react-bootstrap';
+import ProfilePicture from '../../assets/images/profile_picture.png';
 import PropTypes from 'prop-types';
 import Navbar from '../../components/Navbar';
 import map from '../../store/map';
-import { editPet } from '../../store/actions/pets';
+import { editPet, getPetProfilePicture, setPetProfilePicture } from '../../store/actions/pets';
 import './styles.scss';
 
 class EditPlantProfilePage extends React.Component {
@@ -18,16 +19,73 @@ class EditPlantProfilePage extends React.Component {
     } = this.props;
     const pet = pets[petId];
 
-    this.state = { currPet: { ...pet }, pet: { ...pet }, petId };
+    this.state = {
+      currPet: { ...pet },
+      pet: { ...pet },
+      profilePic: ProfilePicture,
+      pictureFeedback: '',
+      pictureValidationState: 'default',
+    };
 
+    this.getProfilePicture = this.getProfilePicture.bind(this);
+    this.setProfilePicture = this.setProfilePicture.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentDidMount() {
+    this.getProfilePicture();
   }
 
   componentDidUpdate() {
     const { store: { account: { uid } }, history } = this.props;
     if (!uid) {
       history.push('/login');
+    }
+    this.getProfilePicture();
+  }
+
+  getProfilePicture() {
+    const { match: { params: { id } } } = this.props;
+    getPetProfilePicture(id, (picture) => {
+        picture && this.setState({ profilePic: picture });
+      }
+    );
+  }
+
+  setProfilePicture(file) {
+    if (!file) {
+      return;
+    }
+    const { pictureValidationState } = this.state;
+    const { match: { params: { id } } } = this.props;
+
+    const fileSize = file.size / (1024 * 1024); // gets the file size in MB
+    if (fileSize > 1) {
+      this.setState({
+        pictureValidationState: 'error',
+        pictureFeedback: 'File too large! Please upload a file of size less than 1 MB.',
+      });
+      return;
+    }
+    if (file && pictureValidationState != 'error') {
+      setPetProfilePicture(id, file)
+      .then(() => {
+        console.log('set it!');
+        this.setState({
+          profilePic: file,
+          pictureValidationState: 'success',
+          pictureFeedback: 'Profile picture updated!',
+        });
+      })
+      .catch((error) => {
+        console.log('ded it!', error);
+        this.setState({
+          pictureFeedback: error.message,
+          pictureValidationState: 'error',
+          pictureFeedback: 'There was an error uploading your picture. Please try again.',
+        });
+      });
     }
   }
 
@@ -39,15 +97,19 @@ class EditPlantProfilePage extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     e.stopPropagation();
-    const { history, store: { account: { username } } } = this.props;
-    const { pet, petId } = this.state;
-    editPet(petId, pet).then(() => {
-      history.push(`/${username}/${petId}`);
+    const {
+      match: { params: { id } },
+      history,
+      store: { account: { username } },
+    } = this.props;
+    const { pet, profilePic, pictureValidationState } = this.state;
+    editPet(id, pet).then(() => {
+      history.push(`/${username}/${id}`);
     });
   }
 
   render() {
-    const { pet, currPet } = this.state;
+    const { pet, currPet, profilePic, pictureFeedback, pictureValidationState } = this.state;
     const today = (new Date()).toISOString().split('T')[0];
     const past = new Date((new Date().getFullYear() - 50)).toISOString().split('T')[0];
     return (
@@ -56,6 +118,24 @@ class EditPlantProfilePage extends React.Component {
         <div id="edit-plant-page" className="container">
           <h1>Edit {currPet.name}</h1>
           <Form onSubmit={this.handleSubmit}>
+            <Form.Group
+              controlId="profilePic"
+              validationstate={pictureValidationState}>
+              <Form.Label>Set Profile Picture:</Form.Label>
+              <br/>
+              <img style={{width: '150px'}} id="profile-picture" src={profilePic} alt="Profile" />
+              <Form.Control
+                name="profilePic"
+                type="file"
+                accept="image/jpg,image/jpeg,image/png"
+                onChange={(event) => { this.setProfilePicture(event.target.files[0]); }}
+              />
+              <FormControl.Feedback />
+                <Form.Label className={`text-${pictureValidationState === 'error' ? 'danger' : pictureValidationState}`}>
+                  {pictureFeedback}
+                </Form.Label>
+            </Form.Group>
+
             <Form.Group controlId="name">
               <Form.Label>Plant's Name:</Form.Label>
               <Form.Control

@@ -7,9 +7,10 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import PropTypes from 'prop-types';
 import { Modal, Button } from 'react-bootstrap';
+import ProfilePicture from '../../assets/images/profile_picture.png';
 import Navbar from '../../components/Navbar';
 
-import { setForeignUserPets, addDate, deletePet } from '../../store/actions/pets';
+import { setForeignUserPets, getPetProfilePicture, addDate, deletePet } from '../../store/actions/pets';
 
 import map from '../../store/map';
 import './styles.scss';
@@ -23,9 +24,12 @@ class PlantProfilePage extends React.Component {
     this.onEdit = this.onEdit.bind(this);
     this.onDelete = this.onDelete.bind(this);
     this.showDeleteModal = this.showDeleteModal.bind(this);
+    this.getProfilePicture = this.getProfilePicture.bind(this);
     this.fetchEventList = this.fetchEventList.bind(this);
     this.state = {
       showDeleteModal: false,
+      currentProfilePic: ProfilePicture,
+      profilePic: null,
       eventList: [],
     };
   }
@@ -34,13 +38,20 @@ class PlantProfilePage extends React.Component {
     const { match: { params: { username, id } } } = this.props;
     const { history, store: { account: { username: ownUsername } } } = this.props;
 
-    console.log('Component did mount');
-
     this.fetchEventList();
+    this.getProfilePicture();
 
     if (!username) return Promise.resolve();
 
     return setForeignUserPets(username, id).catch(() => history.push(`/${ownUsername}`));
+  }
+
+  getProfilePicture() {
+    const { match: { params: { id } } } = this.props;
+    getPetProfilePicture(id, (picture) => {
+        picture && this.setState({ profilePic: picture });
+      }
+    );
   }
 
   onWater() {
@@ -121,7 +132,7 @@ class PlantProfilePage extends React.Component {
   render() {
     const { store: { users, pets, account: { username: ownUsername } } } = this.props;
     const { history, match: { params: { username, id } } } = this.props;
-    const { eventList } = this.state;
+    const { eventList, profilePic } = this.state;
     let pet;
     if (username && username !== ownUsername) {
       pet = users[username] ? users[username].pets[id] : { name: '' };
@@ -136,6 +147,8 @@ class PlantProfilePage extends React.Component {
         <Navbar />
         <div className="container">
           <h1>{pet?.name}</h1>
+          <img style={{width: '150px'}} id="profile-picture" src={profilePic} alt="Profile" />
+          <br/>
           <button type="button" onClick={this.onWater}> Water </button>
           <button type="button" onClick={this.onFertilize}> Fertilize </button>
           <button type="button" onClick={this.onRotate}> Rotate </button>

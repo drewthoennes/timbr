@@ -71,3 +71,40 @@ export function addDate(petId, action, currDate) {
     firebase.database().ref(`users/${uid}/pets/${petId}/${action}/last/`).set(currDate),
   ]);
 }
+
+export function getPetProfilePicture(petId, callback) {
+  const { account: { uid } } = store.getState();
+  if (!uid) {
+    return Promise.resolve();
+  }
+
+  return firebase.database().ref(`users/${uid}/pets/${petId}`).once('value', (pet) => {
+    if (pet.exists() && pet.val().profilePic) {
+      const pictureRef = firebase.storage().ref().child(`pets/profile-pictures/${petId}`);
+      pictureRef.getDownloadURL()
+        .then(callback)
+        .catch((error) => {
+          console.log(error.message);
+        });
+    }
+  });
+}
+
+export function setPetProfilePicture(petId, file) {
+  const { account: { uid } } = store.getState();
+  if (!uid) {
+    return Promise.resolve();
+  }
+  const storageRef = firebase.storage().ref();
+
+  return storageRef.child(`pets/profile-pictures/${petId}`).put(file)
+    .then(() => {
+      firebase.database().ref(`users/${uid}/pets/${petId}`).once('value', (pet) => {
+        if (pet.exists()) {
+          firebase.database().ref(`users/${uid}/pets/${petId}`).update({
+            profilePic: true,
+          });
+        }
+      });
+    });
+}
