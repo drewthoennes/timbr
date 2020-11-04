@@ -87,7 +87,6 @@ class EditPlantProfilePage extends React.Component {
     if (!file) {
       return;
     }
-    const { profilePictureValidationState } = this.state;
     const { match: { params: { id } } } = this.props;
 
     const fileSize = file.size / (1024 * 1024); // gets the file size in MB
@@ -98,7 +97,7 @@ class EditPlantProfilePage extends React.Component {
       });
       return;
     }
-    if (file && profilePictureValidationState !== 'error') {
+    if (file) {
       setPetProfilePicture(id, file)
         .then(() => {
           this.setState({
