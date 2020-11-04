@@ -69,16 +69,6 @@ export function reauthenticateUser(password) {
   return Promise.resolve();
 }
 
-/* This method uses firebase auth to create a new user. */
-export function registerWithTimbr(credentials) {
-  return firebase.auth().createUserWithEmailAndPassword(credentials.email, credentials.password)
-    .then(() => {
-      if (firebase.auth().currentUser) {
-        addToDatabase();
-      }
-    });
-}
-
 /* This method uses firebase auth to sign in a user. */
 export function loginWithTimbr(credentials) {
   return firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password);
@@ -108,7 +98,7 @@ export function changeUsername(username) {
     .once('value')
     .then((snapshot) => {
       if (snapshot.val()) {
-        alert('Username Taken! Please select a different one.');
+        alert('Could not set username because it is taken by another user.');
         return Promise.reject();
       }
 
@@ -251,6 +241,21 @@ export function getEmailsOn(cb, myStore) {
   firebase.database().ref().child('users').child(uid)
     .child('emailsOn')
     .on('value', cb);
+}
+
+/* This method uses firebase auth to create a new user. */
+export function registerWithTimbr(credentials) {
+  return firebase.auth().createUserWithEmailAndPassword(credentials.email, credentials.password)
+    .then(() => {
+      if (firebase.auth().currentUser) {
+        addToDatabase()
+          .then(() => {
+            if (credentials.username) {
+              changeUsername(credentials.username);
+            }
+          });
+      }
+    });
 }
 
 /* This function is used to delete a user. */
