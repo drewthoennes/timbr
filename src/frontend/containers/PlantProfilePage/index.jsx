@@ -111,14 +111,14 @@ class PlantProfilePage extends React.Component {
 
   getProfilePicture() {
     const { match: { params: { id } } } = this.props;
+    this.setState({ profilePic: ProfilePicture });
+
     getPetProfilePicture(id, (pictureRef) => {
       pictureRef.getDownloadURL()
         .then((picture) => {
           this.setState({ profilePic: picture });
         })
-        .catch(() => {
-          this.setState({ profilePic: ProfilePicture });
-        });
+        .catch();
     });
   }
 

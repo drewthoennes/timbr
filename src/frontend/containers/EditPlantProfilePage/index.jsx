@@ -57,14 +57,14 @@ class EditPlantProfilePage extends React.Component {
 
   getProfilePicture() {
     const { match: { params: { id } } } = this.props;
+    this.setState({ profilePic: ProfilePicture });
+
     getPetProfilePicture(id, (pictureRef) => {
       pictureRef.getDownloadURL()
         .then((picture) => {
           this.setState({ profilePic: picture });
         })
-        .catch(() => {
-          this.setState({ profilePic: ProfilePicture });
-        });
+        .catch();
     });
   }
 
@@ -101,7 +101,6 @@ class EditPlantProfilePage extends React.Component {
       setPetProfilePicture(id, file)
         .then(() => {
           this.setState({
-            profilePic: file,
             profilePictureValidationState: 'success',
             profilePictureFeedback: 'Profile picture updated!',
           });
@@ -111,7 +110,8 @@ class EditPlantProfilePage extends React.Component {
             profilePictureValidationState: 'error',
             profilePictureFeedback: 'There was an error uploading your picture. Please try again.',
           });
-        });
+        })
+        .finally(() => this.getProfilePicture());
     }
   }
 

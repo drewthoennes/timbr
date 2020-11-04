@@ -41,10 +41,11 @@ class MyPlantsPage extends React.Component {
     const { store: { pets } } = this.props;
     const { profilePics } = this.state;
     Object.keys(pets).forEach((id) => {
+      profilePics[id] = ProfilePicture;
+      this.setState({ profilePics });
+
       getPetProfilePicture(id, (pictureRef) => {
         if (!pictureRef) {
-          profilePics[id] = ProfilePicture;
-          this.setState({ profilePics });
           return;
         }
 
@@ -53,10 +54,7 @@ class MyPlantsPage extends React.Component {
             profilePics[id] = picture;
             this.setState({ profilePics });
           })
-          .catch(() => {
-            profilePics[id] = ProfilePicture;
-            this.setState({ profilePics });
-          });
+          .catch(() => {});
       });
     });
   }
