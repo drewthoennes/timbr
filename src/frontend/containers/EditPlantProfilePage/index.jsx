@@ -26,11 +26,13 @@ class EditPlantProfilePage extends React.Component {
       currPet: { ...pet },
       pet: { ...pet },
       profilePic: ProfilePicture,
-      growthPics: {},
       profilePictureFeedback: '',
       profilePictureValidationState: 'default',
+      resetProfilePicInput: 0,
+      growthPics: {},
       growthPictureFeedback: '',
       growthPictureValidationState: 'default',
+      resetGrowthPicInput: 0,
     };
 
     this.getProfilePicture = this.getProfilePicture.bind(this);
@@ -84,6 +86,9 @@ class EditPlantProfilePage extends React.Component {
   }
 
   setProfilePicture(file) {
+    const { resetProfilePicInput } = this.state;
+    this.setState({ resetProfilePicInput: resetProfilePicInput + 1 });
+
     if (!file) {
       return;
     }
@@ -116,6 +121,9 @@ class EditPlantProfilePage extends React.Component {
   }
 
   addGrowthPicture(file) {
+    const { resetGrowthPicInput } = this.state;
+    this.setState({ resetGrowthPicInput: resetGrowthPicInput + 1 });
+
     if (!file) {
       return;
     }
@@ -198,7 +206,9 @@ class EditPlantProfilePage extends React.Component {
       history,
       store: { account: { username } },
     } = this.props;
-    const { pet } = this.state;
+    const { pet, profilePic, growthPics } = this.state;
+    pet.profilePic = !!profilePic;
+    pet.growthPics = Object.keys(growthPics);
     editPet(id, pet).then(() => {
       history.push(`/${username}/${id}`);
     });
@@ -206,8 +216,8 @@ class EditPlantProfilePage extends React.Component {
 
   render() {
     const { pet, currPet, profilePic, growthPics,
-      profilePictureFeedback, profilePictureValidationState,
-      growthPictureFeedback, growthPictureValidationState } = this.state;
+      profilePictureFeedback, profilePictureValidationState, resetProfilePicInput,
+      growthPictureFeedback, growthPictureValidationState, resetGrowthPicInput } = this.state;
     const today = (new Date()).toISOString().split('T')[0];
     const past = new Date((new Date().getFullYear() - 50)).toISOString().split('T')[0];
 
@@ -247,6 +257,7 @@ class EditPlantProfilePage extends React.Component {
               <br />
               <img style={{ width: '150px' }} id="profile-picture" src={profilePic} alt="Profile" />
               <Form.Control
+                key={`profile-${resetProfilePicInput}`}
                 name="profilePic"
                 type="file"
                 accept="image/jpg,image/jpeg,image/png"
@@ -312,6 +323,7 @@ class EditPlantProfilePage extends React.Component {
               { Object.keys(growthPics).length < 5 && (
                 <Card className="growth-pic-card">
                   <input
+                    key={`growth-${resetGrowthPicInput}`}
                     type="file"
                     className="file-select"
                     onChange={(event) => { this.addGrowthPicture(event.target.files[0]); }}
