@@ -127,14 +127,13 @@ class PlantProfilePage extends React.Component {
     const growthPics = {};
     this.setState({ growthPics });
 
-    // console.log('getting them again');
     getPetGrowthPictures(id, (pictureRef, index) => {
       pictureRef.getDownloadURL()
         .then((picture) => {
           growthPics[index] = picture;
           this.setState({ growthPics });
         })
-        .catch((error) => {});
+        .catch(() => {});
     });
   }
 
@@ -225,7 +224,7 @@ class PlantProfilePage extends React.Component {
     const { showDeleteModal: show } = this.state;
 
     const growthPicCards = Object.entries(growthPics)
-      .sort(([i,], [j,]) => {
+      .sort(([i], [j]) => {
         if (new Date(i) < new Date(j)) return -1;
         return 1;
       })

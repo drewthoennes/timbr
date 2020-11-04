@@ -73,14 +73,13 @@ class EditPlantProfilePage extends React.Component {
     const growthPics = {};
     this.setState({ growthPics });
 
-    // console.log('getting them again');
     getPetGrowthPictures(id, (pictureRef, index) => {
       pictureRef.getDownloadURL()
         .then((picture) => {
           growthPics[index] = picture;
           this.setState({ growthPics });
         })
-        .catch((error) => {});
+        .catch(() => {});
     });
   }
 
@@ -121,7 +120,7 @@ class EditPlantProfilePage extends React.Component {
     if (!file) {
       return;
     }
-    const { growthPics, growthPictureValidationState } = this.state;
+    const { growthPictureValidationState } = this.state;
     const { match: { params: { id } } } = this.props;
 
     const fileSize = file.size / (1024 * 1024); // gets the file size in MB
@@ -210,9 +209,8 @@ class EditPlantProfilePage extends React.Component {
     const today = (new Date()).toISOString().split('T')[0];
     const past = new Date((new Date().getFullYear() - 50)).toISOString().split('T')[0];
 
-
     const growthPicCards = Object.entries(growthPics)
-      .sort(([i,], [j,]) => {
+      .sort(([i], [j]) => {
         if (new Date(i) < new Date(j)) return -1;
         return 1;
       })
@@ -309,7 +307,7 @@ class EditPlantProfilePage extends React.Component {
               <Form.Label>Growth Pictures</Form.Label>
               <br />
               {growthPicCards}
-              { Object.keys(growthPics).length < 5 &&
+              { Object.keys(growthPics).length < 5 && (
                 <Card className="growth-pic-card">
                   <input
                     type="file"
@@ -319,10 +317,9 @@ class EditPlantProfilePage extends React.Component {
                   <Card.Img className="card-img" variant="top" src={Plus} />
                   <Card.Body>
                     <Card.Title>Add Growth Picture</Card.Title>
-                    <Card.Text></Card.Text>
                   </Card.Body>
                 </Card>
-              }
+              )}
 
               <br />
               <FormControl.Feedback />

@@ -123,7 +123,6 @@ export function removePetProfilePicture(petId) {
     });
 }
 
-
 export function getPetGrowthPictures(petId, callback) {
   const { account: { uid } } = store.getState();
   if (!uid) {
@@ -133,7 +132,7 @@ export function getPetGrowthPictures(petId, callback) {
   return firebase.database().ref(`users/${uid}/pets/${petId}`).once('value', (pet) => {
     if (pet.exists() && pet.val().growthPics) {
       const growthPics = pet.val().growthPics?.slice();
-      for (let i = 0; i < growthPics.length; i++) {
+      for (let i = 0; i < growthPics.length; ++i) {
         const pictureRef = firebase.storage().ref().child(`pets/growth-pictures/${petId}@${growthPics[i]}`);
         callback(pictureRef, growthPics[i]);
       }
@@ -144,12 +143,12 @@ export function getPetGrowthPictures(petId, callback) {
 export function addPetGrowthPicture(petId, file, callback) {
   const { account: { uid } } = store.getState();
   if (!uid) {
-    return callback(new Error(`User does not exist.`));
+    return callback(new Error('User does not exist.'));
   }
 
-  firebase.database().ref(`users/${uid}/pets/${petId}`).once('value', (pet) => {
+  return firebase.database().ref(`users/${uid}/pets/${petId}`).once('value', (pet) => {
     if (!pet.exists()) {
-      return callback(new Error(`Pet does not exist.`));
+      return callback(new Error('Pet does not exist.'));
     }
 
     const growthPics = pet.val().growthPics?.slice() ?? [];
@@ -160,24 +159,23 @@ export function addPetGrowthPicture(petId, file, callback) {
     const storageRef = firebase.storage().ref();
     const timestamp = (new Date()).toISOString();
     return storageRef.child(`pets/growth-pictures/${petId}@${timestamp}`).put(file)
-      .then((url) => {
+      .then(() => {
         growthPics.push(timestamp);
         firebase.database().ref(`users/${uid}/pets/${petId}`).update({ growthPics });
         callback(timestamp);
       });
   });
-
 }
 
 export function removePetGrowthPicture(petId, index, callback) {
   const { account: { uid } } = store.getState();
   if (!uid) {
-    return callback(new Error(`User does not exist.`));
+    return callback(new Error('User does not exist.'));
   }
 
-  firebase.database().ref(`users/${uid}/pets/${petId}`).once('value', (pet) => {
+  return firebase.database().ref(`users/${uid}/pets/${petId}`).once('value', (pet) => {
     if (!pet.exists()) {
-      return callback(new Error(`Pet does not exist.`));
+      return callback(new Error('Pet does not exist.'));
     }
 
     const growthPics = pet.val().growthPics.slice();
