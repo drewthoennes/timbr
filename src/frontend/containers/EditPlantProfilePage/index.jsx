@@ -119,7 +119,6 @@ class EditPlantProfilePage extends React.Component {
     if (!file) {
       return;
     }
-    const { growthPictureValidationState } = this.state;
     const { match: { params: { id } } } = this.props;
 
     const fileSize = file.size / (1024 * 1024); // gets the file size in MB
@@ -130,7 +129,7 @@ class EditPlantProfilePage extends React.Component {
       });
       return;
     }
-    if (file && growthPictureValidationState !== 'error') {
+    if (file) {
       addPetGrowthPicture(id, file, (error) => {
         if (error.message) {
           this.setState({
@@ -139,6 +138,10 @@ class EditPlantProfilePage extends React.Component {
           });
           return;
         }
+        this.setState({
+          growthPictureValidationState: 'success',
+          growthPictureFeedback: 'Growth picture added.',
+        });
         this.getGrowthPictures();
       });
     }

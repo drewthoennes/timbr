@@ -78,10 +78,16 @@ export function getPetProfilePicture(petId, callback) {
     return Promise.resolve();
   }
   return firebase.database().ref(`users/${uid}/pets/${petId}`).once('value', (pet) => {
-    if (pet.exists()) {
-      const pictureRef = firebase.storage().ref().child(`pets/profile-pictures/${petId}`);
-      callback(pictureRef);
+    if (!pet.exists()) {
+      return callback(null);
     }
+
+    if (!pet.val().profilePic) {
+      return callback(null);
+    }
+
+    const pictureRef = firebase.storage().ref().child(`pets/profile-pictures/${petId}`);
+    return callback(pictureRef);
   });
 }
 
