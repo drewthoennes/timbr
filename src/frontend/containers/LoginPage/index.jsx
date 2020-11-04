@@ -70,91 +70,91 @@ class LoginPage extends React.Component {
     const { history } = this.props;
     return (
       <div id="login-page">
-        <div class="row h-100 ml-4 mr-4">
-        <div class="col-sm-6 my-auto">
-            <div class="card h-100 border-primary">
-              <div class="card-body text-center">
-              <button
-          id="Facebook"
-          type="button"
-          class="btn btn-primary"
-          onClick={(e) => {
-            e.preventDefault();
-            this.handleAuth(constants.LOGIN_WITH_FACEBOOK);
-          }}
-        >
-          Sign in with Facebook
-        </button>
-        <button
-          id="Google"
-          type="button"
-          class="btn btn-primary"
-          onClick={(e) => {
-            e.preventDefault();
-            this.handleAuth(constants.LOGIN_WITH_GOOGLE);
-          }}
-        >
-          Sign in with Google
-        </button>
-        
-        <form
-          id="login-form"
-          class="mt-3 mb-3"
-          onSubmit={(e) => {
-            e.preventDefault();
-            this.handleAuth(constants.LOGIN_WITH_TIMBR);
-          }}
-        >
-          <fieldset>
-          <div class="form-group">
-          <input
-            id="email"
-            type="email"
-            class="form-control"
-            placeholder="Enter email"
-            onChange={(event) => { this.setState({ email: event.target.value }); }}
-          />
-          </div>
-          <div class="form-group">
-          <input
-            id="password"
-            type="password"
-            class="form-control"
-            autoComplete="on"
-            placeholder="Password"
-            onChange={(event) => { this.setState({ password: event.target.value }); }}
-          />
-          </div>
+        <div className="row h-100 ml-4 mr-4">
+          <div className="col-sm-6 my-auto">
+            <div className="card h-100 border-primary">
+              <div className="card-body text-center">
+                <button
+                  id="Facebook"
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    this.handleAuth(constants.LOGIN_WITH_FACEBOOK);
+                  }}
+                >
+                  Sign in with Facebook
+                </button>
+                <button
+                  id="Google"
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    this.handleAuth(constants.LOGIN_WITH_GOOGLE);
+                  }}
+                >
+                  Sign in with Google
+                </button>
 
-          <button type="submit" class="btn btn-primary">Login</button>
-          </fieldset>
-        </form>
-        <button
-          type="button"
-          class="btn btn-link"
-          onClick={() => history.push('/forget-password')}
-        >
-          Forgot your password? Reset it here.
-        </button>
-        <p id="error" />
+                <form
+                  id="login-form"
+                  className="mt-3 mb-3"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    this.handleAuth(constants.LOGIN_WITH_TIMBR);
+                  }}
+                >
+                  <fieldset>
+                    <div className="form-group">
+                      <input
+                        id="email"
+                        type="email"
+                        className="form-control"
+                        placeholder="Enter email"
+                        onChange={(event) => { this.setState({ email: event.target.value }); }}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <input
+                        id="password"
+                        type="password"
+                        className="form-control"
+                        autoComplete="on"
+                        placeholder="Password"
+                        onChange={(event) => { this.setState({ password: event.target.value }); }}
+                      />
+                    </div>
+
+                    <button type="submit" className="btn btn-primary">Login</button>
+                  </fieldset>
+                </form>
+                <button
+                  type="button"
+                  className="btn btn-link"
+                  onClick={() => history.push('/forget-password')}
+                >
+                  Forgot your password? Reset it here.
+                </button>
+                <p id="error" />
+              </div>
+            </div>
+          </div>
+          <div className="col-sm-6 my-auto">
+            <div className="card h-100 border-primary">
+              <div className="card-body text-center my-auto">
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => history.push('/register')}
+                >
+                  Not a user? Register with timbr here.
+                </button>
+
+              </div>
+            </div>
+          </div>
         </div>
-        </div>
-        </div>
-        <div class="col-sm-6 my-auto">
-            <div class="card h-100 border-primary">
-              <div class="card-body text-center my-auto">
-        <button
-          type="button"
-          class="btn btn-primary"
-          onClick={() => history.push('/register')}
-        >
-          Not a user? Register with timbr here.
-        </button>
-        
-        </div>
-        </div>
-        </div>
-      </div>
       </div>
     );
   }

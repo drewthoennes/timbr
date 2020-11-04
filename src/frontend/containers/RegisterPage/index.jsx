@@ -63,37 +63,44 @@ class RegisterPage extends React.Component {
     const { history } = this.props;
     return (
       <div id="register-page">
-        <h1>timbr Register Page!</h1>
-        <button
-          type="button"
-          onClick={() => history.push('/login')}
-        >
-          Already a user? Go to login
-        </button>
+        <div className="row h-100 ml-4 mr-4">
+          <div className="col-sm-6 my-auto">
+            <div className="card h-100 border-primary">
+              <div className="card-body text-center">
+                <button
+                  type="button"
+                  onClick={() => history.push('/login')}
+                >
+                  Already a user? Go to login
+                </button>
 
-        <form
-          id="register-form"
-          onSubmit={this.handleRegister}
-        >
+                <form
+                  id="register-form"
+                  onSubmit={this.handleRegister}
+                >
 
-          <input
-            id="email"
-            type="text"
-            placeholder="Email"
-            onChange={(event) => { this.setState({ email: event.target.value }); }}
-          />
+                  <input
+                    id="email"
+                    type="text"
+                    placeholder="Email"
+                    onChange={(event) => { this.setState({ email: event.target.value }); }}
+                  />
 
-          <input
-            id="password"
-            type="password"
-            autoComplete="on"
-            placeholder="Password"
-            onChange={(event) => { this.setState({ password: event.target.value }); }}
-          />
+                  <input
+                    id="password"
+                    type="password"
+                    autoComplete="on"
+                    placeholder="Password"
+                    onChange={(event) => { this.setState({ password: event.target.value }); }}
+                  />
 
-          <button type="submit">Register</button>
-        </form>
-        <p id="error"> </p>
+                  <button type="submit">Register</button>
+                </form>
+                <p id="error"> </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
