@@ -26,7 +26,7 @@ class EditPlantProfilePage extends React.Component {
       currPet: { ...pet },
       pet: { ...pet },
       profilePic: ProfilePicture,
-      growthPics: [],
+      growthPics: {},
       profilePictureFeedback: '',
       profilePictureValidationState: 'default',
       growthPictureFeedback: '',
@@ -217,22 +217,22 @@ class EditPlantProfilePage extends React.Component {
         return 1;
       })
       .map(([index, picture]) => (
-      <Card className="growth-pic-card" key={index}>
-        <Card.Img className="card-img" variant="top" src={picture} />
-        <Card.Body>
-          <Card.Title>{(new Date(index)).toISOString().split('T')[0]}</Card.Title>
-          <Card.Text style={{ textAlign: 'center' }}>
-            <Button
-              className="btn btn-danger"
-              style={{ marginTop: '10px', marginBottom: '10px' }}
-              onClick={() => { this.removeGrowthPicture(index); }}
-            >
-              Remove
-            </Button>
-          </Card.Text>
-        </Card.Body>
-      </Card>
-    ));
+        <Card className="growth-pic-card" key={index}>
+          <Card.Img className="card-img" variant="top" src={picture} />
+          <Card.Body>
+            <Card.Title>{(new Date(index)).toISOString().split('T')[0]}</Card.Title>
+            <Card.Text style={{ textAlign: 'center' }}>
+              <Button
+                className="btn btn-danger"
+                style={{ marginTop: '10px', marginBottom: '10px' }}
+                onClick={() => { this.removeGrowthPicture(index); }}
+              >
+                Remove
+              </Button>
+            </Card.Text>
+          </Card.Body>
+        </Card>
+      ));
     return (
       <>
         <Navbar />

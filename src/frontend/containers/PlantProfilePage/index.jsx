@@ -6,11 +6,12 @@ import { withRouter } from 'react-router-dom';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import PropTypes from 'prop-types';
-import { Modal, Button } from 'react-bootstrap';
+import { Card, Modal, Button } from 'react-bootstrap';
 import ProfilePicture from '../../assets/images/pet_profile_picture.png';
 import Navbar from '../../components/Navbar';
 
-import { setForeignUserPets, getPetProfilePicture, addDate, deletePet } from '../../store/actions/pets';
+import { setForeignUserPets, getPetProfilePicture, getPetGrowthPictures,
+  addDate, deletePet } from '../../store/actions/pets';
 
 import { getPlantDetails } from '../../store/actions/plants';
 import map from '../../store/map';
@@ -27,6 +28,7 @@ class PlantProfilePage extends React.Component {
     this.onDelete = this.onDelete.bind(this);
     this.showDeleteModal = this.showDeleteModal.bind(this);
     this.getProfilePicture = this.getProfilePicture.bind(this);
+    this.getGrowthPictures = this.getGrowthPictures.bind(this);
     this.fetchEventList = this.fetchEventList.bind(this);
 
     this.state = {
@@ -38,7 +40,8 @@ class PlantProfilePage extends React.Component {
       feedFreq: '',
       fertFreq: 0,
       showDeleteModal: false,
-      profilePic: null,
+      profilePic: ProfilePicture,
+      growthPics: {},
       eventList: [],
     };
   }
@@ -52,6 +55,7 @@ class PlantProfilePage extends React.Component {
     this.getPlantDetails();
     this.fetchEventList();
     this.getProfilePicture();
+    this.getGrowthPictures();
 
     if (!username) return Promise.resolve();
 
@@ -115,6 +119,22 @@ class PlantProfilePage extends React.Component {
         .catch(() => {
           this.setState({ profilePic: ProfilePicture });
         });
+    });
+  }
+
+  getGrowthPictures() {
+    const { match: { params: { id } } } = this.props;
+    const growthPics = {};
+    this.setState({ growthPics });
+
+    // console.log('getting them again');
+    getPetGrowthPictures(id, (pictureRef, index) => {
+      pictureRef.getDownloadURL()
+        .then((picture) => {
+          growthPics[index] = picture;
+          this.setState({ growthPics });
+        })
+        .catch((error) => {});
     });
   }
 
@@ -190,7 +210,9 @@ class PlantProfilePage extends React.Component {
     const { store: { users, pets, account: { username: ownUsername } } } = this.props;
     const { history, match: { params: { username, id } } } = this.props;
     const { speciesName, scientificName, description, carn,
-      waterFreq, fertFreq, feedFreq, eventList, profilePic } = this.state;
+      waterFreq, fertFreq, feedFreq, eventList,
+      profilePic, growthPics } = this.state;
+
     let pet;
     if (username && username !== ownUsername) {
       pet = users[username] ? users[username].pets[id] : { name: '', type: '', birth: '', ownedSince: '' };
@@ -199,12 +221,28 @@ class PlantProfilePage extends React.Component {
     } else {
       pet = pets[id];
     }
+
     const { showDeleteModal: show } = this.state;
+
+    const growthPicCards = Object.entries(growthPics)
+      .sort(([i,], [j,]) => {
+        if (new Date(i) < new Date(j)) return -1;
+        return 1;
+      })
+      .map(([index, picture]) => (
+        <Card className="growth-pic-card" key={index}>
+          <Card.Img className="card-img" variant="top" src={picture} />
+          <Card.Body>
+            <Card.Title>{(new Date(index)).toISOString().split('T')[0]}</Card.Title>
+          </Card.Body>
+        </Card>
+      ));
+
     return (
       <div>
         <Navbar />
 
-        <div className="container">
+        <div id="plant-profile-page" className="container">
           <h1>{pet?.name}</h1>
           <img style={{ width: '150px' }} id="profile-picture" src={profilePic} alt="Profile" />
           <h2>General Information</h2>
@@ -275,30 +313,33 @@ class PlantProfilePage extends React.Component {
             <button type="button" onClick={this.onEdit}> Edit </button>
             <button type="button" onClick={() => this.showDeleteModal(true)}> Delete </button>
           </div>
-        </div>
-        <div id="calendar">
-          <FullCalendar
-            plugins={[dayGridPlugin]}
-            initialView="dayGridMonth"
-            weekends
-            events={eventList}
-          />
-        </div>
+          <div id="calendar">
+            <FullCalendar
+              plugins={[dayGridPlugin]}
+              initialView="dayGridMonth"
+              weekends
+              events={eventList}
+            />
+          </div>
 
-        <Modal show={show} onHide={() => this.showDeleteModal(false)}>
-          <Modal.Header closeButton>
-            <Modal.Title>Delete {pet?.name}</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>Are you sure you want to delete {pet?.name}?</Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={() => this.showDeleteModal(false)}>
-              No
-            </Button>
-            <Button variant="primary" onClick={this.onDelete}>
-              Yes
-            </Button>
-          </Modal.Footer>
-        </Modal>
+          <h2>Growth Pictures</h2>
+          {growthPicCards}
+
+          <Modal show={show} onHide={() => this.showDeleteModal(false)}>
+            <Modal.Header closeButton>
+              <Modal.Title>Delete {pet?.name}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>Are you sure you want to delete {pet?.name}?</Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={() => this.showDeleteModal(false)}>
+                No
+              </Button>
+              <Button variant="primary" onClick={this.onDelete}>
+                Yes
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        </div>
       </div>
     );
   }

@@ -1,15 +1,17 @@
 @import "~@theme";
-#calendar {
-  width: 400px;
-  margin: 0 auto;
-  font-size: 10px;
-}
-#heatmap{
+
+#plant-profile-page {
+  #calendar {
+    width: 400px;
+    margin: 0 auto;
+    font-size: 10px;
+  }
+  #heatmap{
     width: 200px;
     margin: 0 auto;
     font-size: 10px;
-}
-.react-calendar-heatmap text {
+  }
+  .react-calendar-heatmap text {
     font-size: 10px;
     fill: #aaa;
   }
@@ -24,8 +26,8 @@
   }
 
   /*
-   * Default color scale
-   */
+  * Default color scale
+  */
 
   .react-calendar-heatmap .color-empty {
     fill: #eeeeee;
@@ -36,8 +38,8 @@
   }
 
   /*
-   * Github color scale
-   */
+  * Github color scale
+  */
 
   .react-calendar-heatmap .color-github-0 {
     fill: #eeeeee;
@@ -56,8 +58,8 @@
   }
 
   /*
-   * Gitlab color scale
-   */
+  * Gitlab color scale
+  */
 
   .react-calendar-heatmap .color-gitlab-0 {
     fill: #ededed;
@@ -80,4 +82,17 @@
   .react-calendar-heatmap .color-scale-4 { fill: #1e6823; }
   .photo {
     height: 500px;
+  }
+
+  .growth-pic-card {
+    width: 12rem;
+    margin: 8px 8px 0 0 ;
+    display: inline-block;
+  }
+
+  .card-img {
+    padding: 12px;
+    max-width: 100%;
+    cursor: pointer;
+  }
 }
