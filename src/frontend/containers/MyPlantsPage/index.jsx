@@ -42,7 +42,8 @@ class MyPlantsPage extends React.Component {
     const { profilePics } = this.state;
     Object.keys(pets).forEach((id) => {
       getPetProfilePicture(id, (picture) => {
-        this.setState({ profilePics: { ...profilePics, [id]: picture } });
+        profilePics[id] = picture;
+        this.setState({ profilePics });
       });
     });
   }
