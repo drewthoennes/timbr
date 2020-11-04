@@ -3,6 +3,12 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Button, Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import {
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+} from 'reactstrap';
 import Navbar from '../../components/Navbar';
 import map from '../../store/map';
 import { editPet } from '../../store/actions/pets';
@@ -18,10 +24,17 @@ class EditPlantProfilePage extends React.Component {
     } = this.props;
     const pet = pets[petId];
 
-    this.state = { currPet: { ...pet }, pet: { ...pet }, petId };
+    this.state = {
+      currPet: { ...pet },
+      pet: { ...pet },
+      petId,
+      dropdownOpen: false,
+    };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.toggleDropdown = this.toggleDropdown.bind(this);
+    this.handleDropdown = this.handleDropdown.bind(this);
   }
 
   componentDidUpdate() {
@@ -46,8 +59,21 @@ class EditPlantProfilePage extends React.Component {
     });
   }
 
+  handleDropdown(e) {
+    const { pet } = this.state;
+    this.setState({ pet: { ...pet, type: e.currentTarget.textContent } });
+  }
+
+  toggleDropdown() {
+    this.setState((prevState) => ({
+      dropdownOpen: !prevState.dropdownOpen,
+    }));
+  }
+
   render() {
+    const { store: { plants } } = this.props;
     const { pet, currPet } = this.state;
+    const plantList = Object.keys(plants);
     const today = (new Date()).toISOString().split('T')[0];
     const past = new Date((new Date().getFullYear() - 50)).toISOString().split('T')[0];
     return (
@@ -90,6 +116,23 @@ class EditPlantProfilePage extends React.Component {
                 onChange={this.handleChange}
               />
             </Form.Group>
+
+            <Form.Group controlId="type">
+              <Form.Label>Plant's Type:</Form.Label>
+              { /* eslint-disable-next-line react/destructuring-assignment */}
+              <Dropdown name="type" isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
+                <DropdownToggle caret id="size-dropdown">
+                  { /* eslint-disable-next-line react/destructuring-assignment */}
+                  {this.state.pet.type}
+                </DropdownToggle>
+                <DropdownMenu required>
+                  {plantList.map((plant) => (
+                    <DropdownItem onClick={this.handleDropdown}>{plant}</DropdownItem>
+                  ))}
+                </DropdownMenu>
+              </Dropdown>
+            </Form.Group>
+
             <Button variant="primary" type="submit">
               Submit
             </Button>
@@ -107,6 +150,7 @@ EditPlantProfilePage.propTypes = {
       username: PropTypes.string,
     }),
     pets: PropTypes.object.isRequired,
+    plants: PropTypes.object.isRequired,
   }).isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
