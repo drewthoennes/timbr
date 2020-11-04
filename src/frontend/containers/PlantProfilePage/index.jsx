@@ -107,7 +107,15 @@ class PlantProfilePage extends React.Component {
 
   getProfilePicture() {
     const { match: { params: { id } } } = this.props;
-    getPetProfilePicture(id, (picture) => picture && this.setState({ profilePic: picture }));
+    getPetProfilePicture(id, (pictureRef) => {
+      pictureRef.getDownloadURL()
+        .then((picture) => {
+          this.setState({ profilePic: picture });
+        })
+        .catch(() => {
+          this.setState({ profilePic: ProfilePicture });
+        });
+    });
   }
 
   getPlantType() {
@@ -198,7 +206,7 @@ class PlantProfilePage extends React.Component {
 
         <div className="container">
           <h1>{pet?.name}</h1>
-          <img style={{ width: '150px' }} id="profile-picture" src={profilePic ?? ProfilePicture} alt="Profile" />
+          <img style={{ width: '150px' }} id="profile-picture" src={profilePic} alt="Profile" />
           <h2>General Information</h2>
           <p>
             Species Name:

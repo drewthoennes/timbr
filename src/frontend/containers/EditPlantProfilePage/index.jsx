@@ -1,12 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Button, Form, FormControl } from 'react-bootstrap';
+import { Button, Card, Form, FormControl } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import ProfilePicture from '../../assets/images/pet_profile_picture.png';
+import Plus from '../../assets/images/plus.png';
 import Navbar from '../../components/Navbar';
 import map from '../../store/map';
-import { editPet, getPetProfilePicture, setPetProfilePicture, removePetProfilePicture } from '../../store/actions/pets';
+import { editPet, getPetProfilePicture, getPetGrowthPictures,
+  addPetGrowthPicture, setPetProfilePicture,
+  removePetProfilePicture, removePetGrowthPicture } from '../../store/actions/pets';
 import './styles.scss';
 
 class EditPlantProfilePage extends React.Component {
@@ -23,19 +26,26 @@ class EditPlantProfilePage extends React.Component {
       currPet: { ...pet },
       pet: { ...pet },
       profilePic: ProfilePicture,
-      pictureFeedback: '',
-      pictureValidationState: 'default',
+      growthPics: [],
+      profilePictureFeedback: '',
+      profilePictureValidationState: 'default',
+      growthPictureFeedback: '',
+      growthPictureValidationState: 'default',
     };
 
     this.getProfilePicture = this.getProfilePicture.bind(this);
+    this.getGrowthPictures = this.getGrowthPictures.bind(this);
     this.setProfilePicture = this.setProfilePicture.bind(this);
+    this.addGrowthPicture = this.addGrowthPicture.bind(this);
     this.removeProfilePicture = this.removeProfilePicture.bind(this);
+    this.removeGrowthPicture = this.removeGrowthPicture.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount() {
     this.getProfilePicture();
+    this.getGrowthPictures();
   }
 
   componentDidUpdate() {
@@ -43,44 +53,96 @@ class EditPlantProfilePage extends React.Component {
     if (!uid) {
       history.push('/login');
     }
-    this.getProfilePicture();
   }
 
   getProfilePicture() {
     const { match: { params: { id } } } = this.props;
-    getPetProfilePicture(id, (picture) => picture && this.setState({ profilePic: picture }));
+    getPetProfilePicture(id, (pictureRef) => {
+      pictureRef.getDownloadURL()
+        .then((picture) => {
+          this.setState({ profilePic: picture });
+        })
+        .catch(() => {
+          this.setState({ profilePic: ProfilePicture });
+        });
+    });
+  }
+
+  getGrowthPictures() {
+    const { match: { params: { id } } } = this.props;
+    const growthPics = {};
+    this.setState({ growthPics });
+
+    // console.log('getting them again');
+    getPetGrowthPictures(id, (pictureRef, index) => {
+      pictureRef.getDownloadURL()
+        .then((picture) => {
+          growthPics[index] = picture;
+          this.setState({ growthPics });
+        })
+        .catch((error) => {});
+    });
   }
 
   setProfilePicture(file) {
     if (!file) {
       return;
     }
-    const { pictureValidationState } = this.state;
+    const { profilePictureValidationState } = this.state;
     const { match: { params: { id } } } = this.props;
 
     const fileSize = file.size / (1024 * 1024); // gets the file size in MB
     if (fileSize > 1) {
       this.setState({
-        pictureValidationState: 'error',
-        pictureFeedback: 'File too large! Please upload a file of size less than 1 MB.',
+        profilePictureValidationState: 'error',
+        profilePictureFeedback: 'File too large! Please upload a file of size less than 1 MB.',
       });
       return;
     }
-    if (file && pictureValidationState !== 'error') {
+    if (file && profilePictureValidationState !== 'error') {
       setPetProfilePicture(id, file)
         .then(() => {
           this.setState({
             profilePic: file,
-            pictureValidationState: 'success',
-            pictureFeedback: 'Profile picture updated!',
+            profilePictureValidationState: 'success',
+            profilePictureFeedback: 'Profile picture updated!',
           });
         })
         .catch(() => {
           this.setState({
-            pictureValidationState: 'error',
-            pictureFeedback: 'There was an error uploading your picture. Please try again.',
+            profilePictureValidationState: 'error',
+            profilePictureFeedback: 'There was an error uploading your picture. Please try again.',
           });
         });
+    }
+  }
+
+  addGrowthPicture(file) {
+    if (!file) {
+      return;
+    }
+    const { growthPics, growthPictureValidationState } = this.state;
+    const { match: { params: { id } } } = this.props;
+
+    const fileSize = file.size / (1024 * 1024); // gets the file size in MB
+    if (fileSize > 1) {
+      this.setState({
+        growthPictureValidationState: 'error',
+        growthPictureFeedback: 'File too large! Please upload a file of size less than 1 MB.',
+      });
+      return;
+    }
+    if (file && growthPictureValidationState !== 'error') {
+      addPetGrowthPicture(id, file, (error) => {
+        if (error.message) {
+          this.setState({
+            growthPictureValidationState: 'error',
+            growthPictureFeedback: error.message,
+          });
+          return;
+        }
+        this.getGrowthPictures();
+      });
     }
   }
 
@@ -91,16 +153,35 @@ class EditPlantProfilePage extends React.Component {
       .then(() => {
         this.setState({
           profilePic: ProfilePicture,
-          pictureValidationState: 'success',
-          pictureFeedback: 'Profile picture removed.',
+          profilePictureValidationState: 'success',
+          profilePictureFeedback: 'Profile picture removed.',
         });
       })
       .catch(() => {
         this.setState({
-          pictureValidationState: 'error',
-          pictureFeedback: 'There was an error removing your picture. Please try again.',
+          profilePictureValidationState: 'error',
+          profilePictureFeedback: 'There was an error removing your picture. Please try again.',
         });
       });
+  }
+
+  removeGrowthPicture(index) {
+    const { match: { params: { id } } } = this.props;
+
+    removePetGrowthPicture(id, index, (error) => {
+      if (error.message) {
+        this.setState({
+          growthPictureValidationState: 'error',
+          growthPictureFeedback: error.message,
+        });
+        return;
+      }
+      this.setState({
+        growthPictureValidationState: 'success',
+        growthPictureFeedback: 'Growth picture removed.',
+      });
+      this.getGrowthPictures();
+    });
   }
 
   handleChange(e) {
@@ -123,9 +204,35 @@ class EditPlantProfilePage extends React.Component {
   }
 
   render() {
-    const { pet, currPet, profilePic, pictureFeedback, pictureValidationState } = this.state;
+    const { pet, currPet, profilePic, growthPics,
+      profilePictureFeedback, profilePictureValidationState,
+      growthPictureFeedback, growthPictureValidationState } = this.state;
     const today = (new Date()).toISOString().split('T')[0];
     const past = new Date((new Date().getFullYear() - 50)).toISOString().split('T')[0];
+
+
+    const growthPicCards = Object.entries(growthPics)
+      .sort(([i,], [j,]) => {
+        if (new Date(i) < new Date(j)) return -1;
+        return 1;
+      })
+      .map(([index, picture]) => (
+      <Card className="growth-pic-card" key={index}>
+        <Card.Img className="card-img" variant="top" src={picture} />
+        <Card.Body>
+          <Card.Title>{(new Date(index)).toISOString().split('T')[0]}</Card.Title>
+          <Card.Text style={{ textAlign: 'center' }}>
+            <Button
+              className="btn btn-danger"
+              style={{ marginTop: '10px', marginBottom: '10px' }}
+              onClick={() => { this.removeGrowthPicture(index); }}
+            >
+              Remove
+            </Button>
+          </Card.Text>
+        </Card.Body>
+      </Card>
+    ));
     return (
       <>
         <Navbar />
@@ -134,7 +241,7 @@ class EditPlantProfilePage extends React.Component {
           <Form onSubmit={this.handleSubmit}>
             <Form.Group
               controlId="profilePic"
-              validationstate={pictureValidationState}
+              validationstate={profilePictureValidationState}
             >
               <Form.Label>{profilePic === ProfilePicture ? 'Add' : 'Set'} Profile Picture:</Form.Label>
               <br />
@@ -158,8 +265,8 @@ class EditPlantProfilePage extends React.Component {
                 </>
               )}
               <FormControl.Feedback />
-              <Form.Label className={`text-${pictureValidationState === 'error' ? 'danger' : pictureValidationState}`}>
-                {pictureFeedback}
+              <Form.Label className={`text-${profilePictureValidationState === 'error' ? 'danger' : profilePictureValidationState}`}>
+                {profilePictureFeedback}
               </Form.Label>
             </Form.Group>
 
@@ -197,7 +304,35 @@ class EditPlantProfilePage extends React.Component {
                 onChange={this.handleChange}
               />
             </Form.Group>
-            <Button variant="primary" type="submit">
+
+            <Form.Group>
+              <Form.Label>Growth Pictures</Form.Label>
+              <br />
+              {growthPicCards}
+              { Object.keys(growthPics).length < 5 &&
+                <Card className="growth-pic-card">
+                  <input
+                    type="file"
+                    className="file-select"
+                    onChange={(event) => { this.addGrowthPicture(event.target.files[0]); }}
+                  />
+                  <Card.Img className="card-img" variant="top" src={Plus} />
+                  <Card.Body>
+                    <Card.Title>Add Growth Picture</Card.Title>
+                    <Card.Text></Card.Text>
+                  </Card.Body>
+                </Card>
+              }
+
+              <br />
+              <FormControl.Feedback />
+              <Form.Label className={`text-${growthPictureValidationState === 'error' ? 'danger' : growthPictureValidationState}`}>
+                {growthPictureFeedback}
+              </Form.Label>
+            </Form.Group>
+
+            <br />
+            <Button variant="primary" type="submit" style={{ marginTop: '1rem' }}>
               Submit
             </Button>
           </Form>

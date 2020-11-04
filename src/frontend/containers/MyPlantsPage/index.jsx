@@ -41,8 +41,16 @@ class MyPlantsPage extends React.Component {
     const { store: { pets } } = this.props;
     const { profilePics } = this.state;
     Object.keys(pets).forEach((id) => {
-      getPetProfilePicture(id, (picture) => {
-        this.setState({ profilePics: { ...profilePics, [id]: picture } });
+      getPetProfilePicture(id, (pictureRef) => {
+        pictureRef.getDownloadURL()
+          .then((picture) => {
+            profilePics[id] = picture;
+            this.setState({ profilePics });
+          })
+          .catch(() => {
+            profilePics[id] = ProfilePicture;
+            this.setState({ profilePics });
+          });
       });
     });
   }
@@ -67,7 +75,7 @@ class MyPlantsPage extends React.Component {
       <span className="plant-link" key={id}>
         <Link to={`/${username}/${id}`}>
           <Card className="plant-card">
-            <Card.Img className="card-img" variant="top" src={profilePics[id] ?? ProfilePicture} />
+            <Card.Img className="card-img" variant="top" src={profilePics[id]} />
             <Card.Body>
               <Card.Title>{pet.name}</Card.Title>
               <Card.Text>{pet.type}</Card.Text>
