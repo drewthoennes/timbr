@@ -123,30 +123,37 @@ class RegisterPage extends React.Component {
                   id="register-form"
                   onSubmit={this.handleRegister}
                 >
-
+                  <fieldset>
+                    <div className="form-group">
                   <input
                     id="email"
-                    type="text"
+                    type="email"
+                    className="form-control"
                     placeholder="Email"
                     onChange={(event) => { this.setState({ email: event.target.value }); }}
                   />
-
+                  </div>
+                  <div className="form-group">
                   <input
                     id="password"
                     type="password"
+                    className="form-control"
                     autoComplete="on"
                     placeholder="Password"
                     onChange={(event) => { this.setState({ password: event.target.value }); }}
                   />
-
+                  </div>
+                  <div className="form-group">
                   <input
                     id="username"
                     type="text"
+                    className="form-control"
                     placeholder="Username (Optional)"
                     onChange={(event) => { this.setState({ username: event.target.value }); }}
                   />
-
+                  </div>
                   <button type="submit">Register</button>
+                  </fieldset>
                 </form>
                 <p id="error"> </p>
 
