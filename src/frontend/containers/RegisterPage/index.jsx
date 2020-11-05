@@ -109,16 +109,11 @@ class RegisterPage extends React.Component {
         <h1 className="text-center pt-5 pb-2">timbr</h1>
         <h3 className="text-center" style={{ color: 'white' }}><i>your plants need some love</i></h3>
         <div className="row h-100 ml-4 mr-4">
+          <div className="col-sm-3" />
           <div className="col-sm-6 my-auto">
             <div className="card h-100 border-primary">
-              <div className="card-body text-center">
-                <button
-                  type="button"
-                  onClick={() => history.push('/login')}
-                >
-                  Already a user? Go to login
-                </button>
-
+              <div className="card-body text-center my-auto">
+                <h4 className="mt-2 mb-3">Register</h4>
                 <form
                   id="register-form"
                   onSubmit={this.handleRegister}
@@ -129,7 +124,7 @@ class RegisterPage extends React.Component {
                         id="email"
                         type="email"
                         className="form-control"
-                        placeholder="Email"
+                        placeholder="Email*"
                         onChange={(event) => { this.setState({ email: event.target.value }); }}
                       />
                     </div>
@@ -139,7 +134,7 @@ class RegisterPage extends React.Component {
                         type="password"
                         className="form-control"
                         autoComplete="on"
-                        placeholder="Password"
+                        placeholder="Password*"
                         onChange={(event) => { this.setState({ password: event.target.value }); }}
                       />
                     </div>
@@ -148,44 +143,52 @@ class RegisterPage extends React.Component {
                         id="username"
                         type="text"
                         className="form-control"
-                        placeholder="Username (Optional)"
+                        placeholder="Username"
                         onChange={(event) => { this.setState({ username: event.target.value }); }}
                       />
                     </div>
-                    <button type="submit">Register</button>
+                    <button type="submit" className="btn btn-primary">REGISTER</button>
                   </fieldset>
                 </form>
                 <p id="error"> </p>
-
-                <Modal id="can-oauth" show={this.state.isOauthModalOpen} onHide={this.closeModal}>
-                  <Modal.Header closeButton>
-                    <Modal.Title>Gmail Account</Modal.Title>
-                  </Modal.Header>
-                  <p>Looks like you're registering with a Gmail account.
-                    Do you want to sign in with Google instead?
-                  </p>
-                  <Modal.Body>
-                    <button
-                      type="button"
-                      onClick={this.signInWithGoogle}
-                    >
-                      Sign in with Google
-                    </button>
-                    <button
-                      type="button"
-                      onClick={this.closeModal}
-                    >
-                      Continue registering with timbr
-                    </button>
-                  </Modal.Body>
-                  <Modal.Footer>
-                    <p id="modal-error">{this.state.modalError}</p>
-                  </Modal.Footer>
-                </Modal>
+                <button
+                  type="button"
+                  className="btn btn-link mb-2"
+                  onClick={() => history.push('/login')}
+                >
+                  Already a user? Go to login
+                </button>
               </div>
             </div>
           </div>
+          <div className="col-sm-3" />
         </div>
+
+        <Modal id="can-oauth" show={this.state.isOauthModalOpen} onHide={this.closeModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Gmail Account</Modal.Title>
+          </Modal.Header>
+          <p>Looks like you're registering with a Gmail account.
+            Do you want to sign in with Google instead?
+          </p>
+          <Modal.Body>
+            <button
+              type="button"
+              onClick={this.signInWithGoogle}
+            >
+              Sign in with Google
+            </button>
+            <button
+              type="button"
+              onClick={this.closeModal}
+            >
+              Continue registering with timbr
+            </button>
+          </Modal.Body>
+          <Modal.Footer>
+            <p id="modal-error">{this.state.modalError}</p>
+          </Modal.Footer>
+        </Modal>
       </div>
     );
   }

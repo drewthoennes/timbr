@@ -80,7 +80,7 @@ class LoginPage extends React.Component {
           <div className="col-sm-6 my-auto">
             <div className="card h-100 border-primary">
               <div className="card-body text-center my-auto">
-                <h4 className="mt-2 mb-5">Sign-up</h4>
+                <h4 className="mt-2 mb-5">Register</h4>
                 <p className="mt-5 mb-0 pt-2 lead text-muted">Don't have a timbr account yet?</p>
                 <p className="mt-0 mb-4 lead text-muted">Sign-up now!</p>
                 <button
@@ -138,7 +138,7 @@ class LoginPage extends React.Component {
                         id="email"
                         type="email"
                         className="form-control"
-                        placeholder="Enter email"
+                        placeholder="Email"
                         onChange={(event) => { this.setState({ email: event.target.value }); }}
                       />
                     </div>
@@ -161,7 +161,7 @@ class LoginPage extends React.Component {
                   className="btn btn-link"
                   onClick={() => history.push('/forget-password')}
                 >
-                  Forgot your password? Reset it here.
+                  Forgot your password?
                 </button>
                 <p id="error" />
               </div>

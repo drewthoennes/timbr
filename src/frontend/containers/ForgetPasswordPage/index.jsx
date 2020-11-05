@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import map from '../../store/map';
 import { forgotPassword, getSignInMethod } from '../../store/actions/account';
 import constants from '../../store/const';
+import './styles.scss';
 
 class ForgetPasswordPage extends React.Component {
   constructor() {
@@ -56,7 +57,7 @@ class ForgetPasswordPage extends React.Component {
               this.setError(error.message);
             });
         } else if (providers.includes(constants.FACEBOOK_PROVIDER_ID)
-                      || providers.includes(constants.GOOGLE_PROVIDER_ID)) {
+          || providers.includes(constants.GOOGLE_PROVIDER_ID)) {
           // don't allow password reset for fb/google accountd
           this.setError('Can not reset passwors for external accounts.');
         } else {
@@ -75,28 +76,43 @@ class ForgetPasswordPage extends React.Component {
 
     return (
       <div id="forget-password-page">
-        <h1>timbr Forget Password Page!</h1>
-        <form id="password-reset-form">
-          <input
-            id="email"
-            type="text"
-            placeholder="Email address"
-            onChange={(event) => { this.setState({ email: event.target.value }); }}
-          />
-          <button
-            type="button"
-            onClick={this.sendResetEmail}
-          >
-            Send Password Reset Email
-          </button>
-          <p id="error">{ error }</p>
-        </form>
-        <button
-          type="button"
-          onClick={() => { history.push('/login'); }}
-        >
-          Back to Login Page
-        </button>
+        <h1 className="text-center pt-5 pb-2">timbr</h1>
+        <h3 className="text-center" style={{ color: 'white' }}><i>your plants need some love</i></h3>
+        <div className="row h-100 ml-4 mr-4">
+          <div className="col-sm-3" />
+          <div className="col-sm-6 my-auto">
+            <div className="card h-100 border-primary">
+              <div className="card-body text-center my-auto">
+                <h4 className="mt-2 mb-3">Reset Your Password</h4>
+                <form id="password-reset-form">
+                  <input
+                    id="email"
+                    type="text"
+                    className="form-control mt-2"
+                    placeholder="Email"
+                    onChange={(event) => { this.setState({ email: event.target.value }); }}
+                  />
+                  <button
+                    type="button"
+                    className="btn btn-primary mt-4"
+                    onClick={this.sendResetEmail}
+                  >
+                    RESET
+                  </button>
+                  <p id="error">{error}</p>
+                </form>
+                <button
+                  type="button"
+                  className="btn btn-link"
+                  onClick={() => { history.push('/login'); }}
+                >
+                  Back to Login Page
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="col-sm-3" />
+        </div>
       </div>
     );
   }
