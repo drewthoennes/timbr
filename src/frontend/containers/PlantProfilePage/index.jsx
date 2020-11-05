@@ -255,6 +255,9 @@ class PlantProfilePage extends React.Component {
           </p>
           <p>{description}</p>
           <p>
+            Rotation Schedule: 7 Days
+          </p>
+          <p>
             Water Schedule:
             {' '}
             {waterFreq}
