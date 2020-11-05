@@ -76,7 +76,7 @@ class ChangePasswordPage extends React.Component {
                 type="password"
                 className="form-control mt-2"
                 autoComplete="on"
-                placeholder="Current Password"
+                placeholder="Current Password*"
                 onChange={(event) => this.setState({
                   currentpwd: event.target.value,
                 })}
@@ -86,7 +86,7 @@ class ChangePasswordPage extends React.Component {
                 type="password"
                 className="form-control mt-2"
                 autoComplete="on"
-                placeholder="New Password"
+                placeholder="New Password*"
                 onChange={(event) => this.setState({
                   newpwd: event.target.value,
                 })}
@@ -96,7 +96,7 @@ class ChangePasswordPage extends React.Component {
                 type="password"
                 className="form-control mt-2"
                 autoComplete="on"
-                placeholder="Confirm New Password"
+                placeholder="Confirm New Password*"
                 onChange={(event) => this.setState({
                   confirmpwd: event.target.value,
                 })}
