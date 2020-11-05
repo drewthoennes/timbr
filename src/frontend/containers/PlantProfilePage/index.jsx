@@ -11,7 +11,6 @@ import ProfilePicture from '../../assets/images/pet_profile_picture.png';
 import Navbar from '../../components/Navbar';
 import { setForeignUserPets, getPetProfilePicture, getPetGrowthPictures,
   addDate, deletePet } from '../../store/actions/pets';
-import { getPlantDetails } from '../../store/actions/plants';
 import map from '../../store/map';
 import './styles.scss';
 
@@ -24,6 +23,7 @@ class PlantProfilePage extends React.Component {
     this.onRotate = this.onRotate.bind(this);
     this.onEdit = this.onEdit.bind(this);
     this.onDelete = this.onDelete.bind(this);
+    this.getPlantDetails = this.getPlantDetails.bind(this);
     this.showDeleteModal = this.showDeleteModal.bind(this);
     this.getProfilePicture = this.getProfilePicture.bind(this);
     this.getGrowthPictures = this.getGrowthPictures.bind(this);
@@ -34,7 +34,7 @@ class PlantProfilePage extends React.Component {
       scientificName: '',
       waterFreq: 0,
       description: '',
-      carn: false,
+      carnivorous: false,
       feedFreq: '',
       fertFreq: 0,
       showDeleteModal: false,
@@ -47,8 +47,6 @@ class PlantProfilePage extends React.Component {
   componentDidMount() {
     const { match: { params: { username, id } } } = this.props;
     const { history, store: { account: { username: ownUsername } } } = this.props;
-
-    console.log('Component did mount');
 
     this.getPlantDetails();
     this.fetchEventList();
@@ -151,28 +149,9 @@ class PlantProfilePage extends React.Component {
   }
 
   getPlantDetails() {
-    const plantType = this.getPlantType();
-    getPlantDetails(
-      (plant) => { this.setState({ speciesName: plant.val() }); }, plantType, 'name',
-    );
-    getPlantDetails(
-      (plant) => { this.setState({ scientificName: plant.val() }); }, plantType, 'scientificName',
-    );
-    getPlantDetails(
-      (plant) => { this.setState({ waterFreq: plant.val() }); }, plantType, 'waterFreq',
-    );
-    getPlantDetails(
-      (plant) => { this.setState({ feedFreq: plant.val() }); }, plantType, 'feedFreq',
-    );
-    getPlantDetails(
-      (plant) => { this.setState({ fertFreq: plant.val() }); }, plantType, 'fertFreq',
-    );
-    getPlantDetails(
-      (plant) => { this.setState({ description: plant.val() }); }, plantType, 'description',
-    );
-    getPlantDetails(
-      (plant) => { this.setState({ carn: plant.val() }); }, plantType, 'carnivorous',
-    );
+    const { store: { plants } } = this.props;
+    const type = this.getPlantType();
+    this.setState({ ...plants[type] });
   }
 
   fetchEventList() {
@@ -206,7 +185,7 @@ class PlantProfilePage extends React.Component {
   render() {
     const { store: { users, pets, account: { username: ownUsername } } } = this.props;
     const { history, match: { params: { username, id } } } = this.props;
-    const { speciesName, scientificName, description, carn,
+    const { speciesName, scientificName, description, carnivorous,
       waterFreq, fertFreq, feedFreq, eventList,
       profilePic, growthPics } = this.state;
 
@@ -218,6 +197,11 @@ class PlantProfilePage extends React.Component {
     } else {
       pet = pets[id];
     }
+
+    const today = new Date().toISOString().slice(0, 10);
+    const hasWateredToday = !!pet.watered.history?.[today];
+    const hasFertilizedToday = !!pet.fertilized.history?.[today];
+    const hasTurnedToday = !!pet.turned.history?.[today];
 
     const { showDeleteModal: show } = this.state;
 
@@ -271,19 +255,19 @@ class PlantProfilePage extends React.Component {
           <p>
             This plant
             {' '}
-            {carn}
-            {carn ? 'is' : 'is not'}
+            {carnivorous}
+            {carnivorous ? 'is' : 'is not'}
             {' '}
             carnivorous and hence you
             {' '}
-            {carn ? 'must' : 'must not'}
+            {carnivorous ? 'must' : 'must not'}
             {' '}
             feed it.
           </p>
           <p>
-            {carn ? 'Feed Schedule: ' : ''}
-            {carn ? feedFreq : ''}
-            {carn ? ' Days' : ''}
+            {carnivorous ? 'Feed Schedule: ' : ''}
+            {carnivorous ? feedFreq : ''}
+            {carnivorous ? ' Days' : ''}
           </p>
           <p>
             <i>{pet?.name}</i>
@@ -303,9 +287,9 @@ class PlantProfilePage extends React.Component {
             {pet?.ownedSince}
             .
           </p>
-          <button type="button" onClick={this.onWater}> Water </button>
-          <button type="button" onClick={this.onFertilize}> Fertilize </button>
-          <button type="button" onClick={this.onRotate}> Rotate </button>
+          <button type="button" disabled={hasWateredToday} onClick={hasWateredToday ? () => {} : this.onWater}> Water </button>
+          <button type="button" disabled={hasFertilizedToday} onClick={hasFertilizedToday ? () => {} : this.onFertilize}> Fertilize </button>
+          <button type="button" disabled={hasTurnedToday} onClick={hasTurnedToday ? () => {} : this.onRotate}> Rotate </button>
           <div className="container">
             <button type="button" onClick={this.onEdit}> Edit </button>
             <button type="button" onClick={() => this.showDeleteModal(true)}> Delete </button>
@@ -351,6 +335,7 @@ PlantProfilePage.propTypes = {
     }),
     pets: PropTypes.object.isRequired,
     users: PropTypes.object.isRequired,
+    plants: PropTypes.object.isRequired,
   }).isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({

@@ -6,6 +6,7 @@ yarn-error.log*
 dist/
 data/
 .nyc_output/
+coverage/
 # Editor directories and files
 .idea
 .vscode
