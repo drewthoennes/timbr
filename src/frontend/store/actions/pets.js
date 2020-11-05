@@ -71,3 +71,125 @@ export function addDate(petId, action, currDate) {
     firebase.database().ref(`users/${uid}/pets/${petId}/${action}/last/`).set(currDate),
   ]);
 }
+
+export function getPetProfilePicture(petId, callback) {
+  const { account: { uid } } = store.getState();
+  if (!uid) {
+    return Promise.resolve();
+  }
+  return firebase.database().ref(`users/${uid}/pets/${petId}`).once('value', (pet) => {
+    if (!pet.exists() || !pet.val().profilePic) {
+      return Promise.resolve();
+    }
+
+    const pictureRef = firebase.storage().ref().child(`pets/profile-pictures/${petId}`);
+    return callback(pictureRef);
+  });
+}
+
+export function setPetProfilePicture(petId, file) {
+  const { account: { uid } } = store.getState();
+  if (!uid) {
+    return Promise.resolve();
+  }
+  const storageRef = firebase.storage().ref();
+
+  return storageRef.child(`pets/profile-pictures/${petId}`).put(file)
+    .then(() => {
+      firebase.database().ref(`users/${uid}/pets/${petId}`).once('value', (pet) => {
+        if (pet.exists()) {
+          firebase.database().ref(`users/${uid}/pets/${petId}`).update({
+            profilePic: true,
+          });
+        }
+      });
+    });
+}
+
+export function removePetProfilePicture(petId) {
+  const { account: { uid } } = store.getState();
+  if (!uid) {
+    return Promise.resolve();
+  }
+  const storageRef = firebase.storage().ref();
+
+  return storageRef.child(`pets/profile-pictures/${petId}`).delete()
+    .then(() => {
+      firebase.database().ref(`users/${uid}/pets/${petId}`).once('value', (pet) => {
+        if (pet.exists()) {
+          firebase.database().ref(`users/${uid}/pets/${petId}`).update({
+            profilePic: false,
+          });
+        }
+      });
+    });
+}
+
+export function getPetGrowthPictures(petId, callback) {
+  const { account: { uid } } = store.getState();
+  if (!uid) {
+    return Promise.resolve();
+  }
+
+  return firebase.database().ref(`users/${uid}/pets/${petId}`).once('value', (pet) => {
+    if (pet.exists() && pet.val().growthPics) {
+      const growthPics = pet.val().growthPics?.slice();
+      for (let i = 0; i < growthPics.length; ++i) {
+        const pictureRef = firebase.storage().ref().child(`pets/growth-pictures/${petId}@${growthPics[i]}`);
+        callback(pictureRef, growthPics[i]);
+      }
+    }
+  });
+}
+
+export function addPetGrowthPicture(petId, file, callback) {
+  const { account: { uid } } = store.getState();
+  if (!uid) {
+    return callback(new Error('User does not exist.'));
+  }
+
+  return firebase.database().ref(`users/${uid}/pets/${petId}`).once('value', (pet) => {
+    if (!pet.exists()) {
+      return callback(new Error('Pet does not exist.'));
+    }
+
+    const growthPics = pet.val().growthPics?.slice() ?? [];
+    if (growthPics.length === constants.NUM_GROWTH_PICTURES) {
+      return callback(new Error(`Maximum growth pictures uploaded (${constants.NUM_GROWTH_PICTURES}). Please remove one or more existing pictures, and try again.`));
+    }
+
+    const storageRef = firebase.storage().ref();
+    const timestamp = (new Date()).toISOString();
+    return storageRef.child(`pets/growth-pictures/${petId}@${timestamp}`).put(file)
+      .then(() => {
+        growthPics.push(timestamp);
+        firebase.database().ref(`users/${uid}/pets/${petId}`).update({ growthPics });
+        callback(timestamp);
+      });
+  });
+}
+
+export function removePetGrowthPicture(petId, index, callback) {
+  const { account: { uid } } = store.getState();
+  if (!uid) {
+    return callback(new Error('User does not exist.'));
+  }
+
+  return firebase.database().ref(`users/${uid}/pets/${petId}`).once('value', (pet) => {
+    if (!pet.exists()) {
+      return callback(new Error('Pet does not exist.'));
+    }
+
+    const growthPics = pet.val().growthPics.slice();
+    const storageRef = firebase.storage().ref();
+    return storageRef.child(`pets/growth-pictures/${petId}@${index}`).delete()
+      .then(() => {
+        const i = growthPics.indexOf(index);
+        if (i > -1) {
+          growthPics.splice(i, 1);
+        }
+        firebase.database().ref(`users/${uid}/pets/${petId}`).update({ growthPics });
+        callback(index);
+      });
+  });
+}

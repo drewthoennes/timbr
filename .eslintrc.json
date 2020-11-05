@@ -24,6 +24,7 @@
         "react/jsx-props-no-spreading": "off",
         "react/no-unescaped-entities": "off",
         "object-curly-newline": "off",
-        "react/jsx-one-expression-per-line": "off"
+        "react/jsx-one-expression-per-line": "off",
+        "no-plusplus": "off"
     }
 }
