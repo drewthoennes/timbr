@@ -357,21 +357,6 @@ class AccountPage extends React.Component {
             </Col>
           </Row>
           <Row className="align-items-center">
-            <Col sm={3}><h5 className="text-right">Password</h5></Col>
-            <Col sm={1} />
-            <Col sm={8}>
-              <button
-                id="change-password"
-                type="button"
-                className="btn btn-outline-primary"
-                style={{ visibility: this.state.canChangePassword ? 'visible' : 'hidden' }}
-                onClick={() => history.push('/change-password')}
-              >
-                Change Password
-              </button>
-            </Col>
-          </Row>
-          <Row className="align-items-center mt-3">
             <Col sm={3}><h5 className="text-right">Email Notifications</h5></Col>
             <Col sm={1} />
             <Col sm={8}>
@@ -407,7 +392,21 @@ class AccountPage extends React.Component {
                 className="btn btn-outline-primary"
                 onClick={this.openModal}
               >
-                Delete my <i>timbr</i> account
+                Delete Account
+              </button>
+            </Col>
+          </Row>
+          <Row style={{ visibility: this.state.canChangePassword ? 'visible' : 'hidden' }} className="align-items-center mt-3">
+            <Col sm={3}><h5 className="text-right">Password</h5></Col>
+            <Col sm={1} />
+            <Col sm={8}>
+              <button
+                id="change-password"
+                type="button"
+                className="btn btn-outline-primary"
+                onClick={() => history.push('/change-password')}
+              >
+                Change Password
               </button>
             </Col>
           </Row>
@@ -415,7 +414,7 @@ class AccountPage extends React.Component {
 
         <Modal id="email-reauth" show={this.state.isModalOpen} onHide={this.closeModal}>
           <Modal.Header closeButton>
-            <Modal.Title>Confirm delete account</Modal.Title>
+            <Modal.Title>Confirm Account Deletion</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <input
@@ -451,6 +450,7 @@ class AccountPage extends React.Component {
           <Modal.Body>
             <button
               type="button"
+              className="btn btn-primary"
               onClick={this.deleteAccount}
             >
               Confirm Delete Account
