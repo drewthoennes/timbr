@@ -3,14 +3,14 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Button, Card, Form, FormControl } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import ProfilePicture from '../../assets/images/pet_profile_picture.png';
-import Plus from '../../assets/images/plus.png';
 import {
   Dropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
 } from 'reactstrap';
+import Plus from '../../assets/images/plus.png';
+import ProfilePicture from '../../assets/images/pet_profile_picture.png';
 import Navbar from '../../components/Navbar';
 import map from '../../store/map';
 import { editPet, getPetProfilePicture, getPetGrowthPictures,
@@ -31,7 +31,6 @@ class EditPlantProfilePage extends React.Component {
     this.state = {
       currPet: { ...pet },
       pet: { ...pet },
-      petId,
       dropdownOpen: false,
       profilePic: ProfilePicture,
       profilePictureFeedback: '',

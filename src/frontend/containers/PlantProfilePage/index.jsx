@@ -9,10 +9,8 @@ import PropTypes from 'prop-types';
 import { Card, Modal, Button } from 'react-bootstrap';
 import ProfilePicture from '../../assets/images/pet_profile_picture.png';
 import Navbar from '../../components/Navbar';
-
 import { setForeignUserPets, getPetProfilePicture, getPetGrowthPictures,
   addDate, deletePet } from '../../store/actions/pets';
-
 import { getPlantDetails } from '../../store/actions/plants';
 import map from '../../store/map';
 import './styles.scss';
