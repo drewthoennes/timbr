@@ -106,44 +106,63 @@ class RegisterPage extends React.Component {
     const { history } = this.props;
     return (
       <div id="register-page">
-        <h1>timbr Register Page!</h1>
-        <button
-          type="button"
-          onClick={() => history.push('/login')}
-        >
-          Already a user? Go to login
-        </button>
-
-        <form
-          id="register-form"
-          onSubmit={this.handleRegister}
-        >
-
-          <input
-            id="email"
-            type="text"
-            placeholder="Email"
-            onChange={(event) => { this.setState({ email: event.target.value }); }}
-          />
-
-          <input
-            id="password"
-            type="password"
-            autoComplete="on"
-            placeholder="Password"
-            onChange={(event) => { this.setState({ password: event.target.value }); }}
-          />
-
-          <input
-            id="username"
-            type="text"
-            placeholder="Username (Optional)"
-            onChange={(event) => { this.setState({ username: event.target.value }); }}
-          />
-
-          <button type="submit">Register</button>
-        </form>
-        <p id="error"> </p>
+        <h1 className="text-center pt-5 pb-2">timbr</h1>
+        <h3 className="text-center" style={{ color: 'white' }}><i>your plants need some love</i></h3>
+        <div className="row h-100 ml-4 mr-4">
+          <div className="col-sm-3" />
+          <div className="col-sm-6 my-auto">
+            <div className="card h-100 border-primary">
+              <div className="card-body text-center my-auto">
+                <h4 className="mt-2 mb-3">Register</h4>
+                <form
+                  id="register-form"
+                  onSubmit={this.handleRegister}
+                >
+                  <fieldset>
+                    <div className="form-group">
+                      <input
+                        id="email"
+                        type="email"
+                        className="form-control"
+                        placeholder="Email*"
+                        onChange={(event) => { this.setState({ email: event.target.value }); }}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <input
+                        id="password"
+                        type="password"
+                        className="form-control"
+                        autoComplete="on"
+                        placeholder="Password*"
+                        onChange={(event) => { this.setState({ password: event.target.value }); }}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <input
+                        id="username"
+                        type="text"
+                        className="form-control"
+                        placeholder="Username"
+                        onChange={(event) => { this.setState({ username: event.target.value }); }}
+                      />
+                    </div>
+                    <button type="submit" className="btn btn-primary">REGISTER</button>
+                  </fieldset>
+                </form>
+                <p id="error"> </p>
+                <button
+                  type="button"
+                  className="btn btn-link mb-2"
+                  onClick={() => history.push('/login')}
+                >
+                  Already a user? Go to login
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="col-sm-3" />
+        </div>
 
         <Modal id="can-oauth" show={this.state.isOauthModalOpen} onHide={this.closeModal}>
           <Modal.Header closeButton>

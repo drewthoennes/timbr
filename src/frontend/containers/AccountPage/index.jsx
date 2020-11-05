@@ -10,6 +10,7 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Switch from 'react-switch';
 import { Modal } from 'react-bootstrap';
+import { Container, Row, Col } from 'reactstrap';
 import map from '../../store/map';
 import './styles.scss';
 import { getUsername, getPhoneNumber, getProfilePicture, getTextsOn, getEmailsOn, getProviderId, changeUsername, changePhoneNumber, changeEmailsOn, changeTextsOn, changeProfilePicture, deleteAccount } from '../../store/actions/account';
@@ -107,7 +108,11 @@ class AccountPage extends React.Component {
   getCurrentPhoneNumber() {
     // Get the phone number from the database, hard coded for now
     getPhoneNumber(
-      (phoneNumber) => { this.mounted && this.setState({ phoneNumber: phoneNumber.val() }); },
+      (phoneNumber) => {
+        this.mounted && this.setState({
+          phoneNumber: phoneNumber.val().substring(2),
+        });
+      },
     );
   }
 
@@ -272,103 +277,152 @@ class AccountPage extends React.Component {
       <div id="account-page">
         <Navbar />
         <br />
-        <img style={styles} id="profile-picture" src={this.state.profilePic} alt="Profile" />
-        <br />
-        <label htmlFor="image-uploader">
-          Change Profile Picture:
-          <input
-            type="file"
-            id="image-uploader"
-            accept="image/jpg,image/jpeg,image/png"
-            onChange={(event) => { this.changeProfilePicture(event.target.files[0]); }}
-          />
-        </label>
-        <p id="picture-feedback">{this.state.pictureFeedback}</p>
-        <br />
-        <form id="account-settings">
+        <h2 className="mt-1 mb-4 text-center">My Account</h2>
+        <Container class="mt-3">
+          <Row className="align-items-center mt-2">
+            <Col sm={3}><h5 className="text-right">Profile Picture</h5></Col>
+            <Col sm={1} />
+            <Col sm={2}>
+              <img style={styles} id="profile-picture" src={this.state.profilePic} alt="Profile" />
+            </Col>
+            <Col sm={6}>
+              <label htmlFor="image-uploader">
+                Change Profile Picture:
+                <br />
+                <input
+                  type="file"
+                  id="image-uploader"
+                  accept="image/jpg,image/jpeg,image/png"
+                  onChange={(event) => { this.changeProfilePicture(event.target.files[0]); }}
+                />
+              </label>
+              <p id="picture-feedback">{this.state.pictureFeedback}</p>
+            </Col>
+          </Row>
+          <Row className="align-items-center mt-3">
+            <Col sm={3}><h5 className="text-right">Username</h5></Col>
+            <Col sm={1} />
+            <Col sm={5}>
+              <input
+                id="username"
+                type="text"
+                className="form-control"
+                placeholder={this.state.username}
+              />
+            </Col>
+            <Col sm={3}>
+              <button
+                id="change-username"
+                type="button"
+                className="btn btn-outline-primary"
+                onClick={this.changeUsername}
+              >
+                Change Username
+              </button>
+            </Col>
+          </Row>
+          <Row className="align-items-center mt-3">
+            <Col sm={3}><h5 className="text-right">Phone Number</h5></Col>
+            <Col sm={1} />
+            <Col sm={5}>
+              <div className="input-group">
+                <div className="input-group-prepend">
+                  <span className="input-group-text">+1</span>
+                </div>
+                <input
+                  type="tel"
+                  className="form-control"
+                  placeholder={this.state.phoneNumber}
+                  id="phone-number"
+                />
+              </div>
+            </Col>
+            <Col sm={3}>
+              <button
+                id="change-phone-number"
+                type="button"
+                className="btn btn-outline-primary"
+                onClick={this.changePhoneNumber}
+              >
+                Change Phone Number
+              </button>
 
-          <label htmlFor="text-switch">
-            <input type="hidden" id="text-switch" />
-            <span>Text Notifications </span>
-            <Switch
-              onChange={this.changeTextsOn}
-              checked={this.state.textsOn || false}
-            />
-          </label>
-          <p>{'\n'}</p>
-          <label htmlFor="email-switch">
-            <input type="hidden" id="email-switch" />
-            <span>Email Notifications </span>
-            <Switch
-              onChange={this.changeEmailsOn}
-              checked={this.state.emailsOn || false}
-            />
-          </label>
-          <p>
-            Current Username:
-            {' '}
-            {this.state.username}
-          </p>
-          <input
-            id="username"
-            type="text"
-            placeholder="Username"
-          />
-          <button
-            id="change-username"
-            type="button"
-            onClick={this.changeUsername}
-          >
-            Change Username
-          </button>
-          <p>
-            Current Phone Number:
-            {' '}
-            {this.state.phoneNumber}
-          </p>
-          +1
-          {' '}
-          <input
-            type="tel"
-            placeholder="Enter phone number"
-            id="phone-number"
-          />
-          <button
-            id="change-phone-number"
-            type="button"
-            onClick={this.changePhoneNumber}
-          >
-            Change Phone number
-          </button>
-          <p id="phone-error">{this.state.phoneError}</p>
-          <button
-            id="change-password"
-            type="button"
-            style={{ visibility: this.state.canChangePassword ? 'visible' : 'hidden' }}
-            onClick={() => history.push('/change-password')}
-          >
-            Change Password
-          </button>
-          <br />
-          <button
-            id="delete-account"
-            type="button"
-            onClick={this.openModal}
-          >
-            Delete my timbr account
-          </button>
-        </form>
+            </Col>
+          </Row>
+          <Row>
+            <Col sm={3} />
+            <Col sm={1} />
+            <Col sm={8}>
+              <p id="phone-error">{this.state.phoneError}</p>
+            </Col>
+          </Row>
+          <Row className="align-items-center">
+            <Col sm={3}><h5 className="text-right">Email Notifications</h5></Col>
+            <Col sm={1} />
+            <Col sm={8}>
+              <label htmlFor="email-switch">
+                <input type="hidden" id="email-switch" />
+                <Switch
+                  onChange={this.changeEmailsOn}
+                  checked={this.state.emailsOn || false}
+                />
+              </label>
+            </Col>
+          </Row>
+          <Row className="align-items-center mt-2">
+            <Col sm={3}><h5 className="text-right">Text Notifications</h5></Col>
+            <Col sm={1} />
+            <Col sm={8}>
+              <label htmlFor="text-switch">
+                <input type="hidden" id="text-switch" />
+                <Switch
+                  onChange={this.changeTextsOn}
+                  checked={this.state.textsOn || false}
+                />
+              </label>
+            </Col>
+          </Row>
+          <Row className="align-items-center mt-2">
+            <Col sm={3}><h5 className="text-right">Delete Account</h5></Col>
+            <Col sm={1} />
+            <Col sm={8}>
+              <button
+                id="delete-account"
+                type="button"
+                className="btn btn-outline-primary"
+                onClick={this.openModal}
+              >
+                Delete Account
+              </button>
+            </Col>
+          </Row>
+          <Row style={{ visibility: this.state.canChangePassword ? 'visible' : 'hidden' }} className="align-items-center mt-3">
+            <Col sm={3}><h5 className="text-right">Password</h5></Col>
+            <Col sm={1} />
+            <Col sm={8}>
+              <button
+                id="change-password"
+                type="button"
+                className="btn btn-outline-primary"
+                onClick={() => history.push('/change-password')}
+              >
+                Change Password
+              </button>
+            </Col>
+          </Row>
+        </Container>
 
         <Modal id="email-reauth" show={this.state.isModalOpen} onHide={this.closeModal}>
           <Modal.Header closeButton>
-            <Modal.Title>Confirm delete account</Modal.Title>
+            <Modal.Title>Confirm Account Deletion</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <input
               id="delete-password"
               type="password"
+              className="form-control"
               autoComplete="on"
-              placeholder="Re-enter password"
+              placeholder="Enter Password"
               onChange={(event) => {
                 if (this.mounted) {
                   this.setState({ confirmPassword: event.target.value });
@@ -380,6 +434,7 @@ class AccountPage extends React.Component {
             <button
               type="button"
               id="confirm-password"
+              className="btn btn-primary"
               onClick={this.deleteAccount}
             >
               Confirm
@@ -395,6 +450,7 @@ class AccountPage extends React.Component {
           <Modal.Body>
             <button
               type="button"
+              className="btn btn-primary"
               onClick={this.deleteAccount}
             >
               Confirm Delete Account

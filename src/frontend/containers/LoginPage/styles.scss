@@ -1,5 +1,18 @@
 @import "~@theme";
 
 #login-page {
-
+    background-image: url('../../assets/images/background.jpg');
+    height: 78%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    
+    .card {
+        min-height: 389px;
+        margin-top: auto;  
+        margin-bottom: auto;
+    }
+    .photo {
+        height: 25px;
+   }
 }
