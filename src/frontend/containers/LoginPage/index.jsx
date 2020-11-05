@@ -10,6 +10,8 @@ import map from '../../store/map';
 import './styles.scss';
 import { loginWithTimbr, loginWithGoogle, loginWithFacebook } from '../../store/actions/account';
 import constants from '../../store/const';
+import google_logo from '../../assets/images/google_logo.png'
+import facebook_logo from '../../assets/images/facebook_logo.png'
 
 class LoginPage extends React.Component {
   constructor() {
@@ -20,6 +22,8 @@ class LoginPage extends React.Component {
     this.state = {
       email: '',
       password: '',
+      googleLogo: google_logo,
+      facebookLogo: facebook_logo,
     };
   }
 
@@ -70,33 +74,56 @@ class LoginPage extends React.Component {
     const { history } = this.props;
     return (
       <div id="login-page">
+        <h1 class="text-center pt-5 pb-2">timbr</h1>
+        <h3 class="text-center" style={{ color: 'white' }}><i>your plants need some love</i></h3>
         <div className="row h-100 ml-4 mr-4">
+        <div className="col-sm-6 my-auto">
+            <div className="card h-100 border-primary">
+              <div className="card-body text-center my-auto">
+                <h4 class="mt-2 mb-5">Sign-up</h4>
+                <p class="mt-5 mb-0 pt-2 lead text-muted">Don't have a timbr account yet?</p>
+                <p class="mt-0 mb-4 lead text-muted">Sign-up now!</p>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => history.push('/register')}
+                >
+                  CREATE ACCOUNT
+                </button>
+
+              </div>
+            </div>
+          </div>
           <div className="col-sm-6 my-auto">
             <div className="card h-100 border-primary">
               <div className="card-body text-center">
-                <button
-                  id="Facebook"
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    this.handleAuth(constants.LOGIN_WITH_FACEBOOK);
-                  }}
-                >
-                  Sign in with Facebook
-                </button>
+                <h4 class="mt-2 mb-3">Login</h4>
                 <button
                   id="Google"
                   type="button"
-                  className="btn btn-primary"
+                  className="btn btn-outline-primary"
                   onClick={(e) => {
                     e.preventDefault();
                     this.handleAuth(constants.LOGIN_WITH_GOOGLE);
                   }}
                 >
+                  <img className="photo" src={this.state.googleLogo}></img>
+                  {' '}
                   Sign in with Google
                 </button>
-
+                <button
+                  id="Facebook"
+                  type="button"
+                  className="btn btn-outline-primary ml-3"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    this.handleAuth(constants.LOGIN_WITH_FACEBOOK);
+                  }}
+                >
+                  <img className="photo" src={this.state.facebookLogo}></img>
+                  {' '}
+                  Sign in with Facebook
+                </button>
                 <form
                   id="login-form"
                   className="mt-3 mb-3"
@@ -126,7 +153,7 @@ class LoginPage extends React.Component {
                       />
                     </div>
 
-                    <button type="submit" className="btn btn-primary">Login</button>
+                    <button type="submit" className="btn btn-primary">LOGIN</button>
                   </fieldset>
                 </form>
                 <button
@@ -137,20 +164,6 @@ class LoginPage extends React.Component {
                   Forgot your password? Reset it here.
                 </button>
                 <p id="error" />
-              </div>
-            </div>
-          </div>
-          <div className="col-sm-6 my-auto">
-            <div className="card h-100 border-primary">
-              <div className="card-body text-center my-auto">
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={() => history.push('/register')}
-                >
-                  Not a user? Register with timbr here.
-                </button>
-
               </div>
             </div>
           </div>

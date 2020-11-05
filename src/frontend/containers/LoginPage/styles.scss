@@ -2,16 +2,17 @@
 
 #login-page {
     background-image: url('../../assets/images/background.jpg');
-    height: 100%;
+    height: 78%;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    margin-top: auto;
-    margin-bottom: auto;
-
+    
     .card {
-        min-height: 340px;
+        min-height: 368px;
         margin-top: auto;  
         margin-bottom: auto;
     }
+    .photo {
+        height: 25px;
+   }
 }
