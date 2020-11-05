@@ -9,7 +9,8 @@ import PropTypes from 'prop-types';
 import './styles.scss';
 import { Modal } from 'react-bootstrap';
 import map from '../../store/map';
-import { registerWithTimbr, loginWithGoogle } from '../../store/actions/account';
+import { registerWithTimbr } from '../../store/actions/account';
+import { loginWithGoogle } from '../../store/actions/auth';
 
 class RegisterPage extends React.Component {
   constructor() {

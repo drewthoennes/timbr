@@ -1,12 +1,12 @@
 import sinon from 'sinon';
 import {
-  registerWithTimbr,
-  loginWithTimbr,
-  loginWithGoogle,
-  loginWithFacebook,
-  logout,
   changeUsername,
+  registerWithTimbr,
+  changePhoneNumber,
+  changeTextsOn,
+  changeEmailsOn,
 } from '../../../src/frontend/store/actions/account';
+import { validateStubCallCount } from '../../utils';
 
 const mockCreateUserStub = sinon.stub();
 const mockSignInUserStub = sinon.stub();
@@ -47,56 +47,6 @@ describe('Redux account actions should work', () => {
     sinon.reset();
   });
 
-  it('Registering with Timbr should work as expected', async () => {
-    mockCreateUserStub.resolves();
-
-    const funcPromise = await expect(registerWithTimbr({ email: 'test@purdue.edu', password: 'password' }))
-      .resolves.toBe(undefined);
-    const stubPromise = mockCreateUserStub.callCount === 1 ? Promise.resolve() : Promise.reject();
-
-    return Promise.all([funcPromise, stubPromise]);
-  });
-
-  it('Logging in with Timbr should work as expected', async () => {
-    mockSignInUserStub.resolves();
-
-    const funcPromise = await expect(loginWithTimbr({ email: 'test@purdue.edu', password: 'password' }))
-      .resolves.toBe(undefined);
-    const stubPromise = mockSignInUserStub.callCount === 1 ? Promise.resolve() : Promise.reject();
-
-    return Promise.all([funcPromise, stubPromise]);
-  });
-
-  it('Logging in with Facebook should work as expected', async () => {
-    mockSignInPopupStub.resolves();
-
-    const funcPromise = await expect(loginWithFacebook())
-      .resolves.toBe(undefined);
-    const stubPromise = mockSignInPopupStub.callCount === 1 ? Promise.resolve() : Promise.reject();
-
-    return Promise.all([funcPromise, stubPromise]);
-  });
-
-  it('Logging in with Google should work as expected', async () => {
-    mockSignInPopupStub.resolves();
-
-    const funcPromise = await expect(loginWithGoogle())
-      .resolves.toBe(undefined);
-    const stubPromise = mockSignInPopupStub.callCount === 1 ? Promise.resolve() : Promise.reject();
-
-    return Promise.all([funcPromise, stubPromise]);
-  });
-
-  it('Logging out should work as expected', async () => {
-    mockSignOutStub.resolves();
-
-    const funcPromise = await expect(logout())
-      .resolves;
-    const stubPromise = mockSignOutStub.callCount === 1 ? Promise.resolve() : Promise.reject();
-
-    return Promise.all([funcPromise, stubPromise]);
-  });
-
   it('Changing username that is already taken should show a window alert', async () => {
     const user = { val: () => true };
 
@@ -105,8 +55,8 @@ describe('Redux account actions should work', () => {
 
     const funcPromise = await expect(changeUsername('newUsername'))
       .rejects;
-    const stubOncePromise = mockDatabaseOnce.callCount === 1 ? Promise.resolve() : Promise.reject();
-    const stubWindowAlert = mockWindowAlert.callCount === 1 ? Promise.resolve() : Promise.reject();
+    const stubOncePromise = validateStubCallCount(mockDatabaseOnce, 1);
+    const stubWindowAlert = validateStubCallCount(mockWindowAlert, 1);
 
     return Promise.all([funcPromise, stubOncePromise, stubWindowAlert]);
   });
@@ -120,8 +70,8 @@ describe('Redux account actions should work', () => {
 
     const funcPromise = await expect(changeUsername('newUsername'))
       .rejects;
-    const stubOncePromise = mockDatabaseOnce.callCount === 2 ? Promise.resolve() : Promise.reject();
-    const stubWindowAlert = mockWindowAlert.callCount === 0 ? Promise.resolve() : Promise.reject();
+    const stubOncePromise = validateStubCallCount(mockDatabaseOnce, 2);
+    const stubWindowAlert = validateStubCallCount(mockWindowAlert, 0);
 
     return Promise.all([funcPromise, stubOncePromise, stubWindowAlert]);
   });
@@ -134,10 +84,110 @@ describe('Redux account actions should work', () => {
     mockCurrentUser.returns(1234567890);
 
     await changeUsername('newUsername');
-    const stubOncePromise = mockDatabaseOnce.callCount === 2 ? Promise.resolve() : Promise.reject();
-    const stubWindowAlert = mockWindowAlert.callCount === 0 ? Promise.resolve() : Promise.reject();
-    const stubUpdate = mockDatabaseUpdate.callCount === 1 ? Promise.resolve() : Promise.reject();
+    const stubOncePromise = validateStubCallCount(mockDatabaseOnce, 2);
+    const stubWindowAlert = validateStubCallCount(mockWindowAlert, 0);
+    const stubUpdate = validateStubCallCount(mockDatabaseUpdate, 1);
 
     return Promise.all([stubOncePromise, stubWindowAlert, stubUpdate]);
+  });
+
+  it('Registering with Timbr should work as expected', async () => {
+    mockCreateUserStub.resolves();
+
+    const funcPromise = await expect(registerWithTimbr({ email: 'test@purdue.edu', password: 'password' }))
+      .resolves.toBe(undefined);
+    const stubPromise = mockCreateUserStub.callCount === 1 ? Promise.resolve() : Promise.reject();
+
+    return Promise.all([funcPromise, stubPromise]);
+  });
+
+  it('Changing a user\'s phone number should reject if the current user isn\'t logged in', async () => {
+    const phoneNumber = '7658675309';
+    mockCurrentUser.returns(undefined);
+
+    const funcPromise = await expect(changePhoneNumber(phoneNumber)).rejects;
+
+    return funcPromise;
+  });
+
+  it('Changing a user\'s phone number should reject if it has already been used', async () => {
+    const phoneNumber = '7658675309';
+    const user = { val: () => true };
+
+    mockCurrentUser.returns(1234567890);
+    mockDatabaseOnce.resolves(user);
+
+    const funcPromise = await expect(changePhoneNumber(phoneNumber)).rejects;
+    const stubPromise = validateStubCallCount(mockDatabaseOnce, 1);
+
+    return Promise.all([funcPromise, stubPromise]);
+  });
+
+  it('Changing a user\'s phone number should reject if the current user doesn\'t have a profile', async () => {
+    const phoneNumber = '7658675309';
+    const user = { val: () => false, exists: () => false };
+
+    mockCurrentUser.returns(1234567890);
+    mockDatabaseOnce.resolves(user);
+
+    const funcPromise = await expect(changePhoneNumber(phoneNumber)).rejects;
+    const stubPromise = validateStubCallCount(mockDatabaseOnce, 2);
+
+    return Promise.all([funcPromise, stubPromise]);
+  });
+
+  it('Changing a user\'s phone number should work as expected', async () => {
+    const phoneNumber = '7658675309';
+    const user = { val: () => false, exists: () => true };
+
+    mockCurrentUser.returns(1234567890);
+    mockDatabaseOnce.resolves(user);
+
+    const funcPromise = await expect(changePhoneNumber(phoneNumber)).rejects;
+    const onceStubPromise = validateStubCallCount(mockDatabaseOnce, 2);
+    const updateStubPromise = validateStubCallCount(mockDatabaseUpdate, 1)
+      && mockDatabaseUpdate.calledWith({ phoneNumber: `+1${phoneNumber}` });
+
+    return Promise.all([funcPromise, onceStubPromise, updateStubPromise]);
+  });
+
+  it('Changing a user\'s texts to on should reject if the current user isn\'t logged in', async () => {
+    mockCurrentUser.returns(undefined);
+
+    const funcPromise = await expect(changeTextsOn(true)).rejects;
+
+    return funcPromise;
+  });
+
+  it('Changing a user\'s texts to on should work as expected', async () => {
+    const user = { exists: () => true };
+
+    mockCurrentUser.returns(1234567890);
+    mockDatabaseOnce.resolves(user);
+
+    const funcPromise = await expect(changeTextsOn(true)).rejects;
+    const updateStubPromise = validateStubCallCount(mockDatabaseUpdate, 1);
+
+    return Promise.all([funcPromise, updateStubPromise]);
+  });
+
+  it('Changing a user\'s emails to on should reject if the current user isn\'t logged in', async () => {
+    mockCurrentUser.returns(undefined);
+
+    const funcPromise = await expect(changeEmailsOn(true)).rejects;
+
+    return funcPromise;
+  });
+
+  it('Changing a user\'s emails to on should work as expected', async () => {
+    const user = { exists: () => true };
+
+    mockCurrentUser.returns(1234567890);
+    mockDatabaseOnce.resolves(user);
+
+    const funcPromise = await expect(changeEmailsOn(true)).rejects;
+    const updateStubPromise = validateStubCallCount(mockDatabaseUpdate, 1);
+
+    return Promise.all([funcPromise, updateStubPromise]);
   });
 });

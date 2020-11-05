@@ -7,7 +7,7 @@ import ProfilePicture from '../../assets/images/pet_profile_picture.png';
 import Navbar from '../../components/Navbar';
 import map from '../../store/map';
 import './styles.scss';
-import { logout } from '../../store/actions/account';
+import { logout } from '../../store/actions/auth';
 import { getPetProfilePicture } from '../../store/actions/pets';
 
 class MyPlantsPage extends React.Component {

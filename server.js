@@ -54,11 +54,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.get('/favicon.(ico|png)', (req, res) => {
   res.sendFile(`${__dirname}/src/frontend/favicon.png`)
 });
+*/
 
 app.get('/public/manifest.json', (req, res) => {
-  res.sendFile(`${__dirname}/src/frontend/manifest.json`)
+  res.sendFile(`${__dirname}/src/frontend/manifest.json`);
 });
-*/
 
 // Catch all for backend API
 app.use(require('./src/backend/routes')());

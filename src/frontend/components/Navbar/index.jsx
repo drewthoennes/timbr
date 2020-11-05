@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import map from '../../store/map';
 import './styles.scss';
-import { logout } from '../../store/actions/account';
+import { logout } from '../../store/actions/auth';
 
 const Navbar = (props) => (
 

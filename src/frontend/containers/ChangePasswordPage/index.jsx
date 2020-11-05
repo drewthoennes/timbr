@@ -7,7 +7,7 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import map from '../../store/map';
 import Navbar from '../../components/Navbar';
-import { changePassword, reauthenticateUser } from '../../store/actions/account';
+import { changePassword, reauthenticateUser } from '../../store/actions/auth';
 
 class ChangePasswordPage extends React.Component {
   constructor() {

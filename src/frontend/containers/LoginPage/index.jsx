@@ -8,7 +8,7 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import map from '../../store/map';
 import './styles.scss';
-import { loginWithTimbr, loginWithGoogle, loginWithFacebook } from '../../store/actions/account';
+import { loginWithTimbr, loginWithGoogle, loginWithFacebook } from '../../store/actions/auth';
 import constants from '../../store/const';
 
 class LoginPage extends React.Component {
