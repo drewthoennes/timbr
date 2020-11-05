@@ -5,10 +5,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { Container, Row, Col } from 'reactstrap';
 import map from '../../store/map';
 import Navbar from '../../components/Navbar';
 import { changePassword, reauthenticateUser } from '../../store/actions/account';
-import { Container, Row, Col } from 'reactstrap';
 
 class ChangePasswordPage extends React.Component {
   constructor() {
@@ -68,7 +68,7 @@ class ChangePasswordPage extends React.Component {
         <Navbar />
         <Container class="mt-4">
           <Row className="text-center mt-3">
-            <Col sm={3}></Col>
+            <Col sm={3} />
             <Col sm={6}>
               <h1>Change Password</h1>
               <input
@@ -111,12 +111,10 @@ class ChangePasswordPage extends React.Component {
               </button>
               <p id="error">{error}</p>
             </Col>
-            <Col sm={3}></Col>
+            <Col sm={3} />
           </Row>
         </Container>
-        <form id="password-reset-form">
-
-        </form>
+        <form id="password-reset-form" />
       </div>
     );
   }

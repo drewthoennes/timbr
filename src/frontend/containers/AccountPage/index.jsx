@@ -10,13 +10,13 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Switch from 'react-switch';
 import { Modal } from 'react-bootstrap';
+import { Container, Row, Col } from 'reactstrap';
 import map from '../../store/map';
 import './styles.scss';
 import { getUsername, getPhoneNumber, getProfilePicture, getTextsOn, getEmailsOn, getProviderId, changeUsername, changePhoneNumber, changeEmailsOn, changeTextsOn, changeProfilePicture, deleteAccount } from '../../store/actions/account';
 import ProfilePicture from '../../assets/images/profile_picture.png';
 import Navbar from '../../components/Navbar';
 import constants from '../../store/const';
-import { Container, Row, Col } from 'reactstrap';
 
 class AccountPage extends React.Component {
   constructor() {
@@ -42,7 +42,6 @@ class AccountPage extends React.Component {
       textsOn: false,
       emailsOn: false,
       phoneNumber: '',
-      phoneNumberValue: '',
       phoneError: '',
       profilePic: ProfilePicture,
       isModalOpen: false,
@@ -109,11 +108,10 @@ class AccountPage extends React.Component {
   getCurrentPhoneNumber() {
     // Get the phone number from the database, hard coded for now
     getPhoneNumber(
-      (phoneNumber) => { this.mounted && this.setState({ phoneNumber: phoneNumber.val() }); },
-    );
-
-    getPhoneNumber(
-      (phoneNumber) => { this.mounted && this.setState({ phoneNumberValue: phoneNumber.val().substring(2) }); },
+      (phoneNumber) => {
+        this.mounted && this.setState({ phoneNumber: phoneNumber.val().substring(2),
+        });
+      },
     );
   }
 
@@ -196,7 +194,7 @@ class AccountPage extends React.Component {
     });
     changePhoneNumber(number);
     /* Changes the phone number in the state. */
-    this.getCurrentPhoneNumber()
+    this.getCurrentPhoneNumber();
     document.getElementById('phone-number').value = '';
   }
 
@@ -278,16 +276,18 @@ class AccountPage extends React.Component {
       <div id="account-page">
         <Navbar />
         <br />
-        <h2 class="mt-1 mb-3 text-center">My Account</h2>
+        <h2 className="mt-1 mb-4 text-center">My Account</h2>
         <Container class="mt-3">
           <Row className="align-items-center mt-2">
-            <Col sm={3}><h5 class="text-right">Profile Picture</h5></Col>
-            <Col sm={1}></Col>
-            <Col sm={8}>
+            <Col sm={3}><h5 className="text-right">Profile Picture</h5></Col>
+            <Col sm={1} />
+            <Col sm={2}>
               <img style={styles} id="profile-picture" src={this.state.profilePic} alt="Profile" />
-              <label htmlFor="image-uploader" className="ml-4">
+            </Col>
+            <Col sm={6}>
+              <label htmlFor="image-uploader">
                 Change Profile Picture:
-                <br/>
+                <br />
                 <input
                   type="file"
                   id="image-uploader"
@@ -295,11 +295,12 @@ class AccountPage extends React.Component {
                   onChange={(event) => { this.changeProfilePicture(event.target.files[0]); }}
                 />
               </label>
-              <p id="picture-feedback">{this.state.pictureFeedback}</p></Col>
+              <p id="picture-feedback">{this.state.pictureFeedback}</p>
+            </Col>
           </Row>
-          <Row className="align-items-center mt-2">
-            <Col sm={3}><h5 class="text-right">Username</h5></Col>
-            <Col sm={1}></Col>
+          <Row className="align-items-center mt-3">
+            <Col sm={3}><h5 className="text-right">Username</h5></Col>
+            <Col sm={1} />
             <Col sm={5}>
               <input
                 id="username"
@@ -320,8 +321,8 @@ class AccountPage extends React.Component {
             </Col>
           </Row>
           <Row className="align-items-center mt-3">
-            <Col sm={3}><h5 class="text-right">Phone Number</h5></Col>
-            <Col sm={1}></Col>
+            <Col sm={3}><h5 className="text-right">Phone Number</h5></Col>
+            <Col sm={1} />
             <Col sm={1}>
               +1
             </Col>
@@ -329,7 +330,7 @@ class AccountPage extends React.Component {
               <input
                 type="tel"
                 className="form-control"
-                placeholder={this.state.phoneNumberValue}
+                placeholder={this.state.phoneNumber}
                 id="phone-number"
               />
             </Col>
@@ -342,19 +343,19 @@ class AccountPage extends React.Component {
               >
                 Change Phone Number
               </button>
-              
+
             </Col>
           </Row>
           <Row>
-            <Col sm={3}></Col>
-            <Col sm={1}></Col>
+            <Col sm={3} />
+            <Col sm={1} />
             <Col sm={8}>
               <p id="phone-error">{this.state.phoneError}</p>
             </Col>
           </Row>
           <Row className="align-items-center">
-            <Col sm={3}><h5 class="text-right">Password</h5></Col>
-            <Col sm={1}></Col>
+            <Col sm={3}><h5 className="text-right">Password</h5></Col>
+            <Col sm={1} />
             <Col sm={8}>
               <button
                 id="change-password"
@@ -368,8 +369,8 @@ class AccountPage extends React.Component {
             </Col>
           </Row>
           <Row className="align-items-center mt-3">
-            <Col sm={3}><h5 class="text-right">Email Notifications</h5></Col>
-            <Col sm={1}></Col>
+            <Col sm={3}><h5 className="text-right">Email Notifications</h5></Col>
+            <Col sm={1} />
             <Col sm={8}>
               <label htmlFor="email-switch">
                 <input type="hidden" id="email-switch" />
@@ -381,8 +382,8 @@ class AccountPage extends React.Component {
             </Col>
           </Row>
           <Row className="align-items-center mt-2">
-            <Col sm={3}><h5 class="text-right">Text Notifications</h5></Col>
-            <Col sm={1}></Col>
+            <Col sm={3}><h5 className="text-right">Text Notifications</h5></Col>
+            <Col sm={1} />
             <Col sm={8}>
               <label htmlFor="text-switch">
                 <input type="hidden" id="text-switch" />
@@ -394,8 +395,8 @@ class AccountPage extends React.Component {
             </Col>
           </Row>
           <Row className="align-items-center mt-2">
-            <Col sm={3}><h5 class="text-right">Delete Account</h5></Col>
-            <Col sm={1}></Col>
+            <Col sm={3}><h5 className="text-right">Delete Account</h5></Col>
+            <Col sm={1} />
             <Col sm={8}>
               <button
                 id="delete-account"

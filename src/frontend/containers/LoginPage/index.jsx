@@ -10,8 +10,8 @@ import map from '../../store/map';
 import './styles.scss';
 import { loginWithTimbr, loginWithGoogle, loginWithFacebook } from '../../store/actions/account';
 import constants from '../../store/const';
-import google_logo from '../../assets/images/google_logo.png'
-import facebook_logo from '../../assets/images/facebook_logo.png'
+import googleLogo from '../../assets/images/google_logo.png';
+import facebookLogo from '../../assets/images/facebook_logo.png';
 
 class LoginPage extends React.Component {
   constructor() {
@@ -22,8 +22,8 @@ class LoginPage extends React.Component {
     this.state = {
       email: '',
       password: '',
-      googleLogo: google_logo,
-      facebookLogo: facebook_logo,
+      googleLogo,
+      facebookLogo,
     };
   }
 
@@ -74,15 +74,15 @@ class LoginPage extends React.Component {
     const { history } = this.props;
     return (
       <div id="login-page">
-        <h1 class="text-center pt-5 pb-2">timbr</h1>
-        <h3 class="text-center" style={{ color: 'white' }}><i>your plants need some love</i></h3>
+        <h1 className="text-center pt-5 pb-2">timbr</h1>
+        <h3 className="text-center" style={{ color: 'white' }}><i>your plants need some love</i></h3>
         <div className="row h-100 ml-4 mr-4">
-        <div className="col-sm-6 my-auto">
+          <div className="col-sm-6 my-auto">
             <div className="card h-100 border-primary">
               <div className="card-body text-center my-auto">
-                <h4 class="mt-2 mb-5">Sign-up</h4>
-                <p class="mt-5 mb-0 pt-2 lead text-muted">Don't have a timbr account yet?</p>
-                <p class="mt-0 mb-4 lead text-muted">Sign-up now!</p>
+                <h4 className="mt-2 mb-5">Sign-up</h4>
+                <p className="mt-5 mb-0 pt-2 lead text-muted">Don't have a timbr account yet?</p>
+                <p className="mt-0 mb-4 lead text-muted">Sign-up now!</p>
                 <button
                   type="button"
                   className="btn btn-primary"
@@ -97,7 +97,7 @@ class LoginPage extends React.Component {
           <div className="col-sm-6 my-auto">
             <div className="card h-100 border-primary">
               <div className="card-body text-center">
-                <h4 class="mt-2 mb-3">Login</h4>
+                <h4 className="mt-2 mb-3">Login</h4>
                 <button
                   id="Google"
                   type="button"
@@ -107,7 +107,7 @@ class LoginPage extends React.Component {
                     this.handleAuth(constants.LOGIN_WITH_GOOGLE);
                   }}
                 >
-                  <img className="photo" src={this.state.googleLogo}></img>
+                  <img className="photo" alt="" src={this.state.googleLogo} />
                   {' '}
                   Sign in with Google
                 </button>
@@ -120,7 +120,7 @@ class LoginPage extends React.Component {
                     this.handleAuth(constants.LOGIN_WITH_FACEBOOK);
                   }}
                 >
-                  <img className="photo" src={this.state.facebookLogo}></img>
+                  <img className="photo" alt="" src={this.state.facebookLogo} />
                   {' '}
                   Sign in with Facebook
                 </button>
