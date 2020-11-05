@@ -22,6 +22,7 @@ class RegisterPage extends React.Component {
 
     this.state = {
       email: '',
+      username: '',
       password: '',
       isOauthModalOpen: false,
       modalError: '',
@@ -63,7 +64,7 @@ class RegisterPage extends React.Component {
     e.preventDefault();
 
     const { history } = this.props;
-    const { email, password, oauthDenied } = this.state;
+    const { email, username, password, oauthDenied } = this.state;
     if (email.match(/^[\w.+-]+@gmail\.com$/) && !oauthDenied) {
       this.openModal();
       return;
@@ -71,7 +72,7 @@ class RegisterPage extends React.Component {
     /* This method handles registration of a new user by sending the user credentials to the
         corresponding function and redirecting to the login page. */
     const credentials = {
-      email, password,
+      email, username, password,
     };
 
     // Redirects to the login page if registration successful. Else, displays the error message.
@@ -131,6 +132,13 @@ class RegisterPage extends React.Component {
             autoComplete="on"
             placeholder="Password"
             onChange={(event) => { this.setState({ password: event.target.value }); }}
+          />
+
+          <input
+            id="username"
+            type="text"
+            placeholder="Username (Optional)"
+            onChange={(event) => { this.setState({ username: event.target.value }); }}
           />
 
           <button type="submit">Register</button>

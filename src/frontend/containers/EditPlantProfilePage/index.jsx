@@ -5,6 +5,12 @@ import { Button, Card, Form, FormControl } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import ProfilePicture from '../../assets/images/pet_profile_picture.png';
 import Plus from '../../assets/images/plus.png';
+import {
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+} from 'reactstrap';
 import Navbar from '../../components/Navbar';
 import map from '../../store/map';
 import { editPet, getPetProfilePicture, getPetGrowthPictures,
@@ -25,6 +31,8 @@ class EditPlantProfilePage extends React.Component {
     this.state = {
       currPet: { ...pet },
       pet: { ...pet },
+      petId,
+      dropdownOpen: false,
       profilePic: ProfilePicture,
       profilePictureFeedback: '',
       profilePictureValidationState: 'default',
@@ -43,6 +51,8 @@ class EditPlantProfilePage extends React.Component {
     this.removeGrowthPicture = this.removeGrowthPicture.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.toggleDropdown = this.toggleDropdown.bind(this);
+    this.handleDropdown = this.handleDropdown.bind(this);
   }
 
   componentDidMount() {
@@ -214,10 +224,23 @@ class EditPlantProfilePage extends React.Component {
     });
   }
 
+  handleDropdown(e) {
+    const { pet } = this.state;
+    this.setState({ pet: { ...pet, type: e.currentTarget.textContent } });
+  }
+
+  toggleDropdown() {
+    this.setState((prevState) => ({
+      dropdownOpen: !prevState.dropdownOpen,
+    }));
+  }
+
   render() {
     const { pet, currPet, profilePic, growthPics,
       profilePictureFeedback, profilePictureValidationState, resetProfilePicInput,
       growthPictureFeedback, growthPictureValidationState, resetGrowthPicInput } = this.state;
+    const { store: { plants } } = this.props;
+    const plantList = Object.keys(plants);
     const today = (new Date()).toISOString().split('T')[0];
     const past = new Date((new Date().getFullYear() - 50)).toISOString().split('T')[0];
 
@@ -316,6 +339,22 @@ class EditPlantProfilePage extends React.Component {
               />
             </Form.Group>
 
+            <Form.Group controlId="type">
+              <Form.Label>Plant's Type:</Form.Label>
+              { /* eslint-disable-next-line react/destructuring-assignment */}
+              <Dropdown name="type" isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
+                <DropdownToggle caret id="size-dropdown">
+                  { /* eslint-disable-next-line react/destructuring-assignment */}
+                  {this.state.pet.type}
+                </DropdownToggle>
+                <DropdownMenu required>
+                  {plantList.map((plant) => (
+                    <DropdownItem onClick={this.handleDropdown}>{plant}</DropdownItem>
+                  ))}
+                </DropdownMenu>
+              </Dropdown>
+            </Form.Group>
+
             <Form.Group>
               <Form.Label>Growth Pictures</Form.Label>
               <br />
@@ -360,6 +399,7 @@ EditPlantProfilePage.propTypes = {
       username: PropTypes.string,
     }),
     pets: PropTypes.object.isRequired,
+    plants: PropTypes.object.isRequired,
   }).isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({

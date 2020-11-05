@@ -288,21 +288,21 @@ class PlantProfilePage extends React.Component {
             {carn ? ' Days' : ''}
           </p>
           <p>
-            <i>{pet.name}</i>
+            <i>{pet?.name}</i>
             {' '}
             was born on
             {' '}
-            {pet.birth}
+            {pet?.birth}
             .
           </p>
           <p>
             You have owned
             {' '}
-            <i>{pet.name}</i>
+            <i>{pet?.name}</i>
             {' '}
             since
             {' '}
-            {pet.ownedSince}
+            {pet?.ownedSince}
             .
           </p>
           <button type="button" onClick={this.onWater}> Water </button>
