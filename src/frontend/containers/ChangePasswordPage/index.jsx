@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import map from '../../store/map';
 import Navbar from '../../components/Navbar';
 import { changePassword, reauthenticateUser } from '../../store/actions/account';
+import { Container, Row, Col } from 'reactstrap';
 
 class ChangePasswordPage extends React.Component {
   constructor() {
@@ -65,42 +66,56 @@ class ChangePasswordPage extends React.Component {
     return (
       <div id="change-password-page">
         <Navbar />
-        <form id="password-reset-form">
-          <input
-            id="current-pwd"
-            type="password"
-            autoComplete="on"
-            placeholder="Current Password"
-            onChange={(event) => this.setState({
-              currentpwd: event.target.value,
-            })}
-          />
-          <input
-            id="new-pwd"
-            type="password"
-            autoComplete="on"
-            placeholder="New Password"
-            onChange={(event) => this.setState({
-              newpwd: event.target.value,
-            })}
-          />
-          <input
-            id="confirm-pwd"
-            type="password"
-            autoComplete="on"
-            placeholder="Confirm New Password"
-            onChange={(event) => this.setState({
-              confirmpwd: event.target.value,
-            })}
-          />
+        <Container class="mt-4">
+          <Row className="text-center mt-3">
+            <Col sm={3}></Col>
+            <Col sm={6}>
+              <h1>Change Password</h1>
+              <input
+                id="current-pwd"
+                type="password"
+                className="form-control mt-2"
+                autoComplete="on"
+                placeholder="Current Password"
+                onChange={(event) => this.setState({
+                  currentpwd: event.target.value,
+                })}
+              />
+              <input
+                id="new-pwd"
+                type="password"
+                className="form-control mt-2"
+                autoComplete="on"
+                placeholder="New Password"
+                onChange={(event) => this.setState({
+                  newpwd: event.target.value,
+                })}
+              />
+              <input
+                id="confirm-pwd"
+                type="password"
+                className="form-control mt-2"
+                autoComplete="on"
+                placeholder="Confirm New Password"
+                onChange={(event) => this.setState({
+                  confirmpwd: event.target.value,
+                })}
+              />
 
-          <button
-            type="button"
-            onClick={this.changePassword}
-          >
-            Change Password
-          </button>
-          <p id="error">{error}</p>
+              <button
+                type="button"
+                className="btn btn-primary mt-2"
+                onClick={this.changePassword}
+              >
+                Change Password
+              </button>
+              <p id="error">{error}</p>
+            </Col>
+            <Col sm={3}></Col>
+          </Row>
+        </Container>
+        <form id="password-reset-form">
+
         </form>
       </div>
     );

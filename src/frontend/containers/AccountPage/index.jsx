@@ -42,6 +42,7 @@ class AccountPage extends React.Component {
       textsOn: false,
       emailsOn: false,
       phoneNumber: '',
+      phoneNumberValue: '',
       phoneError: '',
       profilePic: ProfilePicture,
       isModalOpen: false,
@@ -109,6 +110,10 @@ class AccountPage extends React.Component {
     // Get the phone number from the database, hard coded for now
     getPhoneNumber(
       (phoneNumber) => { this.mounted && this.setState({ phoneNumber: phoneNumber.val() }); },
+    );
+
+    getPhoneNumber(
+      (phoneNumber) => { this.mounted && this.setState({ phoneNumberValue: phoneNumber.val().substring(2) }); },
     );
   }
 
@@ -191,7 +196,7 @@ class AccountPage extends React.Component {
     });
     changePhoneNumber(number);
     /* Changes the phone number in the state. */
-    this.getCurrentPhoneNumber();
+    this.getCurrentPhoneNumber()
     document.getElementById('phone-number').value = '';
   }
 
@@ -275,13 +280,14 @@ class AccountPage extends React.Component {
         <br />
         <h2 class="mt-1 mb-3 text-center">My Account</h2>
         <Container class="mt-3">
-          <Row>
-            <Col sm={4}><h5 class="text-right">Profile Picture</h5></Col>
+          <Row className="align-items-center mt-2">
+            <Col sm={3}><h5 class="text-right">Profile Picture</h5></Col>
             <Col sm={1}></Col>
-            <Col sm={7}>
+            <Col sm={8}>
               <img style={styles} id="profile-picture" src={this.state.profilePic} alt="Profile" />
-              <label htmlFor="image-uploader">
+              <label htmlFor="image-uploader" className="ml-4">
                 Change Profile Picture:
+                <br/>
                 <input
                   type="file"
                   id="image-uploader"
@@ -291,57 +297,69 @@ class AccountPage extends React.Component {
               </label>
               <p id="picture-feedback">{this.state.pictureFeedback}</p></Col>
           </Row>
-          <Row>
-            <Col sm={4}><h5 class="text-right">Username</h5></Col>
+          <Row className="align-items-center mt-2">
+            <Col sm={3}><h5 class="text-right">Username</h5></Col>
             <Col sm={1}></Col>
-            <Col sm={7}>
+            <Col sm={5}>
               <input
                 id="username"
                 type="text"
+                className="form-control"
                 placeholder={this.state.username}
               />
+            </Col>
+            <Col sm={3}>
               <button
                 id="change-username"
                 type="button"
+                className="btn btn-outline-primary"
                 onClick={this.changeUsername}
               >
                 Change Username
               </button>
             </Col>
           </Row>
-          <Row class="mt-1">
-            <Col sm={4}><h5 class="text-right">Phone Number</h5></Col>
+          <Row className="align-items-center mt-3">
+            <Col sm={3}><h5 class="text-right">Phone Number</h5></Col>
             <Col sm={1}></Col>
-            <Col sm={7}>
-              <p>
-                Current Phone Number:
-                {' '}
-                {this.state.phoneNumber}
-              </p>
+            <Col sm={1}>
               +1
-              {' '}
+            </Col>
+            <Col sm={4}>
               <input
                 type="tel"
-                placeholder="Enter phone number"
+                className="form-control"
+                placeholder={this.state.phoneNumberValue}
                 id="phone-number"
               />
+            </Col>
+            <Col sm={3}>
               <button
                 id="change-phone-number"
                 type="button"
+                className="btn btn-outline-primary"
                 onClick={this.changePhoneNumber}
               >
-                Change Phone number
+                Change Phone Number
               </button>
-              <p id="phone-error">{this.state.phoneError}</p>
+              
             </Col>
           </Row>
           <Row>
-            <Col sm={4}><h5 class="text-right">Password</h5></Col>
+            <Col sm={3}></Col>
             <Col sm={1}></Col>
-            <Col sm={7}>
+            <Col sm={8}>
+              <p id="phone-error">{this.state.phoneError}</p>
+            </Col>
+          </Row>
+          <Row className="align-items-center">
+            <Col sm={3}><h5 class="text-right">Password</h5></Col>
+            <Col sm={1}></Col>
+            <Col sm={8}>
               <button
                 id="change-password"
                 type="button"
+                className="btn btn-outline-primary"
                 style={{ visibility: this.state.canChangePassword ? 'visible' : 'hidden' }}
                 onClick={() => history.push('/change-password')}
               >
@@ -349,10 +367,10 @@ class AccountPage extends React.Component {
               </button>
             </Col>
           </Row>
-          <Row>
-            <Col sm={4}><h5 class="text-right">Email Notifications</h5></Col>
+          <Row className="align-items-center mt-3">
+            <Col sm={3}><h5 class="text-right">Email Notifications</h5></Col>
             <Col sm={1}></Col>
-            <Col sm={7}>
+            <Col sm={8}>
               <label htmlFor="email-switch">
                 <input type="hidden" id="email-switch" />
                 <Switch
@@ -362,10 +380,10 @@ class AccountPage extends React.Component {
               </label>
             </Col>
           </Row>
-          <Row>
-            <Col sm={4}><h5 class="text-right">Text Notifications</h5></Col>
+          <Row className="align-items-center mt-2">
+            <Col sm={3}><h5 class="text-right">Text Notifications</h5></Col>
             <Col sm={1}></Col>
-            <Col sm={7}>
+            <Col sm={8}>
               <label htmlFor="text-switch">
                 <input type="hidden" id="text-switch" />
                 <Switch
@@ -375,16 +393,17 @@ class AccountPage extends React.Component {
               </label>
             </Col>
           </Row>
-          <Row>
-            <Col sm={4}><h5 class="text-right">Delete Account</h5></Col>
+          <Row className="align-items-center mt-2">
+            <Col sm={3}><h5 class="text-right">Delete Account</h5></Col>
             <Col sm={1}></Col>
-            <Col sm={7}>
+            <Col sm={8}>
               <button
                 id="delete-account"
                 type="button"
+                className="btn btn-outline-primary"
                 onClick={this.openModal}
               >
-                Delete my timbr account
+                Delete my <i>timbr</i> account
               </button>
             </Col>
           </Row>
@@ -398,6 +417,7 @@ class AccountPage extends React.Component {
             <input
               id="delete-password"
               type="password"
+              className="form-control"
               autoComplete="on"
               placeholder="Re-enter password"
               onChange={(event) => {
@@ -411,6 +431,7 @@ class AccountPage extends React.Component {
             <button
               type="button"
               id="confirm-password"
+              className="btn btn-primary"
               onClick={this.deleteAccount}
             >
               Confirm
