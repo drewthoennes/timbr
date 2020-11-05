@@ -16,6 +16,7 @@ import { getUsername, getPhoneNumber, getProfilePicture, getTextsOn, getEmailsOn
 import ProfilePicture from '../../assets/images/profile_picture.png';
 import Navbar from '../../components/Navbar';
 import constants from '../../store/const';
+import { Container, Row, Col } from 'reactstrap';
 
 class AccountPage extends React.Component {
   constructor() {
@@ -272,92 +273,122 @@ class AccountPage extends React.Component {
       <div id="account-page">
         <Navbar />
         <br />
-        <img style={styles} id="profile-picture" src={this.state.profilePic} alt="Profile" />
-        <br />
-        <label htmlFor="image-uploader">
-          Change Profile Picture:
-          <input
-            type="file"
-            id="image-uploader"
-            accept="image/jpg,image/jpeg,image/png"
-            onChange={(event) => { this.changeProfilePicture(event.target.files[0]); }}
-          />
-        </label>
-        <p id="picture-feedback">{this.state.pictureFeedback}</p>
-        <br />
-        <form id="account-settings">
-
-          <label htmlFor="text-switch">
-            <input type="hidden" id="text-switch" />
-            <span>Text Notifications </span>
-            <Switch
-              onChange={this.changeTextsOn}
-              checked={this.state.textsOn || false}
-            />
-          </label>
-          <p>{'\n'}</p>
-          <label htmlFor="email-switch">
-            <input type="hidden" id="email-switch" />
-            <span>Email Notifications </span>
-            <Switch
-              onChange={this.changeEmailsOn}
-              checked={this.state.emailsOn || false}
-            />
-          </label>
-          <p>
-            Current Username:
-            {' '}
-            {this.state.username}
-          </p>
-          <input
-            id="username"
-            type="text"
-            placeholder="Username"
-          />
-          <button
-            id="change-username"
-            type="button"
-            onClick={this.changeUsername}
-          >
-            Change Username
-          </button>
-          <p>
-            Current Phone Number:
-            {' '}
-            {this.state.phoneNumber}
-          </p>
-          +1
-          {' '}
-          <input
-            type="tel"
-            placeholder="Enter phone number"
-            id="phone-number"
-          />
-          <button
-            id="change-phone-number"
-            type="button"
-            onClick={this.changePhoneNumber}
-          >
-            Change Phone number
-          </button>
-          <p id="phone-error">{this.state.phoneError}</p>
-          <button
-            id="change-password"
-            type="button"
-            style={{ visibility: this.state.canChangePassword ? 'visible' : 'hidden' }}
-            onClick={() => history.push('/change-password')}
-          >
-            Change Password
-          </button>
-          <br />
-          <button
-            id="delete-account"
-            type="button"
-            onClick={this.openModal}
-          >
-            Delete my timbr account
-          </button>
-        </form>
+        <h2 class="mt-1 mb-3 text-center">My Account</h2>
+        <Container class="mt-3">
+          <Row>
+            <Col sm={4}><h5 class="text-right">Profile Picture</h5></Col>
+            <Col sm={1}></Col>
+            <Col sm={7}>
+              <img style={styles} id="profile-picture" src={this.state.profilePic} alt="Profile" />
+              <label htmlFor="image-uploader">
+                Change Profile Picture:
+                <input
+                  type="file"
+                  id="image-uploader"
+                  accept="image/jpg,image/jpeg,image/png"
+                  onChange={(event) => { this.changeProfilePicture(event.target.files[0]); }}
+                />
+              </label>
+              <p id="picture-feedback">{this.state.pictureFeedback}</p></Col>
+          </Row>
+          <Row>
+            <Col sm={4}><h5 class="text-right">Username</h5></Col>
+            <Col sm={1}></Col>
+            <Col sm={7}>
+              <input
+                id="username"
+                type="text"
+                placeholder={this.state.username}
+              />
+              <button
+                id="change-username"
+                type="button"
+                onClick={this.changeUsername}
+              >
+                Change Username
+              </button>
+            </Col>
+          </Row>
+          <Row class="mt-1">
+            <Col sm={4}><h5 class="text-right">Phone Number</h5></Col>
+            <Col sm={1}></Col>
+            <Col sm={7}>
+              <p>
+                Current Phone Number:
+                {' '}
+                {this.state.phoneNumber}
+              </p>
+              +1
+              {' '}
+              <input
+                type="tel"
+                placeholder="Enter phone number"
+                id="phone-number"
+              />
+              <button
+                id="change-phone-number"
+                type="button"
+                onClick={this.changePhoneNumber}
+              >
+                Change Phone number
+              </button>
+              <p id="phone-error">{this.state.phoneError}</p>
+            </Col>
+          </Row>
+          <Row>
+            <Col sm={4}><h5 class="text-right">Password</h5></Col>
+            <Col sm={1}></Col>
+            <Col sm={7}>
+              <button
+                id="change-password"
+                type="button"
+                style={{ visibility: this.state.canChangePassword ? 'visible' : 'hidden' }}
+                onClick={() => history.push('/change-password')}
+              >
+                Change Password
+              </button>
+            </Col>
+          </Row>
+          <Row>
+            <Col sm={4}><h5 class="text-right">Email Notifications</h5></Col>
+            <Col sm={1}></Col>
+            <Col sm={7}>
+              <label htmlFor="email-switch">
+                <input type="hidden" id="email-switch" />
+                <Switch
+                  onChange={this.changeEmailsOn}
+                  checked={this.state.emailsOn || false}
+                />
+              </label>
+            </Col>
+          </Row>
+          <Row>
+            <Col sm={4}><h5 class="text-right">Text Notifications</h5></Col>
+            <Col sm={1}></Col>
+            <Col sm={7}>
+              <label htmlFor="text-switch">
+                <input type="hidden" id="text-switch" />
+                <Switch
+                  onChange={this.changeTextsOn}
+                  checked={this.state.textsOn || false}
+                />
+              </label>
+            </Col>
+          </Row>
+          <Row>
+            <Col sm={4}><h5 class="text-right">Delete Account</h5></Col>
+            <Col sm={1}></Col>
+            <Col sm={7}>
+              <button
+                id="delete-account"
+                type="button"
+                onClick={this.openModal}
+              >
+                Delete my timbr account
+              </button>
+            </Col>
+          </Row>
+        </Container>
 
         <Modal id="email-reauth" show={this.state.isModalOpen} onHide={this.closeModal}>
           <Modal.Header closeButton>
