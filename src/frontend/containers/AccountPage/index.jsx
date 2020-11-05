@@ -109,7 +109,8 @@ class AccountPage extends React.Component {
     // Get the phone number from the database, hard coded for now
     getPhoneNumber(
       (phoneNumber) => {
-        this.mounted && this.setState({ phoneNumber: phoneNumber.val().substring(2),
+        this.mounted && this.setState({
+          phoneNumber: phoneNumber.val().substring(2),
         });
       },
     );
@@ -323,16 +324,18 @@ class AccountPage extends React.Component {
           <Row className="align-items-center mt-3">
             <Col sm={3}><h5 className="text-right">Phone Number</h5></Col>
             <Col sm={1} />
-            <Col sm={1}>
-              +1
-            </Col>
-            <Col sm={4}>
-              <input
-                type="tel"
-                className="form-control"
-                placeholder={this.state.phoneNumber}
-                id="phone-number"
-              />
+            <Col sm={5}>
+              <div className="input-group">
+                <div className="input-group-prepend">
+                  <span className="input-group-text">+1</span>
+                </div>
+                <input
+                  type="tel"
+                  className="form-control"
+                  placeholder={this.state.phoneNumber}
+                  id="phone-number"
+                />
+              </div>
             </Col>
             <Col sm={3}>
               <button
@@ -420,7 +423,7 @@ class AccountPage extends React.Component {
               type="password"
               className="form-control"
               autoComplete="on"
-              placeholder="Re-enter password"
+              placeholder="Enter Password"
               onChange={(event) => {
                 if (this.mounted) {
                   this.setState({ confirmPassword: event.target.value });
