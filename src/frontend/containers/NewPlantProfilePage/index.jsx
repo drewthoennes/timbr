@@ -48,6 +48,10 @@ class NewPlantProfilePage extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    this.removeProfilePicture();
+  }
+
   getProfilePicture() {
     const { store: { account: { uid } } } = this.props;
     this.setState({ profilePic: ProfilePicture });
@@ -96,10 +100,6 @@ class NewPlantProfilePage extends React.Component {
         });
       })
       .finally(() => this.getProfilePicture());
-  }
-
-  componentDidUnmount() {
-    this.removeProfilePicture();
   }
 
   removeProfilePicture() {
@@ -255,7 +255,7 @@ class NewPlantProfilePage extends React.Component {
               </DropdownToggle>
               <DropdownMenu required>
                 {plantList.map((plant) => (
-                  <DropdownItem onClick={this.handleDropdown}>{plant}</DropdownItem>
+                  <DropdownItem key={plant} onClick={this.handleDropdown}>{plant}</DropdownItem>
                 ))}
               </DropdownMenu>
             </Dropdown>
