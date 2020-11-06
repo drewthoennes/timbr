@@ -199,9 +199,9 @@ class PlantProfilePage extends React.Component {
     }
 
     const today = new Date().toISOString().slice(0, 10);
-    const hasWateredToday = !!pet.watered.history?.[today];
-    const hasFertilizedToday = !!pet.fertilized.history?.[today];
-    const hasTurnedToday = !!pet.turned.history?.[today];
+    const hasWateredToday = !!pet?.watered?.history?.[today];
+    const hasFertilizedToday = !!pet?.fertilized?.history?.[today];
+    const hasTurnedToday = !!pet?.turned?.history?.[today];
 
     const { showDeleteModal: show } = this.state;
 

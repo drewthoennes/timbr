@@ -111,22 +111,21 @@ class EditPlantProfilePage extends React.Component {
       });
       return;
     }
-    if (file) {
-      setPetProfilePicture(id, file)
-        .then(() => {
-          this.setState({
-            profilePictureValidationState: 'success',
-            profilePictureFeedback: 'Profile picture updated!',
-          });
-        })
-        .catch(() => {
-          this.setState({
-            profilePictureValidationState: 'error',
-            profilePictureFeedback: 'There was an error uploading your picture. Please try again.',
-          });
-        })
-        .finally(() => this.getProfilePicture());
-    }
+
+    setPetProfilePicture(id, file)
+      .then(() => {
+        this.setState({
+          profilePictureValidationState: 'success',
+          profilePictureFeedback: 'Profile picture updated!',
+        });
+      })
+      .catch(() => {
+        this.setState({
+          profilePictureValidationState: 'error',
+          profilePictureFeedback: 'There was an error uploading your picture. Please try again.',
+        });
+      })
+      .finally(() => this.getProfilePicture());
   }
 
   addGrowthPicture(file) {
@@ -146,22 +145,21 @@ class EditPlantProfilePage extends React.Component {
       });
       return;
     }
-    if (file) {
-      addPetGrowthPicture(id, file, (error) => {
-        if (error.message) {
-          this.setState({
-            growthPictureValidationState: 'error',
-            growthPictureFeedback: error.message,
-          });
-          return;
-        }
+
+    addPetGrowthPicture(id, file, (error) => {
+      if (error.message) {
         this.setState({
-          growthPictureValidationState: 'success',
-          growthPictureFeedback: 'Growth picture added.',
+          growthPictureValidationState: 'error',
+          growthPictureFeedback: error.message,
         });
-        this.getGrowthPictures();
+        return;
+      }
+      this.setState({
+        growthPictureValidationState: 'success',
+        growthPictureFeedback: 'Growth picture added.',
       });
-    }
+      this.getGrowthPictures();
+    });
   }
 
   removeProfilePicture() {
