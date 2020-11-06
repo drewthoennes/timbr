@@ -78,7 +78,7 @@ export function getPetProfilePicture(petId, callback) {
     return Promise.resolve();
   }
   return firebase.database().ref(`users/${uid}/pets/${petId}`).once('value', (pet) => {
-    if (!pet.exists() || !pet.val().profilePic) {
+    if (petId !== `temp-${uid}` && (!pet.exists() || !pet.val().profilePic)) {
       return Promise.resolve();
     }
 
