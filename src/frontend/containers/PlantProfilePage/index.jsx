@@ -17,12 +17,11 @@ import './styles.scss';
 class PlantProfilePage extends React.Component {
   constructor(props) {
     super(props);
-
-    const { store: { pets }, history, match: { params: { id } } } = props;
-    if (!pets[id]) {
-      history.push('/notfound');
-      return;
-    }
+    // const { store: { pets }, history, match: { params: { id } } } = props;
+    // if (!pets[id]) {
+    //   history.push('/notfound');
+    //   return;
+    // }
 
     this.onWater = this.onWater.bind(this);
     this.onFertilize = this.onFertilize.bind(this);
