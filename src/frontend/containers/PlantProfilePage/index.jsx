@@ -17,6 +17,11 @@ import './styles.scss';
 class PlantProfilePage extends React.Component {
   constructor(props) {
     super(props);
+    // const { store: { pets }, history, match: { params: { id } } } = props;
+    // if (!pets[id]) {
+    //   history.push('/notfound');
+    //   return;
+    // }
 
     this.onWater = this.onWater.bind(this);
     this.onFertilize = this.onFertilize.bind(this);
@@ -140,12 +145,13 @@ class PlantProfilePage extends React.Component {
     let pet;
     if (username && username !== ownUsername) {
       pet = users[username] ? users[username].pets[id] : { name: '', type: '' };
-    } else if (!pets[id]) {
-      history.push(`/${ownUsername}`);
+    }
+    if (!pets[id]) {
+      history.push('/notfound');
     } else {
       pet = pets[id];
     }
-    return pet.type;
+    return pet?.type;
   }
 
   getPlantDetails() {
@@ -156,8 +162,12 @@ class PlantProfilePage extends React.Component {
 
   fetchEventList() {
     // fetches action history
-    const { match: { params: { id } } } = this.props;
+    const { match: { params: { id } }, history } = this.props;
     const { store: { pets } = {} } = this.props;
+    if (!pets[id]) {
+      history.push('/notfound');
+      return;
+    }
 
     const wateredDates = Object.keys(pets[id].watered.history || {});
     const fertilizedDates = Object.keys(pets[id].fertilized.history || {});
@@ -194,6 +204,7 @@ class PlantProfilePage extends React.Component {
       pet = users[username] ? users[username].pets[id] : { name: '', type: '', birth: '', ownedSince: '' };
     } else if (!pets[id]) {
       history.push('/notfound');
+      return null;
     } else {
       pet = pets[id];
     }
