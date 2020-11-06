@@ -95,4 +95,42 @@
     max-width: 100%;
     cursor: pointer;
   }
+
+  section {
+    padding: 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+    &:last-of-type {
+      border-bottom: 0px;
+    }
+  }
+
+  #plant-name-and-information {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+
+  #care-frequency {
+    span {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+
+    #care-buttons {
+      display: flex;
+      flex-direction: column;
+
+      button {
+        margin-bottom: 16px;
+      }
+    }
+  }
+
+  #manage-plant {
+    button {
+      margin-right: 16px;
+    }
+  }
 }

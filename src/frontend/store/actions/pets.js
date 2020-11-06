@@ -77,7 +77,7 @@ export function getPetProfilePicture(petId, callback) {
   if (!uid) {
     return Promise.resolve();
   }
-  return firebase.database().ref(`users/${uid}/pets/${petId}`).once('value', (pet) => {
+  return firebase.database().ref(`users/${uid}/pets/${petId}`).once('value').then((pet) => {
     if (petId !== `temp-${uid}` && (!pet.exists() || !pet.val().profilePic)) {
       return Promise.resolve();
     }
@@ -131,13 +131,12 @@ export function getPetGrowthPictures(petId, callback) {
     return Promise.resolve();
   }
 
-  return firebase.database().ref(`users/${uid}/pets/${petId}`).once('value', (pet) => {
+  return firebase.database().ref(`users/${uid}/pets/${petId}`).once('value').then((pet) => {
     if (pet.exists() && pet.val().growthPics) {
-      const growthPics = pet.val().growthPics?.slice();
-      for (let i = 0; i < growthPics.length; ++i) {
-        const pictureRef = firebase.storage().ref().child(`pets/growth-pictures/${petId}@${growthPics[i]}`);
-        callback(pictureRef, growthPics[i]);
-      }
+      pet.val().growthPics?.slice().forEach((timestamp) => {
+        const pictureRef = firebase.storage().ref().child(`pets/growth-pictures/${petId}@${timestamp}`);
+        callback(pictureRef, timestamp);
+      });
     }
   });
 }
