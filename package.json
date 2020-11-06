@@ -12,7 +12,7 @@
     "clean": "rm dist/*",
     "lint": "eslint \"{server.js,{src,test}/**/*.{js,jsx}}\" --max-warnings 0",
     "lint-fix": "eslint \"{server.js,{src,test}/**/*.{js,jsx}}\" --fix",
-    "test": "jest test"
+    "test": "jest test --coverage true"
   },
   "license": "MIT",
   "devDependencies": {

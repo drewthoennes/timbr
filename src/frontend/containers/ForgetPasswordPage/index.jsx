@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import map from '../../store/map';
-import { forgotPassword, getSignInMethod } from '../../store/actions/account';
+import { forgotPassword, getSignInMethod } from '../../store/actions/auth';
 import constants from '../../store/const';
 import './styles.scss';
 
