@@ -19,6 +19,11 @@ import ManagePlant from './ManagePlant';
 class PlantProfilePage extends React.Component {
   constructor(props) {
     super(props);
+    // const { store: { pets }, history, match: { params: { id } } } = props;
+    // if (!pets[id]) {
+    //   history.push('/notfound');
+    //   return;
+    // }
 
     this.getPlantDetails = this.getPlantDetails.bind(this);
     this.getProfilePicture = this.getProfilePicture.bind(this);
@@ -80,18 +85,19 @@ class PlantProfilePage extends React.Component {
   }
 
   getPlantType() {
-    const { own, store: { users, pets, account: { username: ownUsername } } } = this.props;
+    const { own, store: { users, pets } } = this.props;
     const { history, match: { params: { username, id } } } = this.props;
 
     let pet;
-    if (!own) {
-      pet = users[username] ? users[username].pets[id] : { type: '' };
-    } else if (!pets[id]) {
-      history.push(`/${ownUsername}`);
+    if (own) {
+      pet = users[username] ? users[username].pets[id] : { name: '', type: '' };
+    }
+    if (!pets[id]) {
+      history.push('/notfound');
     } else {
       pet = pets[id];
     }
-    return pet.type;
+    return pet?.type;
   }
 
   getPlantDetails() {
@@ -104,8 +110,12 @@ class PlantProfilePage extends React.Component {
 
   fetchEventList() {
     // fetches action history
-    const { match: { params: { id } } } = this.props;
+    const { match: { params: { id } }, history } = this.props;
     const { store: { pets } = {} } = this.props;
+    if (!pets[id]) {
+      history.push('/notfound');
+      return;
+    }
 
     const wateredDates = Object.keys(pets[id]?.watered.history || {});
     const fertilizedDates = Object.keys(pets[id]?.fertilized.history || {});
@@ -144,6 +154,7 @@ class PlantProfilePage extends React.Component {
         : { name: '', type: '', birth: '', ownedSince: '', watered: {}, fertilized: {}, turned: {}, fed: {} };
     } else if (!pets[id]) {
       history.push('/notfound');
+      return null;
     } else {
       pet = pets[id];
     }
