@@ -89,10 +89,9 @@ class PlantProfilePage extends React.Component {
     const { history, match: { params: { username, id } } } = this.props;
 
     let pet;
-    if (own) {
+    if (!own) {
       pet = users[username] ? users[username].pets[id] : { name: '', type: '' };
-    }
-    if (!pets[id]) {
+    } else if (!pets[id]) {
       history.push('/notfound');
     } else {
       pet = pets[id];
@@ -110,12 +109,8 @@ class PlantProfilePage extends React.Component {
 
   fetchEventList() {
     // fetches action history
-    const { match: { params: { id } }, history } = this.props;
+    const { match: { params: { id } } } = this.props;
     const { store: { pets } = {} } = this.props;
-    if (!pets[id]) {
-      history.push('/notfound');
-      return;
-    }
 
     const wateredDates = Object.keys(pets[id]?.watered.history || {});
     const fertilizedDates = Object.keys(pets[id]?.fertilized.history || {});
