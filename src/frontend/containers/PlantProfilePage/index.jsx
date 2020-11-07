@@ -49,7 +49,6 @@ class PlantProfilePage extends React.Component {
     this.getGrowthPictures();
 
     if (!username) return Promise.resolve();
-
     return setForeignUserPets(username, id).catch(() => history.push(`/${ownUsername}`));
   }
 
@@ -81,11 +80,11 @@ class PlantProfilePage extends React.Component {
   }
 
   getPlantType() {
-    const { store: { users, pets, account: { username: ownUsername } } } = this.props;
+    const { own, store: { users, pets, account: { username: ownUsername } } } = this.props;
     const { history, match: { params: { username, id } } } = this.props;
 
     let pet;
-    if (username && username !== ownUsername) {
+    if (!own) {
       pet = users[username] ? users[username].pets[id] : { type: '' };
     } else if (!pets[id]) {
       history.push(`/${ownUsername}`);
@@ -132,15 +131,14 @@ class PlantProfilePage extends React.Component {
   }
 
   render() {
-    const { store: { users, pets, account: { username: ownUsername } } } = this.props;
+    const { own, store: { users, pets, account: { username: ownUsername } } } = this.props;
     const { history, match: { params: { username, id } } } = this.props;
     const { speciesName, scientificName, description, carnivorous,
       waterFreq, fertFreq, feedFreq, eventList,
       profilePic, growthPics } = this.state;
-    const foreignPlant = !!username && username !== ownUsername;
 
     let pet;
-    if (foreignPlant) {
+    if (!own) {
       pet = users[username]
         ? users[username].pets[id]
         : { name: '', type: '', birth: '', ownedSince: '', watered: {}, fertilized: {}, turned: {}, fed: {} };
@@ -149,8 +147,6 @@ class PlantProfilePage extends React.Component {
     } else {
       pet = pets[id];
     }
-
-    console.log('Index', growthPics);
 
     return (
       <div>
@@ -175,7 +171,7 @@ class PlantProfilePage extends React.Component {
           </section>
 
           {
-            foreignPlant ? '' : (
+            !own ? '' : (
               <section id="care-frequency">
                 <CareFrequency
                   id={id}
@@ -195,11 +191,11 @@ class PlantProfilePage extends React.Component {
           </section>
 
           <section id="growth-pictures">
-            <GrowthPictures pictures={growthPics} foreignPlant={foreignPlant} />
+            <GrowthPictures pictures={growthPics} foreignPlant={!own} />
           </section>
 
           {
-            foreignPlant ? '' : (
+            !own ? '' : (
               <section id="manage-plant">
                 <ManagePlant id={id} pet={pet} username={ownUsername} />
               </section>
@@ -212,6 +208,7 @@ class PlantProfilePage extends React.Component {
 }
 
 PlantProfilePage.propTypes = {
+  own: PropTypes.bool.isRequired,
   history: PropTypes.object.isRequired,
   store: PropTypes.shape({
     account: PropTypes.shape({

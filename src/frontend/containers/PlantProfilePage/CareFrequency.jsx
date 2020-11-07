@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 import { addDate } from '../../store/actions/pets';
 
-const getToday = () => new Date().toISOString().slice(0, 10);
+const getToday = () => {
+  const now = new Date();
+  return new Date(now.getTime() - now.getTimezoneOffset() * 60 * 1000).toISOString().slice(0, 10);
+};
 
 class CareFrequency extends React.PureComponent {
   constructor() {
