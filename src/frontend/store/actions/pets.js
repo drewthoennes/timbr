@@ -23,6 +23,7 @@ export function createNewPet({ parent = '', type = '', name, ownedSince, birth, 
     watered: { last: '0', streak: '0' },
     fertilized: { last: '0', streak: '0' },
     turned: { last: '0', streak: '0' },
+    fed: { last: '0', streak: '0' },
   });
 }
 
@@ -66,6 +67,7 @@ export function addDate(petId, action, currDate) {
   if (!uid) {
     return Promise.resolve();
   }
+
   return Promise.all([
     firebase.database().ref(`users/${uid}/pets/${petId}/${action}/history/`).child(currDate).set(true),
     firebase.database().ref(`users/${uid}/pets/${petId}/${action}/last/`).set(currDate),
@@ -125,19 +127,31 @@ export function removePetProfilePicture(petId) {
     });
 }
 
-export function getPetGrowthPictures(petId, callback) {
+export function getPetGrowthPictures(petId) {
   const { account: { uid } } = store.getState();
   if (!uid) {
     return Promise.resolve();
   }
 
   return firebase.database().ref(`users/${uid}/pets/${petId}`).once('value').then((pet) => {
-    if (pet.exists() && pet.val().growthPics) {
-      pet.val().growthPics?.slice().forEach((timestamp) => {
-        const pictureRef = firebase.storage().ref().child(`pets/growth-pictures/${petId}@${timestamp}`);
-        callback(pictureRef, timestamp);
-      });
+    if (!pet?.exists() || !pet.val().growthPics?.length) {
+      return Promise.resolve({});
     }
+
+    const { growthPics } = pet.val();
+
+    if (!growthPics) {
+      return Promise.resolve({});
+    }
+
+    const promises = growthPics
+      .map((timestamp) => firebase.storage().ref(`pets/growth-pictures/${petId}@${timestamp}`).getDownloadURL());
+
+    return Promise.all(promises)
+      .then((fulfilledPromises) => { // eslint-disable-line arrow-body-style
+        return fulfilledPromises
+          .reduce((acc, promise, index) => ({ ...acc, [pet.val().growthPics[index]]: promise }), {}); // eslint-disable-line max-len
+      });
   });
 }
 

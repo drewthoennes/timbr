@@ -10,9 +10,9 @@ class CareFrequency extends React.PureComponent {
     super();
 
     this.markWatered = this.markWatered.bind(this);
-    this.markFertilized = this.markWatered.bind(this);
-    this.markTurned = this.markWatered.bind(this);
-    this.markFed = this.markWatered.bind(this);
+    this.markFertilized = this.markFertilized.bind(this);
+    this.markTurned = this.markTurned.bind(this);
+    this.markFed = this.markFed.bind(this);
   }
 
   markWatered() {
@@ -36,17 +36,17 @@ class CareFrequency extends React.PureComponent {
   }
 
   render() {
-    const { pet, waterFreq, fertFreq, feedFreq } = this.props;
+    const { pet, waterFreq, fertFreq, feedFreq, carnivorous } = this.props;
 
     const today = getToday();
     const hasWateredToday = !!pet?.watered?.history?.[today];
     const hasFertilizedToday = !!pet?.fertilized?.history?.[today];
     const hasTurnedToday = !!pet?.turned?.history?.[today];
-    const hasFedToday = false;
+    const hasFedToday = !!pet?.fed?.history?.[today];
 
     let feedFreqJSX;
     let feedButtonJSX;
-    if (feedFreq) {
+    if (carnivorous) {
       feedFreqJSX = <p>{`Feed Frequency: Every ${feedFreq} days`}</p>;
       feedButtonJSX = (
         <Button
@@ -120,10 +120,14 @@ CareFrequency.propTypes = {
     turned: PropTypes.shape({
       history: PropTypes.object,
     }).isRequired,
+    fed: PropTypes.shape({
+      history: PropTypes.object,
+    }).isRequired,
   }).isRequired,
   waterFreq: PropTypes.number.isRequired,
   fertFreq: PropTypes.number.isRequired,
   feedFreq: PropTypes.any.isRequired,
+  carnivorous: PropTypes.bool.isRequired,
   onChange: PropTypes.func,
 };
 

@@ -81,16 +81,9 @@ class EditPlantProfilePage extends React.Component {
 
   getGrowthPictures() {
     const { match: { params: { id } } } = this.props;
-    const growthPics = {};
-    this.setState({ growthPics });
 
-    getPetGrowthPictures(id, (pictureRef, index) => {
-      pictureRef.getDownloadURL()
-        .then((picture) => {
-          growthPics[index] = picture;
-          this.setState({ growthPics });
-        })
-        .catch(() => {});
+    getPetGrowthPictures(id).then((growthPics) => {
+      this.setState({ growthPics });
     });
   }
 
@@ -241,7 +234,7 @@ class EditPlantProfilePage extends React.Component {
     const today = (new Date()).toISOString().split('T')[0];
     const past = new Date((new Date().getFullYear() - 50)).toISOString().split('T')[0];
 
-    const growthPicCards = Object.entries(growthPics)
+    const growthPicCards = Object.entries(growthPics || [])
       .sort(([i], [j]) => {
         if (new Date(i) < new Date(j)) return -1;
         return 1;
@@ -346,7 +339,7 @@ class EditPlantProfilePage extends React.Component {
                 </DropdownToggle>
                 <DropdownMenu required>
                   {plantList.map((plant) => (
-                    <DropdownItem onClick={this.handleDropdown}>{plant}</DropdownItem>
+                    <DropdownItem onClick={this.handleDropdown} key={plant}>{plant}</DropdownItem>
                   ))}
                 </DropdownMenu>
               </Dropdown>

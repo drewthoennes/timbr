@@ -6,8 +6,6 @@ class GrowthPictures extends React.PureComponent {
   render() {
     const { foreignPlant, pictures } = this.props;
 
-    console.log('GrowthPictures', pictures);
-
     const cards = Object.entries(pictures)
       .sort(([i], [j]) => new Date(i) - new Date(j))
       .map(([index, picture]) => (

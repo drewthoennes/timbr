@@ -74,17 +74,9 @@ class PlantProfilePage extends React.Component {
 
   getGrowthPictures() {
     const { match: { params: { id } } } = this.props;
-    const growthPics = {};
-    this.setState({ growthPics });
 
-    getPetGrowthPictures(id, (pictureRef, index) => {
-      pictureRef.getDownloadURL()
-        .then((picture) => {
-          console.log(picture, index);
-          growthPics[index] = picture;
-          this.setState({ growthPics });
-        })
-        .catch(() => {});
+    getPetGrowthPictures(id).then((growthPics) => {
+      this.setState({ growthPics });
     });
   }
 
@@ -119,16 +111,20 @@ class PlantProfilePage extends React.Component {
     const wateredDates = Object.keys(pets[id]?.watered.history || {});
     const fertilizedDates = Object.keys(pets[id]?.fertilized.history || {});
     const turnedDates = Object.keys(pets[id]?.turned.history || {});
+    const fedDates = Object.keys(pets[id]?.fed.history || {});
     // construct eventList with title and date
     const eventList = [];
     wateredDates.forEach((item) => {
-      eventList.push({ title: 'watered 💦', date: `${item}` });
+      eventList.push({ title: 'Watered 💦', date: `${item}` });
     });
     fertilizedDates.forEach((item) => {
-      eventList.push({ title: 'fertilized 🌱', date: `${item}` });
+      eventList.push({ title: 'Fertilized 🌱', date: `${item}` });
     });
     turnedDates.forEach((item) => {
-      eventList.push({ title: 'turned 💃', date: `${item}` });
+      eventList.push({ title: 'Turned 💃', date: `${item}` });
+    });
+    fedDates.forEach((item) => {
+      eventList.push({ title: 'Fed 🍽', date: `${item}` });
     });
     this.setState({
       eventList,
@@ -164,7 +160,9 @@ class PlantProfilePage extends React.Component {
           <section id="plant-name-and-information">
             <div>
               <h1>{pet?.name}</h1>
-              <img style={{ width: '150px' }} id="profile-picture" src={profilePic} alt="Profile" />
+              <span>
+                <img style={{ width: '150px' }} id="profile-picture" src={profilePic} alt="Profile" />
+              </span>
             </div>
 
             <GeneralInformation
@@ -185,6 +183,7 @@ class PlantProfilePage extends React.Component {
                   waterFreq={waterFreq}
                   fertFreq={fertFreq}
                   feedFreq={feedFreq}
+                  carnivorous={carnivorous}
                   onChange={this.fetchEventList}
                 />
               </section>
