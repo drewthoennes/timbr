@@ -1,11 +1,18 @@
 @import "~@theme";
 
+$mint: #78C2AD;
+
 #plant-profile-page {
   #calendar {
     margin: 0 auto;
     font-size: 10px;
 
+    .fc-daygrid-event {
+      border-color: $mint;
+    }
+
     .fc-event-title-container {
+      background: $mint;
       font-size: 14px;
     }
   }

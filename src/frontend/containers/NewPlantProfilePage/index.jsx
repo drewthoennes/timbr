@@ -253,14 +253,17 @@ class NewPlantProfilePage extends React.Component {
                 {plants[this.state.type]?.name}
               </DropdownToggle>
               <DropdownMenu required>
-                {Object.entries(plants).map(([key, plant]) => (
-                  <DropdownItem
-                    key={key}
-                    onClick={() => this.handleDropdown(key)}
-                  >
-                    {plant.name}
-                  </DropdownItem>
-                ))}
+                {Object.entries(plants)
+                  // eslint-disable-next-line
+                  .sort(([_, p1], [__, p2]) => p1.name < p2.name ? -1 : 1)
+                  .map(([key, plant]) => (
+                    <DropdownItem
+                      key={key}
+                      onClick={() => this.handleDropdown(key)}
+                    >
+                      {plant.name}
+                    </DropdownItem>
+                  ))}
               </DropdownMenu>
             </Dropdown>
           </Form.Group>

@@ -45,7 +45,7 @@ class PlantProfilePage extends React.Component {
 
     this.getPlantDetails();
     this.fetchEventList();
-    // this.getProfilePicture();
+    this.getProfilePicture();
     this.getGrowthPictures();
 
     if (!username) return Promise.resolve();
