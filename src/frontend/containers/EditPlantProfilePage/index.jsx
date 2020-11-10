@@ -40,6 +40,7 @@ class EditPlantProfilePage extends React.Component {
       growthPictureFeedback: '',
       growthPictureValidationState: 'default',
       resetGrowthPicInput: 0,
+      location:''
     };
 
     this.getProfilePicture = this.getProfilePicture.bind(this);
@@ -202,7 +203,9 @@ class EditPlantProfilePage extends React.Component {
 
   handleChange(e) {
     const { pet } = this.state;
+    console.log("e.target.name is",e.target.name)
     this.setState({ pet: { ...pet, [e.target.name]: e.target.value } });
+    
   }
 
   handleSubmit(e) {
@@ -214,8 +217,10 @@ class EditPlantProfilePage extends React.Component {
       store: { account: { username } },
     } = this.props;
     const { pet, profilePic, growthPics } = this.state;
+    console.log("HANDLE SUBMIT")
     pet.profilePic = !!profilePic;
     pet.growthPics = Object.keys(growthPics);
+    console.log("pet is",pet)
     editPet(id, pet).then(() => {
       history.push(`/${username}/${id}`);
     });
@@ -300,7 +305,6 @@ class EditPlantProfilePage extends React.Component {
                 {profilePictureFeedback}
               </Form.Label>
             </Form.Group>
-
             <Form.Group controlId="name">
               <Form.Label>Plant's Name:</Form.Label>
               <Form.Control
@@ -312,7 +316,18 @@ class EditPlantProfilePage extends React.Component {
                 placeholder="Name"
               />
             </Form.Group>
-
+            <Form.Group controlId="location">
+              <Form.Label>Plant's Location:</Form.Label>
+              <Form.Control
+                required
+                name="location"
+                //value={pet.name}
+                onChange={this.handleChange}
+                maxLength="40"
+                placeholder="eg:living room"
+              />
+            </Form.Group>
+            
             <Form.Group controlId="birth">
               <Form.Label>Plant's birthday:</Form.Label>
               <Form.Control
@@ -335,7 +350,6 @@ class EditPlantProfilePage extends React.Component {
                 onChange={this.handleChange}
               />
             </Form.Group>
-
             <Form.Group controlId="type">
               <Form.Label>Plant's Type:</Form.Label>
               { /* eslint-disable-next-line react/destructuring-assignment */}
@@ -351,7 +365,6 @@ class EditPlantProfilePage extends React.Component {
                 </DropdownMenu>
               </Dropdown>
             </Form.Group>
-
             <Form.Group>
               <Form.Label>Growth Pictures</Form.Label>
               <br />
@@ -377,7 +390,6 @@ class EditPlantProfilePage extends React.Component {
                 {growthPictureFeedback}
               </Form.Label>
             </Form.Group>
-
             <br />
             <Button variant="primary" type="submit" style={{ marginTop: '1rem' }}>
               Submit

@@ -20,6 +20,7 @@ export function createNewPet({ parent = '', type = '', name, ownedSince, birth, 
     ownedSince,
     birth,
     death,
+    location:'',
     watered: { last: '0', streak: '0' },
     fertilized: { last: '0', streak: '0' },
     turned: { last: '0', streak: '0' },
@@ -28,7 +29,7 @@ export function createNewPet({ parent = '', type = '', name, ownedSince, birth, 
 
 export function editPet(petId, newData) {
   const uid = firebase.auth().currentUser?.uid;
-
+  console.log("petData is",newData);
   return firebase.database().ref(`/users/${uid}/pets`).child(petId).update(newData);
 }
 
