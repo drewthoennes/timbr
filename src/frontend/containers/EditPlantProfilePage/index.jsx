@@ -81,16 +81,9 @@ class EditPlantProfilePage extends React.Component {
 
   getGrowthPictures() {
     const { match: { params: { id } } } = this.props;
-    const growthPics = {};
-    this.setState({ growthPics });
 
-    getPetGrowthPictures(id, (pictureRef, index) => {
-      pictureRef.getDownloadURL()
-        .then((picture) => {
-          growthPics[index] = picture;
-          this.setState({ growthPics });
-        })
-        .catch(() => {});
+    getPetGrowthPictures(id).then((growthPics) => {
+      this.setState({ growthPics });
     });
   }
 
@@ -221,9 +214,9 @@ class EditPlantProfilePage extends React.Component {
     });
   }
 
-  handleDropdown(e) {
+  handleDropdown(type) {
     const { pet } = this.state;
-    this.setState({ pet: { ...pet, type: e.currentTarget.textContent } });
+    this.setState({ pet: { ...pet, type } });
   }
 
   toggleDropdown() {
@@ -237,11 +230,10 @@ class EditPlantProfilePage extends React.Component {
       profilePictureFeedback, profilePictureValidationState, resetProfilePicInput,
       growthPictureFeedback, growthPictureValidationState, resetGrowthPicInput } = this.state;
     const { store: { plants } } = this.props;
-    const plantList = Object.keys(plants);
     const today = (new Date()).toISOString().split('T')[0];
     const past = new Date((new Date().getFullYear() - 50)).toISOString().split('T')[0];
 
-    const growthPicCards = Object.entries(growthPics)
+    const growthPicCards = Object.entries(growthPics || [])
       .sort(([i], [j]) => {
         if (new Date(i) < new Date(j)) return -1;
         return 1;
@@ -342,12 +334,20 @@ class EditPlantProfilePage extends React.Component {
               <Dropdown name="type" isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
                 <DropdownToggle caret id="size-dropdown">
                   { /* eslint-disable-next-line react/destructuring-assignment */}
-                  {this.state.pet.type}
+                  {plants[this.state.pet.type]?.name}
                 </DropdownToggle>
                 <DropdownMenu required>
-                  {plantList.map((plant) => (
-                    <DropdownItem onClick={this.handleDropdown}>{plant}</DropdownItem>
-                  ))}
+                  {Object.entries(plants)
+                    // eslint-disable-next-line
+                    .sort(([_, p1], [__, p2]) => p1.name < p2.name ? -1 : 1)
+                    .map(([key, plant]) => (
+                      <DropdownItem
+                        key={key}
+                        onClick={() => this.handleDropdown(key)}
+                      >
+                        {plant.name}
+                      </DropdownItem>
+                    ))}
                 </DropdownMenu>
               </Dropdown>
             </Form.Group>

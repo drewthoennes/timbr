@@ -1,87 +1,26 @@
 @import "~@theme";
 
+$mint: #78C2AD;
+
 #plant-profile-page {
   #calendar {
-    width: 400px;
     margin: 0 auto;
     font-size: 10px;
+
+    .fc-daygrid-event {
+      border-color: $mint;
+    }
+
+    .fc-event-title-container {
+      background: $mint;
+      font-size: 14px;
+    }
   }
-  #heatmap{
+
+  #heatmap {
     width: 200px;
     margin: 0 auto;
     font-size: 10px;
-  }
-  .react-calendar-heatmap text {
-    font-size: 10px;
-    fill: #aaa;
-  }
-
-  .react-calendar-heatmap .react-calendar-heatmap-small-text {
-    font-size: 5px;
-  }
-
-  .react-calendar-heatmap rect:hover {
-    stroke: #555;
-    stroke-width: 1px;
-  }
-
-  /*
-  * Default color scale
-  */
-
-  .react-calendar-heatmap .color-empty {
-    fill: #eeeeee;
-  }
-
-  .react-calendar-heatmap .color-filled {
-    fill: #8cc665;
-  }
-
-  /*
-  * Github color scale
-  */
-
-  .react-calendar-heatmap .color-github-0 {
-    fill: #eeeeee;
-  }
-  .react-calendar-heatmap .color-github-1 {
-    fill: #d6e685;
-  }
-  .react-calendar-heatmap .color-github-2 {
-    fill: #8cc665;
-  }
-  .react-calendar-heatmap .color-github-3 {
-    fill: #44a340;
-  }
-  .react-calendar-heatmap .color-github-4 {
-    fill: #1e6823;
-  }
-
-  /*
-  * Gitlab color scale
-  */
-
-  .react-calendar-heatmap .color-gitlab-0 {
-    fill: #ededed;
-  }
-  .react-calendar-heatmap .color-gitlab-1 {
-    fill: #acd5f2;
-  }
-  .react-calendar-heatmap .color-gitlab-2 {
-    fill: #7fa8d1;
-  }
-  .react-calendar-heatmap .color-gitlab-3 {
-    fill: #49729b;
-  }
-  .react-calendar-heatmap .color-gitlab-4 {
-    fill: #254e77;
-  }
-  .react-calendar-heatmap .color-scale-1 { fill: #d6e685; }
-  .react-calendar-heatmap .color-scale-2 { fill: #8cc665; }
-  .react-calendar-heatmap .color-scale-3 { fill: #44a340; }
-  .react-calendar-heatmap .color-scale-4 { fill: #1e6823; }
-  .photo {
-    height: 500px;
   }
 
   .growth-pic-card {
@@ -94,5 +33,49 @@
     padding: 12px;
     max-width: 100%;
     cursor: pointer;
+  }
+
+  section {
+    padding: 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+    &:last-of-type {
+      border-bottom: 0px;
+    }
+  }
+
+  #plant-name-and-information {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+
+    span {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+    }
+  }
+
+  #care-frequency {
+    span {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+
+    #care-buttons {
+      display: flex;
+      flex-direction: column;
+
+      button {
+        margin-bottom: 16px;
+      }
+    }
+  }
+
+  #manage-plant {
+    button {
+      margin-right: 16px;
+    }
   }
 }
