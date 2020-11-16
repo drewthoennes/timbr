@@ -66,6 +66,7 @@ class GraveyardPage extends React.Component {
             <Card.Img className="card-img" variant="top" src={profilePics[id]} />
             <Card.Body>
               <Card.Title>{pet.name}</Card.Title>
+              <Card.Text>11.01.2017 to 11.01.2020</Card.Text>
               <Card.Text>Placeholder text for epitaph.</Card.Text>
             </Card.Body>
           </Card>
