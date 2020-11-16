@@ -23,6 +23,12 @@ const Navbar = (props) => (
             <span className="plant-link">
               <li className="nav-item">
                 { /* eslint-disable-next-line react/destructuring-assignment */}
+                <a className="nav-link" href="/graveyard">My Graveyard</a>
+              </li>
+            </span>
+            <span className="plant-link">
+              <li className="nav-item">
+                { /* eslint-disable-next-line react/destructuring-assignment */}
                 <a className="nav-link" href={`/${props.store.account.username}/new`}>New Plant</a>
               </li>
             </span>

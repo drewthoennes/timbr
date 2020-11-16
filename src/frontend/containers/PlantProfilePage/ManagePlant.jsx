@@ -49,11 +49,10 @@ class ManagePlant extends React.PureComponent {
   }
 
   dead() {
-    const { history, username } = this.props;
+    const { history } = this.props;
 
     this.toggleDeadModal();
-    // TODO: Change this redirection to graveyard
-    history.push(`/${username}`);
+    history.push('/graveyard');
   }
 
   render() {
