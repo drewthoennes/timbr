@@ -19,6 +19,7 @@ import AccountPage from '../containers/AccountPage';
 import ForgetPasswordPage from '../containers/ForgetPasswordPage';
 import ChangePasswordPage from '../containers/ChangePasswordPage';
 import NotFoundPage from '../containers/NotFoundPage';
+import GraveyardPage from '../containers/GraveyardPage';
 
 const history = createBrowserHistory();
 
@@ -36,6 +37,7 @@ const router = (props) => (
       <Route path="/forget-password" render={() => <ForgetPasswordPage />} />
       <Route path="/change-password" render={() => <ChangePasswordPage />} />
       <Route path="/notfound" render={() => <NotFoundPage />} />
+      <Route path="/graveyard" render={() => <GraveyardPage />} />
       <Route path="*" render={() => <Redirect to={`/${props.store.account.username || 'login'}`} />} />
     </Switch>
   </Router>
