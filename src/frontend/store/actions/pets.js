@@ -21,6 +21,7 @@ export function createNewPet({ parent = '', type = '', name, ownedSince, birth, 
     birth,
     death,
     dead,
+    profilePic: false,
     watered: { last: '0', streak: '0' },
     fertilized: { last: '0', streak: '0' },
     turned: { last: '0', streak: '0' },
@@ -74,7 +75,7 @@ export function setForeignUserPets(username, petId) {
 
 // updates last action and history based on the action
 export function addDate(petId, action, currDate) {
-  const { account: { uid } } = store.getState();
+  const uid = firebase.auth().currentUser?.uid;
   if (!uid) {
     return Promise.resolve();
   }
@@ -85,23 +86,23 @@ export function addDate(petId, action, currDate) {
   ]);
 }
 
-export function getPetProfilePicture(petId, callback) {
-  const { account: { uid } } = store.getState();
+export function getPetProfilePicture(petId) {
+  const uid = firebase.auth().currentUser?.uid;
   if (!uid) {
     return Promise.resolve();
   }
+
   return firebase.database().ref(`users/${uid}/pets/${petId}`).once('value').then((pet) => {
     if (petId !== `temp-${uid}` && (!pet.exists() || !pet.val().profilePic)) {
       return Promise.resolve();
     }
 
-    const pictureRef = firebase.storage().ref().child(`pets/profile-pictures/${petId}`);
-    return callback(pictureRef);
+    return firebase.storage().ref().child(`pets/profile-pictures/${petId}`).getDownloadURL();
   });
 }
 
 export function setPetProfilePicture(petId, file) {
-  const { account: { uid } } = store.getState();
+  const uid = firebase.auth().currentUser?.uid;
   if (!uid) {
     return Promise.resolve();
   }
@@ -120,7 +121,7 @@ export function setPetProfilePicture(petId, file) {
 }
 
 export function removePetProfilePicture(petId) {
-  const { account: { uid } } = store.getState();
+  const uid = firebase.auth().currentUser?.uid;
   if (!uid) {
     return Promise.resolve();
   }
@@ -139,7 +140,7 @@ export function removePetProfilePicture(petId) {
 }
 
 export function getPetGrowthPictures(petId) {
-  const { account: { uid } } = store.getState();
+  const uid = firebase.auth().currentUser?.uid;
   if (!uid) {
     return Promise.resolve();
   }
@@ -167,7 +168,7 @@ export function getPetGrowthPictures(petId) {
 }
 
 export function addPetGrowthPicture(petId, file, callback) {
-  const { account: { uid } } = store.getState();
+  const uid = firebase.auth().currentUser?.uid;
   if (!uid) {
     return callback(new Error('User does not exist.'));
   }
@@ -194,7 +195,7 @@ export function addPetGrowthPicture(petId, file, callback) {
 }
 
 export function removePetGrowthPicture(petId, index, callback) {
-  const { account: { uid } } = store.getState();
+  const uid = firebase.auth().currentUser?.uid;
   if (!uid) {
     return callback(new Error('User does not exist.'));
   }
