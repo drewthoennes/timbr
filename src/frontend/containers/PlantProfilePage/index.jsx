@@ -143,15 +143,17 @@ class PlantProfilePage extends React.Component {
       profilePic, growthPics } = this.state;
 
     let pet;
+    let dead = false;
     if (!own) {
       pet = users[username]
         ? users[username].pets[id]
-        : { name: '', type: '', birth: '', ownedSince: '', watered: {}, fertilized: {}, turned: {}, fed: {} };
+        : { name: '', type: '', birth: '', ownedSince: '', death: '', watered: {}, fertilized: {}, turned: {}, fed: {}, dead: 0 };
     } else if (!pets[id]) {
       history.push('/notfound');
       return null;
     } else {
       pet = pets[id];
+      dead = (pet?.dead === 1);
     }
 
     return (
@@ -173,6 +175,8 @@ class PlantProfilePage extends React.Component {
               description={description}
               birth={pet?.birth}
               ownedSince={pet?.ownedSince}
+              dead={pet?.dead}
+              death={pet?.death}
             />
           </section>
 
@@ -201,7 +205,7 @@ class PlantProfilePage extends React.Component {
           </section>
 
           {
-            !own ? '' : (
+            (!own || dead) ? '' : (
               <section id="manage-plant">
                 <ManagePlant id={id} pet={pet} username={ownUsername} />
               </section>

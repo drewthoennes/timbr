@@ -46,6 +46,7 @@ class CareFrequency extends React.PureComponent {
     const hasFertilizedToday = !!pet?.fertilized?.history?.[today];
     const hasTurnedToday = !!pet?.turned?.history?.[today];
     const hasFedToday = !!pet?.fed?.history?.[today];
+    const dead = pet?.dead === 1;
 
     let feedFreqJSX;
     let feedButtonJSX;
@@ -74,33 +75,36 @@ class CareFrequency extends React.PureComponent {
             {feedFreqJSX}
           </div>
 
-          <div id="care-buttons">
-            <Button
-              type="button"
-              disabled={hasWateredToday}
-              onClick={hasWateredToday ? () => {} : this.markWatered}
-            >
-              { hasWateredToday ? 'Watered' : 'Water' }
-            </Button>
+          {dead ? <div />
+            : (
+              <div id="care-buttons">
+                <Button
+                  type="button"
+                  disabled={hasWateredToday}
+                  onClick={hasWateredToday ? () => {} : this.markWatered}
+                >
+                  { hasWateredToday ? 'Watered' : 'Water' }
+                </Button>
 
-            <Button
-              type="button"
-              disabled={hasFertilizedToday}
-              onClick={hasFertilizedToday ? () => {} : this.markFertilized}
-            >
-              { hasFertilizedToday ? 'Fertilized' : 'Fertilize' }
-            </Button>
+                <Button
+                  type="button"
+                  disabled={hasFertilizedToday}
+                  onClick={hasFertilizedToday ? () => {} : this.markFertilized}
+                >
+                  { hasFertilizedToday ? 'Fertilized' : 'Fertilize' }
+                </Button>
 
-            <Button
-              type="button"
-              disabled={hasTurnedToday}
-              onClick={hasTurnedToday ? () => {} : this.markTurned}
-            >
-              { hasTurnedToday ? 'Turned' : 'Turn' }
-            </Button>
+                <Button
+                  type="button"
+                  disabled={hasTurnedToday}
+                  onClick={hasTurnedToday ? () => {} : this.markTurned}
+                >
+                  { hasTurnedToday ? 'Turned' : 'Turn' }
+                </Button>
 
-            {feedButtonJSX}
-          </div>
+                {feedButtonJSX}
+              </div>
+            ) }
         </span>
       </div>
     );
@@ -124,6 +128,9 @@ CareFrequency.propTypes = {
       history: PropTypes.object,
     }).isRequired,
     fed: PropTypes.shape({
+      history: PropTypes.object,
+    }).isRequired,
+    dead: PropTypes.shape({
       history: PropTypes.object,
     }).isRequired,
   }).isRequired,
