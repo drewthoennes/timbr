@@ -10,7 +10,7 @@ export function setPets(pets) {
 }
 
 /* eslint-disable-next-line object-curly-newline */
-export function createNewPet({ parent = '', type = '', name, ownedSince, birth, death = null } = { parent: '' }) {
+export function createNewPet({ parent = '', type = '', name, ownedSince, birth, death = null, dead = 0 } = { parent: '' }) {
   const uid = firebase.auth().currentUser?.uid;
 
   return firebase.database().ref(`/users/${uid}/pets`).push({
@@ -20,6 +20,7 @@ export function createNewPet({ parent = '', type = '', name, ownedSince, birth, 
     ownedSince,
     birth,
     death,
+    dead,
     watered: { last: '0', streak: '0' },
     fertilized: { last: '0', streak: '0' },
     turned: { last: '0', streak: '0' },
@@ -38,6 +39,16 @@ export function deletePet(petId) {
   const uid = firebase.auth().currentUser?.uid;
 
   return firebase.database().ref(`/users/${uid}/pets`).child(petId).remove();
+}
+
+export function deadPet(petId, epitaph, death) {
+  const uid = firebase.auth().currentUser?.uid;
+
+  const updates = {};
+  updates[`/users/${uid}/pets/${petId}/dead`] = 1;
+  updates[`/users/${uid}/pets/${petId}/epitaph`] = epitaph;
+  updates[`/users/${uid}/pets/${petId}/death`] = death;
+  return firebase.database().ref().update(updates);
 }
 
 export function setForeignUserPets(username, petId) {
