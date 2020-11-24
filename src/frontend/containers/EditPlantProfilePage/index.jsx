@@ -203,7 +203,7 @@ class EditPlantProfilePage extends React.Component {
       store: { account: { username } },
     } = this.props;
     const { pet, profilePic, growthPics } = this.state;
-    pet.profilePic = !!profilePic;
+    pet.profilePic = profilePic !== ProfilePicture;
     pet.growthPics = Object.keys(growthPics);
     editPet(id, pet).then(() => {
       history.push(`/${username}/${id}`);
