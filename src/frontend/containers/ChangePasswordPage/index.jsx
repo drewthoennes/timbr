@@ -66,7 +66,7 @@ class ChangePasswordPage extends React.Component {
     return (
       <div id="change-password-page">
         <Navbar />
-        <Container class="mt-4">
+        <Container className="mt-4">
           <Row className="text-center mt-3">
             <Col sm={3} />
             <Col sm={6}>

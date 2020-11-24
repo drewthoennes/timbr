@@ -44,17 +44,11 @@ class MyPlantsPage extends React.Component {
       profilePics[id] = ProfilePicture;
       this.setState({ profilePics });
 
-      getPetProfilePicture(id, (pictureRef) => {
-        if (!pictureRef) {
-          return;
+      getPetProfilePicture(id).then((picture) => {
+        if (picture) {
+          profilePics[id] = picture;
+          this.setState({ profilePics });
         }
-
-        pictureRef.getDownloadURL()
-          .then((picture) => {
-            profilePics[id] = picture;
-            this.setState({ profilePics });
-          })
-          .catch(() => {});
       });
     });
   }

@@ -67,12 +67,10 @@ class PlantProfilePage extends React.Component {
     const { match: { params: { id } } } = this.props;
     this.setState({ profilePic: ProfilePicture });
 
-    getPetProfilePicture(id, (pictureRef) => {
-      pictureRef.getDownloadURL()
-        .then((picture) => {
-          this.setState({ profilePic: picture });
-        })
-        .catch();
+    getPetProfilePicture(id).then((profilePic) => {
+      if (profilePic) {
+        this.setState({ profilePic });
+      }
     });
   }
 

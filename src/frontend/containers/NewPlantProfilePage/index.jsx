@@ -56,12 +56,8 @@ class NewPlantProfilePage extends React.Component {
     const { store: { account: { uid } } } = this.props;
     this.setState({ profilePic: ProfilePicture });
 
-    getPetProfilePicture(`temp-${uid}`, (pictureRef) => {
-      pictureRef.getDownloadURL()
-        .then((picture) => {
-          this.setState({ profilePic: picture });
-        })
-        .catch();
+    getPetProfilePicture(`temp-${uid}`).then((profilePic) => {
+      this.setState({ profilePic });
     });
   }
 

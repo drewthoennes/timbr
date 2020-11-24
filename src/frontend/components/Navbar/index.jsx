@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Navbar as Bar, Nav } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -11,36 +12,36 @@ const Navbar = (props) => (
   <div id="navbar">
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
       <Bar>
-        <a className="navbar-brand" href="/">timbr</a>
+        <Link className="navbar-brand" to="/">timbr</Link>
         <Nav className="mr-auto">
           <ul className="navbar-nav mr-auto">
             <span className="plant-link">
               <li className="nav-item">
                 { /* eslint-disable-next-line react/destructuring-assignment */}
-                <a className="nav-link" href={`/${props.store.account.username}`}>My Plants</a>
+                <Link className="nav-link" to={`/${props.store.account.username}`}>My Plants</Link>
               </li>
             </span>
             <span className="plant-link">
               <li className="nav-item">
                 { /* eslint-disable-next-line react/destructuring-assignment */}
-                <a className="nav-link" href="/graveyard">My Graveyard</a>
+                <Link className="nav-link" to="/graveyard">My Graveyard</Link>
               </li>
             </span>
             <span className="plant-link">
               <li className="nav-item">
                 { /* eslint-disable-next-line react/destructuring-assignment */}
-                <a className="nav-link" href={`/${props.store.account.username}/new`}>New Plant</a>
+                <Link className="nav-link" to={`/${props.store.account.username}/new`}>New Plant</Link>
               </li>
             </span>
             <span className="plant-link">
               <li className="nav-item">
-                <a className="nav-link" href="/account">Account</a>
+                <Link className="nav-link" to="/account">Account</Link>
               </li>
             </span>
           </ul>
           <span className="plant-link">
             <li className="nav-item">
-              <a className="nav-link" href="/login" onClick={logout}>Logout</a>
+              <Link className="nav-link" to="/login" onClick={logout}>Logout</Link>
             </li>
           </span>
         </Nav>
