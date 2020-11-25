@@ -25,7 +25,7 @@ GeneralInformation.propTypes = {
   description: PropTypes.string.isRequired,
   birth: PropTypes.string.isRequired,
   ownedSince: PropTypes.string.isRequired,
-  dead: PropTypes.string.isRequired,
+  dead: PropTypes.number.isRequired,
   death: PropTypes.string.isRequired,
 };
 

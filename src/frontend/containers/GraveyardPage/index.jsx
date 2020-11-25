@@ -43,8 +43,10 @@ class GraveyardPage extends React.Component {
       this.setState({ profilePics });
 
       getPetProfilePicture(id).then((picture) => {
-        profilePics[id] = picture;
-        this.setState({ profilePics });
+        if (picture) {
+          profilePics[id] = picture;
+          this.setState({ profilePics });
+        }
       });
     });
   }

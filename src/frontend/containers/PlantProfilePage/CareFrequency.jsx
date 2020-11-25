@@ -39,14 +39,13 @@ class CareFrequency extends React.PureComponent {
   }
 
   render() {
-    const { pet, waterFreq, fertFreq, feedFreq, carnivorous } = this.props;
+    const { pet, waterFreq, fertFreq, feedFreq, carnivorous, dead } = this.props;
 
     const today = getToday();
     const hasWateredToday = !!pet?.watered?.history?.[today];
     const hasFertilizedToday = !!pet?.fertilized?.history?.[today];
     const hasTurnedToday = !!pet?.turned?.history?.[today];
     const hasFedToday = !!pet?.fed?.history?.[today];
-    const dead = pet?.dead === 1;
 
     let feedFreqJSX;
     let feedButtonJSX;
@@ -130,11 +129,9 @@ CareFrequency.propTypes = {
     fed: PropTypes.shape({
       history: PropTypes.object,
     }).isRequired,
-    dead: PropTypes.shape({
-      history: PropTypes.object,
-    }).isRequired,
   }).isRequired,
   waterFreq: PropTypes.number.isRequired,
+  dead: PropTypes.number.isRequired,
   fertFreq: PropTypes.number.isRequired,
   feedFreq: PropTypes.any.isRequired,
   carnivorous: PropTypes.bool.isRequired,

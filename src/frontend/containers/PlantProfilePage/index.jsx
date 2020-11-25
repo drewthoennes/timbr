@@ -173,8 +173,8 @@ class PlantProfilePage extends React.Component {
               description={description}
               birth={pet?.birth}
               ownedSince={pet?.ownedSince}
-              dead={pet?.dead}
-              death={pet?.death}
+              dead={pet.dead ? pet.dead : 0}
+              death={pet.death ? pet.death : ''}
             />
           </section>
 
@@ -184,6 +184,7 @@ class PlantProfilePage extends React.Component {
                 <CareFrequency
                   id={id}
                   pet={pet}
+                  dead={pet.dead ? pet.dead : 0}
                   waterFreq={waterFreq}
                   fertFreq={fertFreq}
                   feedFreq={feedFreq}
