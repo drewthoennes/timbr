@@ -10,7 +10,7 @@ export function setPets(pets) {
 }
 
 /* eslint-disable-next-line object-curly-newline */
-export function createNewPet({ parent = '', type = '', name, ownedSince, birth, death = null } = { parent: '' }) {
+export function createNewPet({ parent = '', type = '', name, ownedSince, birth, death = null, dead = 0 } = { parent: '' }) {
   const uid = firebase.auth().currentUser?.uid;
 
   return firebase.database().ref(`/users/${uid}/pets`).push({
@@ -20,15 +20,19 @@ export function createNewPet({ parent = '', type = '', name, ownedSince, birth, 
     ownedSince,
     birth,
     death,
+    dead,
+    profilePic: false,
     location: '',
     watered: { last: '0', streak: '0' },
     fertilized: { last: '0', streak: '0' },
     turned: { last: '0', streak: '0' },
+    fed: { last: '0', streak: '0' },
   });
 }
 
 export function editPet(petId, newData) {
   const uid = firebase.auth().currentUser?.uid;
+
   return firebase.database().ref(`/users/${uid}/pets`).child(petId).update(newData);
 }
 
@@ -38,6 +42,7 @@ export function deletePet(petId) {
 
   return firebase.database().ref(`/users/${uid}/pets`).child(petId).remove();
 }
+
 export function deadPet(petId, epitaph, death) {
   const uid = firebase.auth().currentUser?.uid;
 
@@ -71,33 +76,34 @@ export function setForeignUserPets(username, petId) {
 
 // updates last action and history based on the action
 export function addDate(petId, action, currDate) {
-  const { account: { uid } } = store.getState();
+  const uid = firebase.auth().currentUser?.uid;
   if (!uid) {
     return Promise.resolve();
   }
+
   return Promise.all([
     firebase.database().ref(`users/${uid}/pets/${petId}/${action}/history/`).child(currDate).set(true),
     firebase.database().ref(`users/${uid}/pets/${petId}/${action}/last/`).set(currDate),
   ]);
 }
 
-export function getPetProfilePicture(petId, callback) {
-  const { account: { uid } } = store.getState();
+export function getPetProfilePicture(petId) {
+  const uid = firebase.auth().currentUser?.uid;
   if (!uid) {
     return Promise.resolve();
   }
-  return firebase.database().ref(`users/${uid}/pets/${petId}`).once('value', (pet) => {
+
+  return firebase.database().ref(`users/${uid}/pets/${petId}`).once('value').then((pet) => {
     if (petId !== `temp-${uid}` && (!pet.exists() || !pet.val().profilePic)) {
       return Promise.resolve();
     }
 
-    const pictureRef = firebase.storage().ref().child(`pets/profile-pictures/${petId}`);
-    return callback(pictureRef);
+    return firebase.storage().ref().child(`pets/profile-pictures/${petId}`).getDownloadURL();
   });
 }
 
 export function setPetProfilePicture(petId, file) {
-  const { account: { uid } } = store.getState();
+  const uid = firebase.auth().currentUser?.uid;
   if (!uid) {
     return Promise.resolve();
   }
@@ -116,7 +122,7 @@ export function setPetProfilePicture(petId, file) {
 }
 
 export function removePetProfilePicture(petId) {
-  const { account: { uid } } = store.getState();
+  const uid = firebase.auth().currentUser?.uid;
   if (!uid) {
     return Promise.resolve();
   }
@@ -134,25 +140,36 @@ export function removePetProfilePicture(petId) {
     });
 }
 
-export function getPetGrowthPictures(petId, callback) {
-  const { account: { uid } } = store.getState();
+export function getPetGrowthPictures(petId) {
+  const uid = firebase.auth().currentUser?.uid;
   if (!uid) {
     return Promise.resolve();
   }
 
-  return firebase.database().ref(`users/${uid}/pets/${petId}`).once('value', (pet) => {
-    if (pet.exists() && pet.val().growthPics) {
-      const growthPics = pet.val().growthPics?.slice();
-      for (let i = 0; i < growthPics.length; ++i) {
-        const pictureRef = firebase.storage().ref().child(`pets/growth-pictures/${petId}@${growthPics[i]}`);
-        callback(pictureRef, growthPics[i]);
-      }
+  return firebase.database().ref(`users/${uid}/pets/${petId}`).once('value').then((pet) => {
+    if (!pet?.exists() || !pet.val().growthPics?.length) {
+      return Promise.resolve({});
     }
+
+    const { growthPics } = pet.val();
+
+    if (!growthPics) {
+      return Promise.resolve({});
+    }
+
+    const promises = growthPics
+      .map((timestamp) => firebase.storage().ref(`pets/growth-pictures/${petId}@${timestamp}`).getDownloadURL());
+
+    return Promise.all(promises)
+      .then((fulfilledPromises) => { // eslint-disable-line arrow-body-style
+        return fulfilledPromises
+          .reduce((acc, promise, index) => ({ ...acc, [pet.val().growthPics[index]]: promise }), {}); // eslint-disable-line max-len
+      });
   });
 }
 
 export function addPetGrowthPicture(petId, file, callback) {
-  const { account: { uid } } = store.getState();
+  const uid = firebase.auth().currentUser?.uid;
   if (!uid) {
     return callback(new Error('User does not exist.'));
   }
@@ -179,7 +196,7 @@ export function addPetGrowthPicture(petId, file, callback) {
 }
 
 export function removePetGrowthPicture(petId, index, callback) {
-  const { account: { uid } } = store.getState();
+  const uid = firebase.auth().currentUser?.uid;
   if (!uid) {
     return callback(new Error('User does not exist.'));
   }
