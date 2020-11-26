@@ -2,7 +2,12 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Button, Modal } from 'react-bootstrap';
-import { deletePet } from '../../store/actions/pets';
+import { deletePet, deadPet } from '../../store/actions/pets';
+
+const getToday = () => {
+  const now = new Date();
+  return new Date(now.getTime() - now.getTimezoneOffset() * 60 * 1000).toISOString().slice(0, 10);
+};
 
 class ManagePlant extends React.PureComponent {
   constructor() {
@@ -11,6 +16,7 @@ class ManagePlant extends React.PureComponent {
     this.state = {
       showDelete: false,
       showDead: false,
+      epitaph: '',
     };
 
     this.toggleDeleteModal = this.toggleDeleteModal.bind(this);
@@ -49,10 +55,14 @@ class ManagePlant extends React.PureComponent {
   }
 
   dead() {
-    const { history } = this.props;
-
     this.toggleDeadModal();
-    history.push('/graveyard');
+
+    const { history, id } = this.props;
+    const { epitaph } = this.state;
+
+    deadPet(id, epitaph, getToday()).then(() => {
+      history.push('/graveyard');
+    });
   }
 
   render() {
@@ -81,7 +91,7 @@ class ManagePlant extends React.PureComponent {
           <Modal.Header closeButton>
             <Modal.Title>We're sorry about your loss.</Modal.Title>
           </Modal.Header>
-          <input type="text" placeholder="Add an epitaph to remember your plant, if you'd like." />
+          <input type="text" placeholder="Add an epitaph to remember your plant, if you'd like." onChange={(event) => { this.setState({ epitaph: event.target.value }); }} />
           <Modal.Footer>
             <Button variant="secondary" onClick={this.toggleDeadModal}>Wait, not dead yet!</Button>
             <Button variant="primary" onClick={this.dead}>Confirm</Button>

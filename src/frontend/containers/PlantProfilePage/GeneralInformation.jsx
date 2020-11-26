@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 class GeneralInformation extends React.PureComponent {
   render() {
-    const { speciesName, scientificName, description, birth, ownedSince } = this.props;
+    const { speciesName, scientificName, description, birth, ownedSince, dead, death } = this.props;
 
     return (
       <div>
@@ -13,6 +13,7 @@ class GeneralInformation extends React.PureComponent {
         <p>{`Description: ${description}`}</p>
         <p>{`Born: ${birth}`}</p>
         <p>{`Owned Since: ${ownedSince}`}</p>
+        {dead === 1 ? (<p>Dead Since: {death}</p>) : <p />}
       </div>
     );
   }
@@ -24,6 +25,8 @@ GeneralInformation.propTypes = {
   description: PropTypes.string.isRequired,
   birth: PropTypes.string.isRequired,
   ownedSince: PropTypes.string.isRequired,
+  dead: PropTypes.number.isRequired,
+  death: PropTypes.string.isRequired,
 };
 
 export default GeneralInformation;

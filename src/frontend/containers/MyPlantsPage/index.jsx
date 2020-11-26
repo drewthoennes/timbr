@@ -69,19 +69,24 @@ class MyPlantsPage extends React.Component {
   render() {
     const { store: { pets, account: { username } } } = this.props;
     const { profilePics } = this.state;
-    const plantCards = Object.entries(pets).map(([id, pet]) => (
-      <span className="plant-link" key={id}>
-        <Link to={`/${username}/${id}`}>
-          <Card className="plant-card">
-            <Card.Img className="card-img" variant="top" src={profilePics[id]} />
-            <Card.Body>
-              <Card.Title>{pet.name}</Card.Title>
-              <Card.Text>{pet.type}</Card.Text>
-            </Card.Body>
-          </Card>
-        </Link>
-      </span>
-    ));
+    const plantCards = Object.entries(pets).map(([id, pet]) => {
+      if (!pet.dead) {
+        return (
+          <span className="plant-link" key={id}>
+            <Link to={`/${username}/${id}`}>
+              <Card className="plant-card">
+                <Card.Img className="card-img" variant="top" src={profilePics[id]} />
+                <Card.Body>
+                  <Card.Title>{pet.name}</Card.Title>
+                  <Card.Text>{pet.type}</Card.Text>
+                </Card.Body>
+              </Card>
+            </Link>
+          </span>
+        );
+      }
+      return null;
+    });
     return (
       <div id="my-plants-page">
         <Navbar />
