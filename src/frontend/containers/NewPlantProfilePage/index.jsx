@@ -56,12 +56,8 @@ class NewPlantProfilePage extends React.Component {
     const { store: { account: { uid } } } = this.props;
     this.setState({ profilePic: ProfilePicture });
 
-    getPetProfilePicture(`temp-${uid}`, (pictureRef) => {
-      pictureRef.getDownloadURL()
-        .then((picture) => {
-          this.setState({ profilePic: picture });
-        })
-        .catch();
+    getPetProfilePicture(`temp-${uid}`).then((profilePic) => {
+      this.setState({ profilePic });
     });
   }
 
@@ -153,8 +149,8 @@ class NewPlantProfilePage extends React.Component {
     });
   }
 
-  handleDropdown(e) {
-    this.setState({ type: e.currentTarget.textContent });
+  handleDropdown(type) {
+    this.setState({ type });
   }
 
   toggleDropdown() {
@@ -168,7 +164,6 @@ class NewPlantProfilePage extends React.Component {
     const { name, birth, ownedSince,
       profilePic, profilePictureFeedback,
       profilePictureValidationState, resetProfilePicInput } = this.state;
-    const plantList = Object.keys(plants);
     const today = (new Date()).toISOString().split('T')[0];
     const past = new Date((new Date().getFullYear() - 50)).toISOString().split('T')[0];
 
@@ -251,12 +246,20 @@ class NewPlantProfilePage extends React.Component {
             <Dropdown name="type" isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
               <DropdownToggle caret id="size-dropdown">
                 { /* eslint-disable-next-line react/destructuring-assignment */}
-                {this.state.type}
+                {plants[this.state.type]?.name}
               </DropdownToggle>
               <DropdownMenu required>
-                {plantList.map((plant) => (
-                  <DropdownItem key={plant} onClick={this.handleDropdown}>{plant}</DropdownItem>
-                ))}
+                {Object.entries(plants)
+                  // eslint-disable-next-line
+                  .sort(([_, p1], [__, p2]) => p1.name < p2.name ? -1 : 1)
+                  .map(([key, plant]) => (
+                    <DropdownItem
+                      key={key}
+                      onClick={() => this.handleDropdown(key)}
+                    >
+                      {plant.name}
+                    </DropdownItem>
+                  ))}
               </DropdownMenu>
             </Dropdown>
           </Form.Group>

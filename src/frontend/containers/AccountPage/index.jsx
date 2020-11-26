@@ -279,7 +279,7 @@ class AccountPage extends React.Component {
         <Navbar />
         <br />
         <h2 className="mt-1 mb-4 text-center">My Account</h2>
-        <Container class="mt-3">
+        <Container className="mt-3">
           <Row className="align-items-center mt-2">
             <Col sm={3}><h5 className="text-right">Profile Picture</h5></Col>
             <Col sm={1} />

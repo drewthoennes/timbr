@@ -3,20 +3,17 @@ import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import { Card } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import ProfilePicture from '../../assets/images/pet_profile_picture.png';
 import Navbar from '../../components/Navbar';
 import map from '../../store/map';
-import './styles.scss';
-import { logout } from '../../store/actions/auth';
+import ProfilePicture from '../../assets/images/pet_profile_picture.png';
 import { getPetProfilePicture } from '../../store/actions/pets';
 
-class MyPlantsPage extends React.Component {
+class GraveyardPage extends React.Component {
   constructor() {
     super();
 
     this.state = { profilePics: {} };
     this.getProfilePictures = this.getProfilePictures.bind(this);
-    this.handleLogout = this.handleLogout.bind(this);
   }
 
   componentDidMount() {
@@ -38,6 +35,7 @@ class MyPlantsPage extends React.Component {
   }
 
   getProfilePictures() {
+    // TODO: Refactor this
     const { store: { pets } } = this.props;
     const { profilePics } = this.state;
     Object.keys(pets).forEach((id) => {
@@ -53,24 +51,11 @@ class MyPlantsPage extends React.Component {
     });
   }
 
-  handleLogout(e) {
-    e.preventDefault();
-
-    const { history } = this.props;
-    logout()
-      .then(() => {
-        history.push('/login');
-      });
-    // .catch((error) => {
-    //   console.error(`Error: ${error.message}`);
-    // });
-  }
-
   render() {
     const { store: { pets, account: { username } } } = this.props;
     const { profilePics } = this.state;
     const plantCards = Object.entries(pets).map(([id, pet]) => {
-      if (!pet.dead) {
+      if (pet.dead) {
         return (
           <span className="plant-link" key={id}>
             <Link to={`/${username}/${id}`}>
@@ -78,7 +63,8 @@ class MyPlantsPage extends React.Component {
                 <Card.Img className="card-img" variant="top" src={profilePics[id]} />
                 <Card.Body>
                   <Card.Title>{pet.name}</Card.Title>
-                  <Card.Text>{pet.type}</Card.Text>
+                  <Card.Text>{pet.birth} to {pet.death}</Card.Text>
+                  <Card.Text>{pet.epitaph}</Card.Text>
                 </Card.Body>
               </Card>
             </Link>
@@ -88,8 +74,10 @@ class MyPlantsPage extends React.Component {
       return null;
     });
     return (
+
       <div id="my-plants-page">
         <Navbar />
+        <h2>My Graveyard</h2>
         <div className="container">
           {plantCards}
         </div>
@@ -97,7 +85,7 @@ class MyPlantsPage extends React.Component {
     );
   }
 }
-MyPlantsPage.propTypes = {
+GraveyardPage.propTypes = {
   history: PropTypes.object.isRequired,
   store: PropTypes.shape({
     account: PropTypes.shape({
@@ -107,4 +95,4 @@ MyPlantsPage.propTypes = {
     pets: PropTypes.object.isRequired,
   }).isRequired,
 };
-export default connect(map)(withRouter(MyPlantsPage));
+export default connect(map)(withRouter(GraveyardPage));

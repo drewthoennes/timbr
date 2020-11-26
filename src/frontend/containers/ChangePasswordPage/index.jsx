@@ -66,7 +66,7 @@ class ChangePasswordPage extends React.Component {
     return (
       <div id="change-password-page">
         <Navbar />
-        <Container class="mt-4">
+        <Container className="mt-4">
           <Row className="text-center mt-3">
             <Col sm={3} />
             <Col sm={6}>
@@ -76,7 +76,7 @@ class ChangePasswordPage extends React.Component {
                 type="password"
                 className="form-control mt-2"
                 autoComplete="on"
-                placeholder="Current Password*"
+                placeholder="Current Password"
                 onChange={(event) => this.setState({
                   currentpwd: event.target.value,
                 })}
@@ -86,7 +86,7 @@ class ChangePasswordPage extends React.Component {
                 type="password"
                 className="form-control mt-2"
                 autoComplete="on"
-                placeholder="New Password*"
+                placeholder="New Password"
                 onChange={(event) => this.setState({
                   newpwd: event.target.value,
                 })}
@@ -96,7 +96,7 @@ class ChangePasswordPage extends React.Component {
                 type="password"
                 className="form-control mt-2"
                 autoComplete="on"
-                placeholder="Confirm New Password*"
+                placeholder="Confirm New Password"
                 onChange={(event) => this.setState({
                   confirmpwd: event.target.value,
                 })}

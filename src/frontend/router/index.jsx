@@ -19,6 +19,7 @@ import AccountPage from '../containers/AccountPage';
 import ForgetPasswordPage from '../containers/ForgetPasswordPage';
 import ChangePasswordPage from '../containers/ChangePasswordPage';
 import NotFoundPage from '../containers/NotFoundPage';
+import GraveyardPage from '../containers/GraveyardPage';
 
 const history = createBrowserHistory();
 
@@ -27,15 +28,16 @@ const router = (props) => (
     <Switch>
       <Route exact path={`/${props.store.account.username}`} render={() => <MyPlantsPage />} />
       <Route exact path={`/${props.store.account.username}/new`} render={() => <NewPlantProfilePage />} />
-      <Route exact path={`/${props.store.account.username}/:id`} render={() => <PlantProfilePage />} />
+      <Route exact path={`/${props.store.account.username}/:id`} render={() => <PlantProfilePage own />} />
       <Route exact path={`/${props.store.account.username}/edit/:id`} render={() => <EditPlantProfilePage />} />
-      <Route path="/:username/:id" render={() => <PlantProfilePage />} />
+      <Route path="/:username/:id" render={() => <PlantProfilePage own={false} />} />
       <Route path="/login" render={() => <LoginPage />} />
       <Route path="/register" render={() => <RegisterPage />} />
       <Route path="/account" render={() => <AccountPage />} />
       <Route path="/forget-password" render={() => <ForgetPasswordPage />} />
       <Route path="/change-password" render={() => <ChangePasswordPage />} />
       <Route path="/notfound" render={() => <NotFoundPage />} />
+      <Route path="/graveyard" render={() => <GraveyardPage />} />
       <Route path="*" render={() => <Redirect to={`/${props.store.account.username || 'login'}`} />} />
     </Switch>
   </Router>
