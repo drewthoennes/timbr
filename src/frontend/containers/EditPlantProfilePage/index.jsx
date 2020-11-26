@@ -40,7 +40,6 @@ class EditPlantProfilePage extends React.Component {
       growthPictureFeedback: '',
       growthPictureValidationState: 'default',
       resetGrowthPicInput: 0,
-      location:''
     };
 
     this.getProfilePicture = this.getProfilePicture.bind(this);
@@ -203,9 +202,7 @@ class EditPlantProfilePage extends React.Component {
 
   handleChange(e) {
     const { pet } = this.state;
-    console.log("e.target.name is",e.target.name)
     this.setState({ pet: { ...pet, [e.target.name]: e.target.value } });
-    
   }
 
   handleSubmit(e) {
@@ -217,10 +214,8 @@ class EditPlantProfilePage extends React.Component {
       store: { account: { username } },
     } = this.props;
     const { pet, profilePic, growthPics } = this.state;
-    console.log("HANDLE SUBMIT")
     pet.profilePic = !!profilePic;
     pet.growthPics = Object.keys(growthPics);
-    console.log("pet is",pet)
     editPet(id, pet).then(() => {
       history.push(`/${username}/${id}`);
     });
@@ -321,13 +316,12 @@ class EditPlantProfilePage extends React.Component {
               <Form.Control
                 required
                 name="location"
-                //value={pet.name}
+                value={pet.location}
                 onChange={this.handleChange}
                 maxLength="40"
                 placeholder="eg:living room"
               />
             </Form.Group>
-            
             <Form.Group controlId="birth">
               <Form.Label>Plant's birthday:</Form.Label>
               <Form.Control

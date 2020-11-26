@@ -28,7 +28,7 @@ class PlantProfilePage extends React.Component {
     this.onRotate = this.onRotate.bind(this);
     this.onEdit = this.onEdit.bind(this);
     this.onDelete = this.onDelete.bind(this);
-    this.getPlantLocation=this.getPlantLocation.bind(this);
+    this.getPlantLocation = this.getPlantLocation.bind(this);
     this.getPlantDetails = this.getPlantDetails.bind(this);
     this.showDeleteModal = this.showDeleteModal.bind(this);
     this.getProfilePicture = this.getProfilePicture.bind(this);
@@ -47,8 +47,7 @@ class PlantProfilePage extends React.Component {
       profilePic: ProfilePicture,
       growthPics: {},
       eventList: [],
-      streak: 0,
-      location:''
+      location: '',
     };
   }
 
@@ -66,25 +65,10 @@ class PlantProfilePage extends React.Component {
 
     return setForeignUserPets(username, id).catch(() => history.push(`/${ownUsername}`));
   }
-  
- 
 
   onWater() {
     const { match: { params: { id } } } = this.props;
-    const { store: { pets } = {} } = this.props;
     const today = new Date().toISOString().slice(0, 10);
-    /*const streak=pets[id].watered.streak;
-    console.log("streak is",streak)
-    var yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const yDate = yesterday.toISOString().slice(0, 10);
-    console.log("yesterday was",yDate);
-    if(pets[id].watered.last==yDate){
-      streak=streak+1;
-    }else{
-      streak=0;
-    }
-    this.setState({streak:streak}) */
     addDate(id, 'watered', today).then(() => {
       this.fetchEventList();
     });
@@ -156,10 +140,11 @@ class PlantProfilePage extends React.Component {
         .catch(() => {});
     });
   }
-  getPlantLocation(){
-    const { match: { params: { id } }, history } = this.props;
+
+  getPlantLocation() {
+    const { match: { params: { id } } } = this.props;
     const { store: { pets } = {} } = this.props;
-    this.setState({location:pets[id].location});
+    this.setState({ location: pets[id].location });
   }
 
   getPlantType() {
@@ -219,10 +204,9 @@ class PlantProfilePage extends React.Component {
   render() {
     const { store: { users, pets, account: { username: ownUsername } } } = this.props;
     const { history, match: { params: { username, id } } } = this.props;
-    
     const { speciesName, scientificName, description, carnivorous,
       waterFreq, fertFreq, feedFreq, eventList,
-      profilePic, growthPics,location } = this.state;
+      profilePic, growthPics, location } = this.state;
 
     let pet;
     if (username && username !== ownUsername) {
@@ -330,9 +314,7 @@ class PlantProfilePage extends React.Component {
           <button type="button" disabled={hasWateredToday} onClick={hasWateredToday ? () => {} : this.onWater}> Water </button>
           <button type="button" disabled={hasFertilizedToday} onClick={hasFertilizedToday ? () => {} : this.onFertilize}> Fertilize </button>
           <button type="button" disabled={hasTurnedToday} onClick={hasTurnedToday ? () => {} : this.onRotate}> Rotate </button>
-          
 
-          
           <div className="container">
             <button type="button" onClick={this.onEdit}> Edit </button>
             <button type="button" onClick={() => this.showDeleteModal(true)}> Delete </button>
