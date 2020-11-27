@@ -14,7 +14,7 @@ class MyPlantsPage extends React.Component {
   constructor() {
     super();
 
-    this.state = { profilePics: {} };
+    this.state = { profilePics: {} ,actionItems:{} };
     this.getProfilePictures = this.getProfilePictures.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
   }
@@ -27,6 +27,7 @@ class MyPlantsPage extends React.Component {
     }
 
     this.getProfilePictures();
+    this.getCriticalActions();
   }
 
   componentDidUpdate() {
@@ -52,6 +53,50 @@ class MyPlantsPage extends React.Component {
       });
     });
   }
+  getCriticalActions(){
+    
+    const { store: { pets } } = this.props;
+    const { store: { plants } } = this.props;
+    const {actionItems}=this.state;
+    Object.keys(pets).forEach((id) => {
+      let type=pets[id].type;
+      if(actionItems[id]===undefined){
+        actionItems[id]="";
+      }
+      //water
+      const diffWTime = Math.abs(new Date() - (new Date(pets[id].watered.last)));
+                    const diffWDays = Math.ceil(diffWTime / (1000 * 60 * 60 * 24));
+                    if (diffWDays >= plants[type].waterFreq) {
+                      actionItems[id]=actionItems[id]+"\nWater overdue❗\n";
+                      this.setState({actionItems});
+                    }
+                  
+                 const diffFTime = Math.abs(new Date() - (new Date(pets[id].fertilized.last)));
+                  const diffFDays = Math.ceil(diffFTime / (1000 * 60 * 60 * 24));
+                  if (diffFDays >= plants[type].fertFreq) {
+                    actionItems[id]=actionItems[id]+"\n Fertilization overdue❗\n"
+                    this.setState({actionItems});
+                  }
+                    const diffRTime = Math.abs(new Date() - (new Date(pets[id].turned.last)));
+                    const diffRDays = Math.ceil(diffRTime / (1000 * 60 * 60 * 24));
+                    if (diffRDays >= 7) {
+                      actionItems[id]=actionItems[id]+"\nRotation overdue❗\n"
+                      this.setState({actionItems});
+                    }
+                  if(plants[type].carnivorous==true){
+                  const diffTimeFeed = Math.abs(new Date() - (new Date(pets[id].fed.last)));
+                      const diffDaysFeed = Math.ceil(diffTimeFeed / (1000 * 60 * 60 * 24));
+                      if (diffDaysFeed >= plants[type].feedFreq) {
+                        actionItems[id]=actionItems[id]+"\nFeed overdue❗\n"
+                        this.setState({actionItems});
+                      }
+                    }
+                    
+                  
+    }) 
+                }
+  
+  
 
   handleLogout(e) {
     e.preventDefault();
@@ -68,7 +113,7 @@ class MyPlantsPage extends React.Component {
 
   render() {
     const { store: { pets, account: { username } } } = this.props;
-    const { profilePics } = this.state;
+    const { profilePics,actionItems } = this.state;
     const plantCards = Object.entries(pets).map(([id, pet]) => {
       if (!pet.dead) {
         return (
@@ -79,6 +124,7 @@ class MyPlantsPage extends React.Component {
                 <Card.Body>
                   <Card.Title>{pet.name}</Card.Title>
                   <Card.Text>{pet.type}</Card.Text>
+                  <Card.Text>{actionItems[id]}</Card.Text>
                 </Card.Body>
               </Card>
             </Link>
