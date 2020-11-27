@@ -103,17 +103,23 @@ class MyPlantsPage extends React.Component {
     const { store: { plants } } = this.props;
     const { filters } = this.state;
 
-    return !!filters.find(({ field, equivalence, value }) => {
+    return filters.reduce((aggregate, { field, equivalence, value }) => {
+      if (!aggregate) return aggregate;
+
       if (field === 'Type') {
         switch (equivalence) {
           case '=': { return plants[pet.type].name === value; }
           case '\u2260': { return plants[pet.type].name !== value; }
-          default: return false;
+          default: return true;
         }
+      } else if (field === 'Carnivorous') {
+        return equivalence === '='
+          ? `${plants[pet.type].carnivorous}` === value
+          : `${plants[pet.type].carnivorous}` !== value;
       }
 
-      return false;
-    });
+      return aggregate;
+    }, true);
   }
 
   render() {
@@ -121,8 +127,8 @@ class MyPlantsPage extends React.Component {
     const { profilePics, search, sort, asc, filters } = this.state;
 
     const lowerCaseSearch = search.toLowerCase();
-    const defaultMessage = search
-      ? <p>No plants match this search</p>
+    const defaultMessage = search || filters.length
+      ? <p>No plants match the given query</p>
       : <p>Add a plant to get started</p>;
 
     let filteredAndSortedPets = search || filters.length

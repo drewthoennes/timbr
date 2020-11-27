@@ -45,6 +45,28 @@ const FilterMenu = React.forwardRef(
       setState({ ...state, [field]: value });
     };
 
+    let valueJSX = (
+      <FormControl
+        autoFocus
+        className="w-auto"
+        placeholder="Value to filter by"
+        onChange={(e) => setState({ ...state, value: e.target.value })}
+        value={state.value}
+      />
+    );
+
+    if (state.field === 'Carnivorous') {
+      valueJSX = (
+        <DropdownButton
+          className="white-button"
+          title={state.value || 'Value'}
+        >
+          {Clickable('True', () => onDropdownClick('value', 'true'))}
+          {Clickable('False', () => onDropdownClick('value', 'false'))}
+        </DropdownButton>
+      );
+    }
+
     const filtersJSX = state.filters.length
       ? state.filters.map((filter, index) => (
         // eslint-disable-next-line react/no-array-index-key
@@ -81,6 +103,7 @@ const FilterMenu = React.forwardRef(
             title={state.field || 'Field'}
           >
             {Clickable('Type', () => onDropdownClick('field', 'Type'))}
+            {Clickable('Carnivorous', () => onDropdownClick('field', 'Carnivorous'))}
           </DropdownButton>
 
           <DropdownButton
@@ -91,13 +114,7 @@ const FilterMenu = React.forwardRef(
             {Clickable('\u2260', () => onDropdownClick('equivalence', '\u2260'))}
           </DropdownButton>
 
-          <FormControl
-            autoFocus
-            className="w-auto"
-            placeholder="Value to filter by"
-            onChange={(e) => setState({ ...state, value: e.target.value })}
-            value={state.value}
-          />
+          {valueJSX}
         </span>
         <Button className="w-100" variant="primary" onClick={addFilter}>Add Filter</Button>
       </div>
