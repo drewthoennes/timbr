@@ -2,7 +2,25 @@
 
 #my-plants-page {
   .container {
-    margin-top: 38px;
+    padding-top: 38px;
+    padding-bottom: 38px;
+  }
+
+  .container #top-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    & > a {
+      width: 110px;
+      min-width: 110px;
+      padding: 0px;
+      margin-left: 30px;
+
+      & > button {
+        width: 100%;
+      }
+    }
   }
 
   .plant-card {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
-import { Card, Dropdown, DropdownButton, FormControl, InputGroup } from 'react-bootstrap';
+import { Button, Card, Dropdown, DropdownButton, FormControl, InputGroup } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import ProfilePicture from '../../assets/images/pet_profile_picture.png';
 import Navbar from '../../components/Navbar';
@@ -23,12 +23,13 @@ class MyPlantsPage extends React.Component {
       search: '',
       sort: '',
       asc: true,
-      filter: [],
+      filters: [],
     };
 
     this.getProfilePictures = this.getProfilePictures.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
+    this.setFilters = this.setFilters.bind(this);
     this.sortBy = this.sortBy.bind(this);
     this.filterBy = this.filterBy.bind(this);
   }
@@ -94,26 +95,45 @@ class MyPlantsPage extends React.Component {
     }
   }
 
-  filterBy(fields) {
-    console.log(fields);
+  setFilters(filters) {
+    this.setState({ filters });
+  }
+
+  filterBy(pet) {
+    const { store: { plants } } = this.props;
+    const { filters } = this.state;
+
+    return !!filters.find(({ field, equivalence, value }) => {
+      if (field === 'Type') {
+        switch (equivalence) {
+          case '=': { return plants[pet.type].name === value; }
+          case '\u2260': { return plants[pet.type].name !== value; }
+          default: return false;
+        }
+      }
+
+      return false;
+    });
   }
 
   render() {
     const { store: { pets, plants, account: { username } } } = this.props;
-    const { profilePics, search, sort, asc } = this.state;
+    const { profilePics, search, sort, asc, filters } = this.state;
 
     const lowerCaseSearch = search.toLowerCase();
     const defaultMessage = search
       ? <p>No plants match this search</p>
       : <p>Add a plant to get started</p>;
 
-    let filteredAndSortedPets = search ? Object.entries(pets).filter(([, pet]) => {
-      const name = pet.name.toLowerCase().indexOf(lowerCaseSearch) !== -1;
-      const commonType = plants[pet.type].name.toLowerCase().indexOf(lowerCaseSearch) !== -1;
-      const binomType = pet.type.indexOf(lowerCaseSearch) !== -1;
+    let filteredAndSortedPets = search || filters.length
+      ? Object.entries(pets).filter(([, pet]) => {
+        const name = pet.name.toLowerCase().indexOf(lowerCaseSearch) !== -1;
+        const commonType = plants[pet.type].name.toLowerCase().indexOf(lowerCaseSearch) !== -1;
+        const binomType = pet.type.indexOf(lowerCaseSearch) !== -1;
+        const fieldFilters = this.filterBy(pet);
 
-      return name || commonType || binomType;
-    }) : Object.entries(pets);
+        return search ? fieldFilters && (name || commonType || binomType) : fieldFilters;
+      }) : Object.entries(pets);
 
     filteredAndSortedPets = filteredAndSortedPets.sort(([, p1], [, p2]) => {
       const field1 = sort === 'type' ? plants[p1.type].name : p1[sort];
@@ -144,30 +164,36 @@ class MyPlantsPage extends React.Component {
       <div id="my-plants-page">
         <Navbar />
         <div className="container">
-          <InputGroup>
-            <FormControl
-              name="search"
-              value={search}
-              onChange={this.handleSearch}
-              maxLength="40"
-              placeholder="Search through your plants"
-            />
+          <span id="top-row">
+            <InputGroup>
+              <FormControl
+                name="search"
+                value={search}
+                onChange={this.handleSearch}
+                maxLength="40"
+                placeholder="Search through your plants"
+              />
 
-            <Dropdown as={InputGroup.Append}>
-              <Dropdown.Toggle>Filter</Dropdown.Toggle>
-              <Dropdown.Menu as={FilterMenu} onChange={this.filterBy} align="right" />
-            </Dropdown>
+              <Dropdown as={InputGroup.Append}>
+                <Dropdown.Toggle>{`Filter${filters.length ? ` (${filters.length})` : ''}`}</Dropdown.Toggle>
+                <Dropdown.Menu as={FilterMenu} onChange={this.setFilters} align="right" />
+              </Dropdown>
 
-            <DropdownButton
-              as={InputGroup.Append}
-              title={sort ? `${uppercaseFirst(sort)} ${asc ? '\u2191' : '\u2193'}` : 'Sort By'}
-            >
-              <Dropdown.Item onSelect={() => this.sortBy('name')}>Name</Dropdown.Item>
-              <Dropdown.Item onSelect={() => this.sortBy('type')}>Type</Dropdown.Item>
-              <Dropdown.Item onSelect={() => this.sortBy('ownedSince')}>Owned Since</Dropdown.Item>
-              <Dropdown.Item onSelect={() => this.sortBy('birth')}>Age</Dropdown.Item>
-            </DropdownButton>
-          </InputGroup>
+              <DropdownButton
+                as={InputGroup.Append}
+                title={sort ? `${uppercaseFirst(sort)} ${asc ? '\u2191' : '\u2193'}` : 'Sort By'}
+              >
+                <Dropdown.Item onSelect={() => this.sortBy('name')}>Name</Dropdown.Item>
+                <Dropdown.Item onSelect={() => this.sortBy('type')}>Type</Dropdown.Item>
+                <Dropdown.Item onSelect={() => this.sortBy('ownedSince')}>Owned Since</Dropdown.Item>
+                <Dropdown.Item onSelect={() => this.sortBy('birth')}>Age</Dropdown.Item>
+              </DropdownButton>
+            </InputGroup>
+
+            <Link className="nav-link" to={`/${username}/new`}>
+              <Button>New Plant</Button>
+            </Link>
+          </span>
 
           {plantCards}
         </div>
