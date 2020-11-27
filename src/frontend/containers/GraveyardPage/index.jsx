@@ -9,8 +9,9 @@ import ProfilePicture from '../../assets/images/pet_profile_picture.png';
 import { getPetProfilePicture } from '../../store/actions/pets';
 
 class GraveyardPage extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
+
     this.state = { profilePics: {} };
     this.getProfilePictures = this.getProfilePictures.bind(this);
   }
@@ -42,8 +43,10 @@ class GraveyardPage extends React.Component {
       this.setState({ profilePics });
 
       getPetProfilePicture(id).then((picture) => {
-        profilePics[id] = picture;
-        this.setState({ profilePics });
+        if (picture) {
+          profilePics[id] = picture;
+          this.setState({ profilePics });
+        }
       });
     });
   }
@@ -51,21 +54,27 @@ class GraveyardPage extends React.Component {
   render() {
     const { store: { pets, account: { username } } } = this.props;
     const { profilePics } = this.state;
-    const plantCards = Object.entries(pets).map(([id, pet]) => (
-      <span className="plant-link" key={id}>
-        <Link to={`/${username}/${id}`}>
-          <Card className="plant-card">
-            <Card.Img className="card-img" variant="top" src={profilePics[id]} />
-            <Card.Body>
-              <Card.Title>{pet.name}</Card.Title>
-              <Card.Text>11.01.2017 to 11.01.2020</Card.Text>
-              <Card.Text>Placeholder text for epitaph.</Card.Text>
-            </Card.Body>
-          </Card>
-        </Link>
-      </span>
-    ));
+    const plantCards = Object.entries(pets).map(([id, pet]) => {
+      if (pet.dead) {
+        return (
+          <span className="plant-link" key={id}>
+            <Link to={`/${username}/${id}`}>
+              <Card className="plant-card">
+                <Card.Img className="card-img" variant="top" src={profilePics[id]} />
+                <Card.Body>
+                  <Card.Title>{pet.name}</Card.Title>
+                  <Card.Text>{pet.birth} to {pet.death}</Card.Text>
+                  <Card.Text>{pet.epitaph}</Card.Text>
+                </Card.Body>
+              </Card>
+            </Link>
+          </span>
+        );
+      }
+      return null;
+    });
     return (
+
       <div id="my-plants-page">
         <Navbar />
         <h2>My Graveyard</h2>

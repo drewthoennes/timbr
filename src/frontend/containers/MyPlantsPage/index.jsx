@@ -131,15 +131,16 @@ class MyPlantsPage extends React.Component {
       ? <p>No plants match the given query</p>
       : <p>Add a plant to get started</p>;
 
+    const alivePlants = Object.entries(pets).filter(([, pet]) => !pet.dead);
     let filteredAndSortedPets = search || filters.length
-      ? Object.entries(pets).filter(([, pet]) => {
+      ? alivePlants.filter(([, pet]) => {
         const name = pet.name.toLowerCase().indexOf(lowerCaseSearch) !== -1;
         const commonType = plants[pet.type].name.toLowerCase().indexOf(lowerCaseSearch) !== -1;
         const binomType = pet.type.indexOf(lowerCaseSearch) !== -1;
         const fieldFilters = this.filterBy(pet);
 
         return search ? fieldFilters && (name || commonType || binomType) : fieldFilters;
-      }) : Object.entries(pets);
+      }) : alivePlants;
 
     filteredAndSortedPets = filteredAndSortedPets.sort(([, p1], [, p2]) => {
       const field1 = sort === 'type' ? plants[p1.type].name : p1[sort];
