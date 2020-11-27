@@ -5,6 +5,7 @@ import './styles.scss';
 
 const Clickable = (label, onClick) => (
   <span
+    key={label}
     className="clickable"
     onClick={onClick}
     onKeyUp={onClick}
@@ -15,7 +16,7 @@ const Clickable = (label, onClick) => (
 );
 
 const FilterMenu = React.forwardRef(
-  ({ style, className, onChange }, ref) => {
+  ({ style, className, onChange, plants }, ref) => {
     const [state, setState] = useState({ filters: [], field: '', equivalence: '', value: '' });
 
     const addFilter = () => {
@@ -42,7 +43,8 @@ const FilterMenu = React.forwardRef(
     };
 
     const onDropdownClick = (field, value) => {
-      setState({ ...state, [field]: value });
+      if (field === 'field') setState({ ...state, field: value, value: '' });
+      else setState({ ...state, [field]: value });
     };
 
     let valueJSX = (
@@ -55,7 +57,19 @@ const FilterMenu = React.forwardRef(
       />
     );
 
-    if (state.field === 'Carnivorous') {
+    if (state.field === 'Type') {
+      valueJSX = (
+        <DropdownButton
+          className="white-button"
+          title={state.value || 'Value'}
+        >
+          {Object.entries(plants)
+            // eslint-disable-next-line
+            .sort(([_, p1], [__, p2]) => p1.name < p2.name ? -1 : 1)
+            .map(([, plant]) => Clickable(plant.name, () => onDropdownClick('value', plant.name)))}
+        </DropdownButton>
+      );
+    } else if (state.field === 'Carnivorous') {
       valueJSX = (
         <DropdownButton
           className="white-button"
@@ -129,6 +143,7 @@ FilterMenu.propTypes = {
   style: PropTypes.object.isRequired,
   className: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
+  plants: PropTypes.object.isRequired,
 };
 
 export default FilterMenu;

@@ -136,10 +136,10 @@ class MyPlantsPage extends React.Component {
       ? alivePlants.filter(([, pet]) => {
         const name = pet.name.toLowerCase().indexOf(lowerCaseSearch) !== -1;
         const commonType = plants[pet.type].name.toLowerCase().indexOf(lowerCaseSearch) !== -1;
-        const binomType = pet.type.indexOf(lowerCaseSearch) !== -1;
+        // const binomType = pet.type.indexOf(lowerCaseSearch) !== -1;
         const fieldFilters = this.filterBy(pet);
 
-        return search ? fieldFilters && (name || commonType || binomType) : fieldFilters;
+        return search ? fieldFilters && (name || commonType) : fieldFilters;
       }) : alivePlants;
 
     filteredAndSortedPets = filteredAndSortedPets.sort(([, p1], [, p2]) => {
@@ -183,7 +183,7 @@ class MyPlantsPage extends React.Component {
 
               <Dropdown as={InputGroup.Append}>
                 <Dropdown.Toggle>{`Filter${filters.length ? ` (${filters.length})` : ''}`}</Dropdown.Toggle>
-                <Dropdown.Menu as={FilterMenu} onChange={this.setFilters} align="right" />
+                <Dropdown.Menu as={FilterMenu} onChange={this.setFilters} plants={plants} align="right" />
               </Dropdown>
 
               <DropdownButton
