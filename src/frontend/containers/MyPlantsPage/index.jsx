@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
-import { Card } from 'react-bootstrap';
+import { Card, Dropdown, DropdownButton, FormControl, InputGroup } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import ProfilePicture from '../../assets/images/pet_profile_picture.png';
 import Navbar from '../../components/Navbar';
@@ -10,13 +10,27 @@ import './styles.scss';
 import { logout } from '../../store/actions/auth';
 import { getPetProfilePicture } from '../../store/actions/pets';
 
+import FilterMenu from './FilterMenu';
+
+const uppercaseFirst = (str) => str[0].toUpperCase() + str.substr(1).toLowerCase();
+
 class MyPlantsPage extends React.Component {
   constructor() {
     super();
 
-    this.state = { profilePics: {} };
+    this.state = {
+      profilePics: {},
+      search: '',
+      sort: '',
+      asc: true,
+      filter: [],
+    };
+
     this.getProfilePictures = this.getProfilePictures.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
+    this.sortBy = this.sortBy.bind(this);
+    this.filterBy = this.filterBy.bind(this);
   }
 
   componentDidMount() {
@@ -53,6 +67,10 @@ class MyPlantsPage extends React.Component {
     });
   }
 
+  handleSearch(e) {
+    this.setState({ search: e.target.value });
+  }
+
   handleLogout(e) {
     e.preventDefault();
 
@@ -66,32 +84,98 @@ class MyPlantsPage extends React.Component {
     // });
   }
 
+  sortBy(field) {
+    const { sort } = this.state;
+
+    if (field === sort) {
+      this.setState((prevProps) => ({ asc: !prevProps.asc }));
+    } else {
+      this.setState({ sort: field, asc: true });
+    }
+  }
+
+  filterBy(fields) {
+    console.log(fields);
+  }
+
   render() {
-    const { store: { pets, account: { username } } } = this.props;
-    const { profilePics } = this.state;
-    const plantCards = Object.entries(pets).map(([id, pet]) => (
+    const { store: { pets, plants, account: { username } } } = this.props;
+    const { profilePics, search, sort, asc } = this.state;
+
+    const lowerCaseSearch = search.toLowerCase();
+    const defaultMessage = search
+      ? <p>No plants match this search</p>
+      : <p>Add a plant to get started</p>;
+
+    let filteredAndSortedPets = search ? Object.entries(pets).filter(([, pet]) => {
+      const name = pet.name.toLowerCase().indexOf(lowerCaseSearch) !== -1;
+      const commonType = plants[pet.type].name.toLowerCase().indexOf(lowerCaseSearch) !== -1;
+      const binomType = pet.type.indexOf(lowerCaseSearch) !== -1;
+
+      return name || commonType || binomType;
+    }) : Object.entries(pets);
+
+    filteredAndSortedPets = filteredAndSortedPets.sort(([, p1], [, p2]) => {
+      const field1 = sort === 'type' ? plants[p1.type].name : p1[sort];
+      const field2 = sort === 'type' ? plants[p2.type].name : p2[sort];
+
+      if (asc) {
+        return field1 > field2 ? 1 : -1;
+      }
+
+      return field1 < field2 ? 1 : -1;
+    });
+
+    const plantCards = filteredAndSortedPets.length ? filteredAndSortedPets.map(([id, pet]) => (
       <span className="plant-link" key={id}>
         <Link to={`/${username}/${id}`}>
           <Card className="plant-card">
             <Card.Img className="card-img" variant="top" src={profilePics[id]} />
             <Card.Body>
               <Card.Title>{pet.name}</Card.Title>
-              <Card.Text>{pet.type}</Card.Text>
+              <Card.Text>{plants[pet.type].name}</Card.Text>
             </Card.Body>
           </Card>
         </Link>
       </span>
-    ));
+    )) : defaultMessage;
+
     return (
       <div id="my-plants-page">
         <Navbar />
         <div className="container">
+          <InputGroup>
+            <FormControl
+              name="search"
+              value={search}
+              onChange={this.handleSearch}
+              maxLength="40"
+              placeholder="Search through your plants"
+            />
+
+            <Dropdown as={InputGroup.Append}>
+              <Dropdown.Toggle>Filter</Dropdown.Toggle>
+              <Dropdown.Menu as={FilterMenu} onChange={this.filterBy} align="right" />
+            </Dropdown>
+
+            <DropdownButton
+              as={InputGroup.Append}
+              title={sort ? `${uppercaseFirst(sort)} ${asc ? '\u2191' : '\u2193'}` : 'Sort By'}
+            >
+              <Dropdown.Item onSelect={() => this.sortBy('name')}>Name</Dropdown.Item>
+              <Dropdown.Item onSelect={() => this.sortBy('type')}>Type</Dropdown.Item>
+              <Dropdown.Item onSelect={() => this.sortBy('ownedSince')}>Owned Since</Dropdown.Item>
+              <Dropdown.Item onSelect={() => this.sortBy('birth')}>Age</Dropdown.Item>
+            </DropdownButton>
+          </InputGroup>
+
           {plantCards}
         </div>
       </div>
     );
   }
 }
+
 MyPlantsPage.propTypes = {
   history: PropTypes.object.isRequired,
   store: PropTypes.shape({
@@ -100,6 +184,7 @@ MyPlantsPage.propTypes = {
       username: PropTypes.string,
     }).isRequired,
     pets: PropTypes.object.isRequired,
+    plants: PropTypes.object.isRequired,
   }).isRequired,
 };
 export default connect(map)(withRouter(MyPlantsPage));

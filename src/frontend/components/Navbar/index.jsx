@@ -10,10 +10,10 @@ import { logout } from '../../store/actions/auth';
 const Navbar = (props) => (
 
   <div id="navbar">
-    <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
-      <Bar>
+    <Nav className="navbar navbar-expand-lg navbar-dark bg-primary w-100">
+      <Bar className="w-100">
         <Link className="navbar-brand" to="/">timbr</Link>
-        <Nav className="mr-auto">
+        <Nav className="mr-auto w-100">
           <ul className="navbar-nav mr-auto">
             <span className="plant-link">
               <li className="nav-item">
@@ -46,7 +46,7 @@ const Navbar = (props) => (
           </span>
         </Nav>
       </Bar>
-    </nav>
+    </Nav>
   </div>
 );
 
