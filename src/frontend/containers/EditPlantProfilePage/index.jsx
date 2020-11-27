@@ -288,7 +288,6 @@ class EditPlantProfilePage extends React.Component {
                 {profilePictureFeedback}
               </Form.Label>
             </Form.Group>
-
             <Form.Group controlId="name">
               <Form.Label>Plant's Name:</Form.Label>
               <Form.Control
@@ -300,7 +299,17 @@ class EditPlantProfilePage extends React.Component {
                 placeholder="Name"
               />
             </Form.Group>
-
+            <Form.Group controlId="location">
+              <Form.Label>Plant's Location:</Form.Label>
+              <Form.Control
+                required
+                name="location"
+                value={pet.location}
+                onChange={this.handleChange}
+                maxLength="40"
+                placeholder="eg:living room"
+              />
+            </Form.Group>
             <Form.Group controlId="birth">
               <Form.Label>Plant's birthday:</Form.Label>
               <Form.Control
@@ -323,7 +332,6 @@ class EditPlantProfilePage extends React.Component {
                 onChange={this.handleChange}
               />
             </Form.Group>
-
             <Form.Group controlId="type">
               <Form.Label>Plant's Type:</Form.Label>
               { /* eslint-disable-next-line react/destructuring-assignment */}
@@ -347,7 +355,6 @@ class EditPlantProfilePage extends React.Component {
                 </DropdownMenu>
               </Dropdown>
             </Form.Group>
-
             <Form.Group>
               <Form.Label>Growth Pictures</Form.Label>
               <br />
@@ -373,7 +380,6 @@ class EditPlantProfilePage extends React.Component {
                 {growthPictureFeedback}
               </Form.Label>
             </Form.Group>
-
             <br />
             <Button variant="primary" type="submit" style={{ marginTop: '1rem' }}>
               Submit

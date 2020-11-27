@@ -29,6 +29,7 @@ class PlantProfilePage extends React.Component {
     this.getProfilePicture = this.getProfilePicture.bind(this);
     this.getGrowthPictures = this.getGrowthPictures.bind(this);
     this.fetchEventList = this.fetchEventList.bind(this);
+    this.getPlantLocation = this.getPlantLocation.bind(this);
 
     this.state = {
       speciesName: '',
@@ -41,6 +42,7 @@ class PlantProfilePage extends React.Component {
       profilePic: ProfilePicture,
       growthPics: {},
       eventList: [],
+      location: '',
     };
   }
 
@@ -52,6 +54,7 @@ class PlantProfilePage extends React.Component {
     this.fetchEventList();
     this.getProfilePicture();
     this.getGrowthPictures();
+    this.getPlantLocation();
 
     if (!username) return Promise.resolve();
     return setForeignUserPets(username, id).catch(() => history.push(`/${ownUsername}`));
@@ -105,6 +108,12 @@ class PlantProfilePage extends React.Component {
     this.setState({ ...plants[type], speciesName: plant?.name || '' });
   }
 
+  getPlantLocation() {
+    const { match: { params: { id } } } = this.props;
+    const { store: { pets } = {} } = this.props;
+    this.setState({ location: pets[id].location });
+  }
+
   fetchEventList() {
     // fetches action history
     const { match: { params: { id } } } = this.props;
@@ -138,7 +147,7 @@ class PlantProfilePage extends React.Component {
     const { history, match: { params: { username, id } } } = this.props;
     const { speciesName, scientificName, description, carnivorous,
       waterFreq, fertFreq, feedFreq, eventList,
-      profilePic, growthPics } = this.state;
+      profilePic, growthPics, location } = this.state;
 
     let pet;
     let dead = false;
@@ -173,6 +182,7 @@ class PlantProfilePage extends React.Component {
               description={description}
               birth={pet?.birth}
               ownedSince={pet?.ownedSince}
+              location={location}
               dead={pet.dead ? pet.dead : 0}
               death={pet.death ? pet.death : ''}
             />
