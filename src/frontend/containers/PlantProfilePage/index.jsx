@@ -30,7 +30,6 @@ class PlantProfilePage extends React.Component {
     this.getGrowthPictures = this.getGrowthPictures.bind(this);
     this.fetchEventList = this.fetchEventList.bind(this);
     this.getPlantLocation = this.getPlantLocation.bind(this);
-   
 
     this.state = {
       speciesName: '',
@@ -56,8 +55,6 @@ class PlantProfilePage extends React.Component {
     this.getProfilePicture();
     this.getGrowthPictures();
     this.getPlantLocation();
-    this.getNextDates();
-   
 
     if (!username) return Promise.resolve();
     return setForeignUserPets(username, id).catch(() => history.push(`/${ownUsername}`));
@@ -79,8 +76,6 @@ class PlantProfilePage extends React.Component {
       }
     });
   }
-
-  getNextDates();
 
   getGrowthPictures() {
     const { match: { params: { id } } } = this.props;

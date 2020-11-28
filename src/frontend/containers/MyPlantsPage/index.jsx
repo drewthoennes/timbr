@@ -18,19 +18,17 @@ class MyPlantsPage extends React.Component {
   constructor() {
     super();
 
-
     this.state = {
       profilePics: {},
       search: '',
       sort: '',
       asc: true,
       filters: [],
-      actionItems:[],
+      actionItems: [],
     };
 
-  
     this.getProfilePictures = this.getProfilePictures.bind(this);
-    this.getCriticalActions=this.getCriticalActions.bind(this);
+    this.getCriticalActions = this.getCriticalActions.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
     this.setFilters = this.setFilters.bind(this);
@@ -72,7 +70,6 @@ class MyPlantsPage extends React.Component {
       });
     });
   }
-
 
   getCriticalActions() {
     const { store: { pets } } = this.props;
@@ -116,7 +113,6 @@ class MyPlantsPage extends React.Component {
 
   handleSearch(e) {
     this.setState({ search: e.target.value });
-
   }
 
   handleLogout(e) {
@@ -169,11 +165,9 @@ class MyPlantsPage extends React.Component {
     }, true);
   }
 
-
   render() {
-
     const { store: { pets, plants, account: { username } } } = this.props;
-    const { profilePics, search, sort, asc, filters,actionItems } = this.state;
+    const { profilePics, search, sort, asc, filters, actionItems } = this.state;
 
     const lowerCaseSearch = search.toLowerCase();
     const defaultMessage = search || filters.length
@@ -197,7 +191,6 @@ class MyPlantsPage extends React.Component {
 
       if (asc) {
         return field1 > field2 ? 1 : -1;
-
       }
 
       return field1 < field2 ? 1 : -1;
