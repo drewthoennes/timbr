@@ -8,11 +8,12 @@ import {
   DropdownMenu,
   DropdownItem,
 } from 'reactstrap';
-import { Button, Form, FormControl } from 'react-bootstrap';
+import { Button, Form, FormControl, Modal } from 'react-bootstrap';
 import ProfilePicture from '../../assets/images/pet_profile_picture.png';
 import Navbar from '../../components/Navbar';
 import map from '../../store/map';
 import { createNewPet, getPetProfilePicture, setPetProfilePicture, removePetProfilePicture } from '../../store/actions/pets';
+import { sendVerificationEmail, isEmailVerified } from '../../store/actions/account';
 import './styles.scss';
 
 class NewPlantProfilePage extends React.Component {
@@ -30,6 +31,7 @@ class NewPlantProfilePage extends React.Component {
       profilePictureFeedback: '',
       profilePictureValidationState: 'default',
       resetProfilePicInput: 0,
+      verifyEmailFeedback: '',
     };
 
     this.getProfilePicture = this.getProfilePicture.bind(this);
@@ -39,6 +41,13 @@ class NewPlantProfilePage extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleDropdown = this.handleDropdown.bind(this);
     this.toggleDropdown = this.toggleDropdown.bind(this);
+    this.sendVerificationEmail = this.sendVerificationEmail.bind(this);
+
+    this.mounted = false;
+  }
+
+  componentDidMount() {
+    this.mounted = true;
   }
 
   componentDidUpdate() {
@@ -50,6 +59,7 @@ class NewPlantProfilePage extends React.Component {
 
   componentWillUnmount() {
     this.removeProfilePicture();
+    this.mounted = false;
   }
 
   getProfilePicture() {
@@ -159,11 +169,29 @@ class NewPlantProfilePage extends React.Component {
     }));
   }
 
+  sendVerificationEmail() {
+    sendVerificationEmail()
+      .then(() => {
+        if (this.mounted) {
+          this.setState({
+            verifyEmailFeedback: 'Verification Email sent!',
+          });
+        }
+      })
+      .catch((error) => {
+        if (this.mounted) {
+          this.setState({
+            verifyEmailFeedback: error.message,
+          });
+        }
+      });
+  }
+
   render() {
     const { store: { plants } } = this.props;
     const { name, birth, ownedSince,
       profilePic, profilePictureFeedback,
-      profilePictureValidationState, resetProfilePicInput } = this.state;
+      profilePictureValidationState, resetProfilePicInput, verifyEmailFeedback } = this.state;
     const today = (new Date()).toISOString().split('T')[0];
     const past = new Date((new Date().getFullYear() - 50)).toISOString().split('T')[0];
 
@@ -171,6 +199,22 @@ class NewPlantProfilePage extends React.Component {
       <div id="new-plant-page">
         <Navbar />
         <h1>Create New Plant</h1>
+        <Modal id="verify-email" show={!isEmailVerified()} backdrop="static" onHide={() => {}}>
+          <Modal.Header>
+            <Modal.Title>Your account is not verified.</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <p>You must verify your account before adding plants.</p>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => { this.sendVerificationEmail(); }}
+            >
+              Resend Verification Email
+            </button>
+            <p id="feedback">{ verifyEmailFeedback }</p>
+          </Modal.Body>
+        </Modal>
         <Form onSubmit={this.handleSubmit}>
           <Form.Group
             controlId="profilePic"
