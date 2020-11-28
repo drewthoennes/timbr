@@ -1,0 +1,45 @@
+@import "~@theme";
+
+#filter-dropdown-menu {
+  width: fit-content;
+  padding: 24px;
+  // transform: translate3d(-418px, 40px, 0px) !important;
+
+  .clickable {
+    cursor: pointer;
+
+    span:hover {
+      background: rgba(0, 0, 0, 0.2);
+      color: white;
+    }
+  }
+
+  .default-message {
+    margin-bottom: 15px;
+  }
+
+  .filter-row {
+    margin-bottom: 15px;
+
+    & > div, & > input, & > button {
+      margin-right: 15px;
+
+      &:last-child {
+        margin-right: 0px;
+      }
+    }
+  }
+
+  .white-button button {
+    background: white;
+    color: #888888;
+    border-color: #ced4da;
+    box-shadow: 0px 0px;
+  }
+
+  #add-filter-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
