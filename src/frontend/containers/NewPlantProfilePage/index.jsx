@@ -23,6 +23,7 @@ class NewPlantProfilePage extends React.Component {
       name: '',
       birth: '',
       ownedSince: '',
+      location: '',
       type: 'alocasia-amazonica',
       dropdownOpen: false,
       profilePic: ProfilePicture,
@@ -126,13 +127,14 @@ class NewPlantProfilePage extends React.Component {
     e.preventDefault();
     e.stopPropagation();
     const { store: { account: { uid, username } } } = this.props;
-    const { name, birth, ownedSince, type, profilePic, profilePicSub } = this.state;
+    const { name, birth, ownedSince, type, profilePic, profilePicSub, location } = this.state;
 
     createNewPet({
       name,
       birth: birth.length ? birth : (new Date()).toISOString().split('T')[0],
       ownedSince: ownedSince.length ? ownedSince : (new Date()).toISOString().split('T')[0],
       type,
+      location,
       profilePic: profilePicSub,
     }).then((snap) => {
       const { history } = this.props;
@@ -161,7 +163,7 @@ class NewPlantProfilePage extends React.Component {
 
   render() {
     const { store: { plants } } = this.props;
-    const { name, birth, ownedSince,
+    const { name, birth, ownedSince, location,
       profilePic, profilePictureFeedback,
       profilePictureValidationState, resetProfilePicInput } = this.state;
     const today = (new Date()).toISOString().split('T')[0];
@@ -213,6 +215,17 @@ class NewPlantProfilePage extends React.Component {
               onChange={this.handleChange}
               maxLength="40"
               placeholder="Name"
+            />
+          </Form.Group>
+          <Form.Group controlId="location">
+            <Form.Label>Plant's Location:</Form.Label>
+            <Form.Control
+
+              name="location"
+              value={location}
+              onChange={this.handleChange}
+              maxLength="40"
+              placeholder="eg:living room"
             />
           </Form.Group>
 

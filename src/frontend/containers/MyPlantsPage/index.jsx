@@ -67,27 +67,27 @@ class MyPlantsPage extends React.Component {
       const diffWTime = Math.abs(new Date() - (new Date(pets[id].watered.last)));
       const diffWDays = Math.ceil(diffWTime / (1000 * 60 * 60 * 24));
       if (diffWDays >= plants[type].waterFreq) {
-        actionItems[id] = `${actionItems[id]}\nWater overdue❗\n`;
+        actionItems[id] = `${actionItems[id]}\n💦\n`;
         this.setState({ actionItems });
       }
 
       const diffFTime = Math.abs(new Date() - (new Date(pets[id].fertilized.last)));
       const diffFDays = Math.ceil(diffFTime / (1000 * 60 * 60 * 24));
       if (diffFDays >= plants[type].fertFreq) {
-        actionItems[id] = `${actionItems[id]}\n Fertilization overdue❗\n`;
+        actionItems[id] = `${actionItems[id]}\n🌱\n`;
         this.setState({ actionItems });
       }
       const diffRTime = Math.abs(new Date() - (new Date(pets[id].turned.last)));
       const diffRDays = Math.ceil(diffRTime / (1000 * 60 * 60 * 24));
       if (diffRDays >= 7) {
-        actionItems[id] = `${actionItems[id]}\nRotation overdue❗\n`;
+        actionItems[id] = `${actionItems[id]}\n💃\n`;
         this.setState({ actionItems });
       }
       if (plants[type].carnivorous === true) {
         const diffTimeFeed = Math.abs(new Date() - (new Date(pets[id].fed.last)));
         const diffDaysFeed = Math.ceil(diffTimeFeed / (1000 * 60 * 60 * 24));
         if (diffDaysFeed >= plants[type].feedFreq) {
-          actionItems[id] = `${actionItems[id]}\nFeed overdue❗\n`;
+          actionItems[id] = `${actionItems[id]}\n🍽️\n`;
           this.setState({ actionItems });
         }
       }
