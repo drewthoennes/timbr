@@ -34,6 +34,16 @@ export function changeUsername(username) {
     });
 }
 
+/* This function checks if the current user's email is verified. */
+export function isEmailVerified() {
+  return firebase.auth().currentUser.emailVerified;
+}
+
+/* This function sends verification email to the current user. */
+export function sendVerificationEmail() {
+  return firebase.auth().currentUser.sendEmailVerification();
+}
+
 /* This method uses firebase auth to create a new user. */
 export function registerWithTimbr(credentials) {
   return firebase.auth().createUserWithEmailAndPassword(credentials.email, credentials.password)
@@ -44,6 +54,7 @@ export function registerWithTimbr(credentials) {
             if (credentials.username) {
               changeUsername(credentials.username);
             }
+            sendVerificationEmail();
           });
       }
     });
