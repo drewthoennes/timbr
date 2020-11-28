@@ -24,9 +24,11 @@ class MyPlantsPage extends React.Component {
       sort: '',
       asc: true,
       filters: [],
+      actionItems: [],
     };
 
     this.getProfilePictures = this.getProfilePictures.bind(this);
+    this.getCriticalActions = this.getCriticalActions.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
     this.setFilters = this.setFilters.bind(this);
@@ -42,6 +44,7 @@ class MyPlantsPage extends React.Component {
     }
 
     this.getProfilePictures();
+    this.getCriticalActions();
   }
 
   componentDidUpdate() {
@@ -65,6 +68,46 @@ class MyPlantsPage extends React.Component {
           this.setState({ profilePics });
         }
       });
+    });
+  }
+
+  getCriticalActions() {
+    const { store: { pets } } = this.props;
+    const { store: { plants } } = this.props;
+    const { actionItems } = this.state;
+    Object.keys(pets).forEach((id) => {
+      const { type } = pets[id];
+      if (actionItems[id] === undefined) {
+        actionItems[id] = '';
+      }
+      // water
+      const diffWTime = Math.abs(new Date() - (new Date(pets[id].watered.last)));
+      const diffWDays = Math.ceil(diffWTime / (1000 * 60 * 60 * 24));
+      if (diffWDays >= plants[type].waterFreq) {
+        actionItems[id] = `${actionItems[id]}\n💦\n`;
+        this.setState({ actionItems });
+      }
+
+      const diffFTime = Math.abs(new Date() - (new Date(pets[id].fertilized.last)));
+      const diffFDays = Math.ceil(diffFTime / (1000 * 60 * 60 * 24));
+      if (diffFDays >= plants[type].fertFreq) {
+        actionItems[id] = `${actionItems[id]}\n🌱\n`;
+        this.setState({ actionItems });
+      }
+      const diffRTime = Math.abs(new Date() - (new Date(pets[id].turned.last)));
+      const diffRDays = Math.ceil(diffRTime / (1000 * 60 * 60 * 24));
+      if (diffRDays >= plants[type].rotateFreq) {
+        actionItems[id] = `${actionItems[id]}\n💃\n`;
+        this.setState({ actionItems });
+      }
+      if (plants[type].carnivorous === true) {
+        const diffTimeFeed = Math.abs(new Date() - (new Date(pets[id].fed.last)));
+        const diffDaysFeed = Math.ceil(diffTimeFeed / (1000 * 60 * 60 * 24));
+        if (diffDaysFeed >= plants[type].feedFreq) {
+          actionItems[id] = `${actionItems[id]}\n🍽️\n`;
+          this.setState({ actionItems });
+        }
+      }
     });
   }
 
@@ -124,7 +167,7 @@ class MyPlantsPage extends React.Component {
 
   render() {
     const { store: { pets, plants, account: { username } } } = this.props;
-    const { profilePics, search, sort, asc, filters } = this.state;
+    const { profilePics, search, sort, asc, filters, actionItems } = this.state;
 
     const lowerCaseSearch = search.toLowerCase();
     const defaultMessage = search || filters.length
@@ -161,6 +204,7 @@ class MyPlantsPage extends React.Component {
             <Card.Body>
               <Card.Title>{pet.name}</Card.Title>
               <Card.Text>{plants[pet.type].name}</Card.Text>
+              <Card.Text>{actionItems[id]}</Card.Text>
             </Card.Body>
           </Card>
         </Link>

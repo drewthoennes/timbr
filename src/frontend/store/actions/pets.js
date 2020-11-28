@@ -10,7 +10,7 @@ export function setPets(pets) {
 }
 
 /* eslint-disable-next-line object-curly-newline */
-export function createNewPet({ parent = '', type = '', name, ownedSince, birth, death = null, dead = 0 } = { parent: '' }) {
+export function createNewPet({ parent = '', type = '', name, ownedSince, birth, death = null, dead = 0, location } = { parent: '' }) {
   const uid = firebase.auth().currentUser?.uid;
 
   return firebase.database().ref(`/users/${uid}/pets`).push({
@@ -21,8 +21,8 @@ export function createNewPet({ parent = '', type = '', name, ownedSince, birth, 
     birth,
     death,
     dead,
+    location,
     profilePic: false,
-    location: '',
     watered: { last: '0', streak: '0' },
     fertilized: { last: '0', streak: '0' },
     turned: { last: '0', streak: '0' },
