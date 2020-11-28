@@ -1,4 +1,25 @@
 @import "~@theme";
 #my-stats-page {
+  .page-title {
+    margin: 20px 0 20px 0;
+    text-align: center;
+  }
 
+  .chart-container {
+    height: 300px;
+  }
+  .stat-card {
+    // width: 12rem;
+    margin: 8px 0 0 8px;
+    display: inline-block;
+
+    .card-title {
+      text-align: center;
+      font-size: 3rem;
+      color: #78C2AD;
+    }
+  }
+  .row {
+    margin-bottom: 32px;
+  }
 }

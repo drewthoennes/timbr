@@ -25,6 +25,9 @@ const Navbar = ({ store: { account: { username } } }) => (
       </Nav>
       <Nav className="ml-auto justify-content-end">
         <span className="plant-link">
+          <Link className="nav-link" to="/my-stats">My Statistics</Link>
+        </span>
+        <span className="plant-link">
           <Link className="nav-link" to="/account">Account</Link>
         </span>
         <span className="plant-link">
