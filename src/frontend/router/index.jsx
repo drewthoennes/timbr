@@ -16,6 +16,7 @@ import NewPlantProfilePage from '../containers/NewPlantProfilePage';
 import EditPlantProfilePage from '../containers/EditPlantProfilePage';
 import PlantProfilePage from '../containers/PlantProfilePage';
 import AccountPage from '../containers/AccountPage';
+import MyStatsPage from '../containers/MyStatsPage';
 import ForgetPasswordPage from '../containers/ForgetPasswordPage';
 import ChangePasswordPage from '../containers/ChangePasswordPage';
 import NotFoundPage from '../containers/NotFoundPage';
@@ -34,6 +35,7 @@ const router = (props) => (
       <Route path="/login" render={() => <LoginPage />} />
       <Route path="/register" render={() => <RegisterPage />} />
       <Route path="/account" render={() => <AccountPage />} />
+      <Route path="/my-stats" render={() => <MyStatsPage />} />
       <Route path="/forget-password" render={() => <ForgetPasswordPage />} />
       <Route path="/change-password" render={() => <ChangePasswordPage />} />
       <Route path="/notfound" render={() => <NotFoundPage />} />
