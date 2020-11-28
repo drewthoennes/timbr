@@ -96,7 +96,7 @@ class MyPlantsPage extends React.Component {
       }
       const diffRTime = Math.abs(new Date() - (new Date(pets[id].turned.last)));
       const diffRDays = Math.ceil(diffRTime / (1000 * 60 * 60 * 24));
-      if (diffRDays >= 7) {
+      if (diffRDays >= plants[type].rotateFreq) {
         actionItems[id] = `${actionItems[id]}\n💃\n`;
         this.setState({ actionItems });
       }
