@@ -39,6 +39,7 @@ class PlantProfilePage extends React.Component {
       carnivorous: false,
       feedFreq: '',
       fertFreq: 0,
+      rotateFreq: 0,
       profilePic: ProfilePicture,
       growthPics: {},
       eventList: [],
@@ -146,7 +147,7 @@ class PlantProfilePage extends React.Component {
     const { own, store: { users, pets, account: { username: ownUsername } } } = this.props;
     const { history, match: { params: { username, id } } } = this.props;
     const { speciesName, scientificName, description, carnivorous,
-      waterFreq, fertFreq, feedFreq, eventList,
+      waterFreq, fertFreq, feedFreq, rotateFreq, eventList,
       profilePic, growthPics, location } = this.state;
 
     let pet;
@@ -197,6 +198,7 @@ class PlantProfilePage extends React.Component {
                   dead={pet.dead ? pet.dead : 0}
                   waterFreq={waterFreq}
                   fertFreq={fertFreq}
+                  rotateFreq={rotateFreq}
                   feedFreq={feedFreq}
                   carnivorous={carnivorous}
                   onChange={this.fetchEventList}

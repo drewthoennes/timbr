@@ -39,7 +39,7 @@ class CareFrequency extends React.PureComponent {
   }
 
   render() {
-    const { pet, waterFreq, fertFreq, feedFreq, carnivorous, dead } = this.props;
+    const { pet, waterFreq, fertFreq, feedFreq, rotateFreq, carnivorous, dead } = this.props;
 
     const today = getToday();
     const hasWateredToday = !!pet?.watered?.history?.[today];
@@ -70,7 +70,7 @@ class CareFrequency extends React.PureComponent {
           <div>
             <p>{`Water Frequency: Every ${waterFreq} days`}</p>
             <p>{`Fertilize Frequency: Every ${fertFreq} days`}</p>
-            <p>{`Turn Frequency: Every ${fertFreq} days`}</p>
+            <p>{`Turn Frequency: Every ${rotateFreq} days`}</p>
             {feedFreqJSX}
           </div>
 
