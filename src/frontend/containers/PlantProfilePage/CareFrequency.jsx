@@ -134,6 +134,7 @@ CareFrequency.propTypes = {
   dead: PropTypes.number.isRequired,
   fertFreq: PropTypes.number.isRequired,
   feedFreq: PropTypes.any.isRequired,
+  rotateFreq: PropTypes.number.isRequired,
   carnivorous: PropTypes.bool.isRequired,
   onChange: PropTypes.func,
 };
