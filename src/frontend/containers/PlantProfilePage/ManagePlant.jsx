@@ -71,10 +71,9 @@ class ManagePlant extends React.PureComponent {
 
     return (
       <div>
-        <h2>Manage Plant</h2>
         <Button type="button" onClick={this.edit}>Edit</Button>
+        <Button type="button" onClick={this.toggleDeadModal}>Mark as Dead</Button>
         <Button type="button" onClick={this.toggleDeleteModal}>Delete</Button>
-        <Button type="button" onClick={this.toggleDeadModal}>Ded</Button>
 
         <Modal show={showDelete} onHide={this.toggleDeleteModal}>
           <Modal.Header closeButton>
@@ -89,9 +88,16 @@ class ManagePlant extends React.PureComponent {
 
         <Modal show={showDead} onHide={this.toggleDeadModal}>
           <Modal.Header closeButton>
-            <Modal.Title>We're sorry about your loss.</Modal.Title>
+            <Modal.Title>We're sorry for your loss.</Modal.Title>
           </Modal.Header>
-          <input type="text" placeholder="Add an epitaph to remember your plant, if you'd like." onChange={(event) => { this.setState({ epitaph: event.target.value }); }} />
+          <Modal.Body>
+            <input
+              type="text"
+              placeholder="Add an epitaph to remember your plant, if you'd like."
+              onChange={(event) => { this.setState({ epitaph: event.target.value }); }}
+              className="form-control w-100"
+            />
+          </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={this.toggleDeadModal}>Wait, not dead yet!</Button>
             <Button variant="primary" onClick={this.dead}>Confirm</Button>

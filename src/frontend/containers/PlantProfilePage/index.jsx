@@ -168,7 +168,7 @@ class PlantProfilePage extends React.Component {
         <Navbar />
 
         <div id="plant-profile-page" className="container">
-          <section id="plant-name-and-information">
+          <section id="plant-name-and-information" className="no-border">
             <div>
               <h1>{pet?.name}</h1>
               <span>
@@ -188,8 +188,13 @@ class PlantProfilePage extends React.Component {
             />
           </section>
 
-          {
-            !own ? '' : (
+          {(!own || dead) ? '' : (
+            <section id="manage-plant">
+              <ManagePlant id={id} pet={pet} username={ownUsername} />
+            </section>
+          )}
+
+          {!own ? '' : (
               <section id="care-frequency">
                 <CareFrequency
                   id={id}
@@ -202,8 +207,7 @@ class PlantProfilePage extends React.Component {
                   onChange={this.fetchEventList}
                 />
               </section>
-            )
-          }
+          )}
 
           <section id="care-calendar">
             <CareCalendar events={eventList} />
@@ -212,14 +216,6 @@ class PlantProfilePage extends React.Component {
           <section id="growth-pictures">
             <GrowthPictures pictures={growthPics} foreignPlant={!own} />
           </section>
-
-          {
-            (!own || dead) ? '' : (
-              <section id="manage-plant">
-                <ManagePlant id={id} pet={pet} username={ownUsername} />
-              </section>
-            )
-          }
         </div>
       </div>
     );
