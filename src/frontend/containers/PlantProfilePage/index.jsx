@@ -117,16 +117,14 @@ class PlantProfilePage extends React.Component {
   }
 
   /* eslint-disable-next-line class-methods-use-this */
-  getTargetDate(lastDate, daysToAdd) {
-    lastDate.setDate(lastDate.getDate() + daysToAdd);
-    const futureDate = lastDate.toISOString().split('T')[0];
-
-    const diffTime = Math.abs(new Date(futureDate) - new Date());
+  getTargetDate(date, daysToAdd) {
+    date.setDate(date.getDate() + daysToAdd);
+    const diffTime = Math.abs(date - new Date());
     let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    if (diffDays >= 1000) {
+    if (diffDays > daysToAdd) {
       diffDays = 0;
     }
-    return [futureDate, diffDays];
+    return [date, diffDays];
   }
 
   getNextCycle() {
