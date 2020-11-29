@@ -70,12 +70,12 @@ class CareFrequency extends React.PureComponent {
             <p>{`Water Frequency: Every ${waterFreq} days`}</p>
             <p>{`Fertilize Frequency: Every ${fertFreq} days`}</p>
             <p>{`Turn Frequency: Every ${fertFreq} days`}</p>
+            {feedFreqJSX}
+
             <p>{`Days remaining to next water cycle: ${nextCycleDates[0]} days`}</p>
             <p>{`Days remaining to next fertilize cycle: ${nextCycleDates[1]} days`}</p>
             <p>{`Days remaining to next rotate cycle: ${nextCycleDates[2]} days`}</p>
-            {carnivorous === 1 ? (<p>{`Days remaining to next feed cycle: ${nextCycleDates[3]} days`}</p>) : '' }
-
-            {feedFreqJSX}
+            {carnivorous ? (<p>{`Days remaining to next feed cycle: ${nextCycleDates[3]} days`}</p>) : '' }
           </div>
 
           {dead ? <div />
