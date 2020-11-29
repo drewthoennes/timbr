@@ -11,7 +11,7 @@ const getToday = () => {
 class CareFrequency extends React.PureComponent {
   constructor() {
     super();
-
+    console.log("callin care freq")
     this.markWatered = this.markWatered.bind(this);
     this.markFertilized = this.markFertilized.bind(this);
     this.markTurned = this.markTurned.bind(this);
@@ -39,7 +39,7 @@ class CareFrequency extends React.PureComponent {
   }
 
   render() {
-    const { pet, waterFreq, fertFreq, feedFreq, carnivorous, dead } = this.props;
+    const { pet, waterFreq, fertFreq, feedFreq, carnivorous, dead,nextCycleDates} = this.props;
 
     const today = getToday();
     const hasWateredToday = !!pet?.watered?.history?.[today];
@@ -71,6 +71,11 @@ class CareFrequency extends React.PureComponent {
             <p>{`Water Frequency: Every ${waterFreq} days`}</p>
             <p>{`Fertilize Frequency: Every ${fertFreq} days`}</p>
             <p>{`Turn Frequency: Every ${fertFreq} days`}</p>
+            <p>{`Days remaining to next water cycle: ${nextCycleDates[0]} days`}</p>
+            <p>{`Days remaining to next fertilize cycle: ${nextCycleDates[1]} days`}</p>
+            <p>{`Days remaining to next rotate cycle: ${nextCycleDates[2]} days`}</p>
+            {carnivorous===1 ? (<p>{`Days remaining to next feed cycle: ${nextCycleDates[3]} days`}</p>) : '' }
+            
             {feedFreqJSX}
           </div>
 

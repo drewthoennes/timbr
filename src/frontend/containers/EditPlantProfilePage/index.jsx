@@ -302,7 +302,7 @@ class EditPlantProfilePage extends React.Component {
             <Form.Group controlId="location">
               <Form.Label>Plant's Location:</Form.Label>
               <Form.Control
-                required
+                
                 name="location"
                 value={pet.location}
                 onChange={this.handleChange}
