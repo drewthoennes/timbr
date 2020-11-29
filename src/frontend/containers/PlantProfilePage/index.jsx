@@ -48,7 +48,6 @@ class PlantProfilePage extends React.Component {
   }
 
   componentDidMount() {
-    console.log('calling index');
     const { match: { params: { username, id } } } = this.props;
     const { history, store: { account: { username: ownUsername } } } = this.props;
 
@@ -117,8 +116,9 @@ class PlantProfilePage extends React.Component {
     this.setState({ location: pets[id].location });
   }
 
+  /* eslint-disable-next-line class-methods-use-this */
   getTargetDate(lastDate, daysToAdd) {
-    this.lastDate.setDate(lastDate.getDate() + daysToAdd);
+    lastDate.setDate(lastDate.getDate() + daysToAdd);
     const futureDate = lastDate.toISOString().split('T')[0];
 
     const diffTime = Math.abs(new Date(futureDate) - new Date());
@@ -130,7 +130,6 @@ class PlantProfilePage extends React.Component {
   }
 
   getNextCycle() {
-    console.log('ok');
     const { match: { params: { id } } } = this.props;
     const { store: { pets } } = this.props;
     const { store: { plants } } = this.props;
