@@ -235,6 +235,7 @@ PlantProfilePage.propTypes = {
       username: PropTypes.string,
     }),
     pets: PropTypes.object.isRequired,
+    genealogy: PropTypes.object.isRequired,
     users: PropTypes.object.isRequired,
     plants: PropTypes.object.isRequired,
   }).isRequired,

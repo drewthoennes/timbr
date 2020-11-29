@@ -2,10 +2,85 @@ import { firebase } from '../../firebase/firebase';
 import store from '../index';
 import constants from '../const';
 
+export function constructGenealogy(plants) {
+  let trees = {};
+  const families = Object.entries(plants).reduce((aggregate, [id, plant]) => {
+    let index = aggregate.findIndex((family) => {
+      const hasPlant = family.indexOf(id) !== -1;
+      const hasParent = plant.parent && family.indexOf(plant.parent) !== -1;
+      return hasPlant || hasParent;
+    });
+
+    if (index === -1) {
+      aggregate.push(plant.parent ? [id, plant.parent] : [id]);
+      index = aggregate.length - 1;
+    } else if (plant.parent && aggregate[index].indexOf(plant.parent) !== -1) {
+      // eslint-disable-next-line no-param-reassign
+      aggregate[index] = [...aggregate[index], id];
+    } else if (plant.parent) {
+      // eslint-disable-next-line no-param-reassign
+      aggregate[index] = [...aggregate[index], id, plant.parent];
+    } else {
+      // eslint-disable-next-line no-param-reassign
+      aggregate[index] = [...aggregate[index], id];
+    }
+
+    if (!trees[id]) {
+      trees[id] = { family: index, children: [] };
+    }
+
+    if (plant.parent) {
+      if (!trees[plant.parent]) {
+        trees[plant.parent] = { family: index, children: [] };
+      }
+
+      trees[plant.parent].children.push(id);
+    }
+
+    return aggregate;
+  }, []);
+
+  // eslint-disable-next-line arrow-body-style
+  trees = Object.entries(trees).reduce((aggregate, [id, { family, children }]) => {
+    return { ...aggregate, [id]: { family: families[family], children } };
+  }, {});
+
+  return { families, trees };
+}
+
+export function getPotentialParents(id) {
+  const { pets: { pets, genealogy: { trees } } } = store.getState();
+
+  if (!pets[id]) return [];
+
+  const { type, birth } = pets[id];
+  const { family } = trees[id];
+
+  return Object.entries(pets).filter(([petId, plant]) => {
+    const isInFamily = family.indexOf(petId) !== -1;
+    const isSameType = plant.type === type;
+    const isYounger = birth > plant.birth;
+
+    return !isInFamily && isSameType && isYounger;
+  }).map(([petId]) => petId);
+}
+
+export function setParent(child, parent) {
+  const uid = firebase.auth().currentUser?.uid;
+
+  if (!child || !parent) return Promise.resolve();
+  if (!getPotentialParents(child).includes(parent)) return Promise.reject();
+
+  return firebase.database().ref(`/users/${uid}/pets/${child}`).update({ parent });
+}
+
 export function setPets(pets) {
+  const { families, trees } = constructGenealogy(pets);
   return store.dispatch({
     type: constants.SET_PETS,
     pets,
+    families,
+    trees,
   });
 }
 
