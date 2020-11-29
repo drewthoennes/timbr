@@ -140,7 +140,7 @@ class PlantProfilePage extends React.Component {
       plants[type].fertFreq);
     const nextTurnDates = this.getTargetDate(new Date(pets[id].turned.last),
       plants[type].rotateFreq);
-    if (plants[type].carnivorous === 1) {
+    if (plants[type].carnivorous) {
       nextFeedDates = this.getTargetDate(new Date(pets[id].fed.last),
         plants[type].feedFreq);
     }
