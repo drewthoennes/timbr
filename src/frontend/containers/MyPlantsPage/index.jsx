@@ -3,13 +3,18 @@ import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import { Button, Card, Dropdown, DropdownButton, FormControl, InputGroup } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import Switch from 'react-switch';
 import ProfilePicture from '../../assets/images/pet_profile_picture.png';
 import Navbar from '../../components/Navbar';
 import map from '../../store/map';
 import './styles.scss';
-import { getNewAcc } from '../../store/actions/account';
+import { getNewAcc, changeNewAcc } from '../../store/actions/account';
 import { logout } from '../../store/actions/auth';
 import { getPetProfilePicture } from '../../store/actions/pets';
+import { Carousel } from 'react-responsive-carousel';
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import tuto1 from '../../assets/images/google_logo.png';
+import tuto2 from '../../assets/images/facebook_logo.png';
 
 import FilterMenu from './FilterMenu';
 
@@ -27,6 +32,8 @@ class MyPlantsPage extends React.Component {
       filters: [],
       newAcc: false,
       actionItems: [],
+      tuto1,
+      tuto2,
     };
 
     this.getProfilePictures = this.getProfilePictures.bind(this);
@@ -37,6 +44,7 @@ class MyPlantsPage extends React.Component {
     this.sortBy = this.sortBy.bind(this);
     this.filterBy = this.filterBy.bind(this);
     this.getNewAcc = this.getNewAcc.bind(this);
+    this.changeNewAcc = this.changeNewAcc.bind(this);
   }
 
   componentDidMount() {
@@ -123,6 +131,14 @@ class MyPlantsPage extends React.Component {
     getNewAcc(
       (user) => { this.setState({ newAcc: user.val() }); }, this.props.store,
     );
+  }
+
+  changeNewAcc(newAccEvent) {
+    this.setState({ newAcc: newAccEvent });
+    const newAcc = newAccEvent;
+    changeNewAcc(newAcc);
+    /* Changes the email notifications status in the state. */
+    this.getNewAcc();
   }
 
   handleSearch(e) {
@@ -228,6 +244,13 @@ class MyPlantsPage extends React.Component {
                       <img src={this.state.tuto2} />
                     </div>
                   </Carousel>
+                  <label htmlFor="text-switch">
+                    <input type="hidden" id="text-switch" />
+                    <Switch
+                      onChange={this.changeNewAcc}
+                      checked={this.state.newAcc || false}
+                    />
+                  </label>
 
                 </div>
               </div>

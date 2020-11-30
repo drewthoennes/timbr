@@ -210,7 +210,7 @@ export function changeNewAcc(newAcc) {
   return firebase.database().ref(`users/${uid}`).once('value').then((user) => {
     if (user.exists()) {
       firebase.database().ref(`users/${uid}`).update({
-        newAcc: false,
+        newAcc,
       });
     }
   });
