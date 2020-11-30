@@ -177,7 +177,7 @@ class MyPlantsPage extends React.Component {
 
       return aggregate;
     }, true);
-  }   
+  }
 
   render() {
     const { store: { pets, plants, account: { username } } } = this.props;
@@ -212,50 +212,70 @@ class MyPlantsPage extends React.Component {
     console.log("here");
     console.log(newAcc);
 
-    const tutorial = ()=>{
-      if(newAcc){
-        return <p>Welcome to timbr!</p>
-      } else{
-        return(
+    const tutorial = () => {
+      if (newAcc) {
+        return (
+          <div className="row h-100 ml-4 mr-4">
+            <div className="col-sm-3" />
+            <div className="col-sm-6 my-auto">
+              <div className="card h-100 border-light">
+                <div className="card-body text-center my-auto">
+                  <Carousel>
+                    <div>
+                      <img src={this.state.tuto1} />
+                    </div>
+                    <div>
+                      <img src={this.state.tuto2} />
+                    </div>
+                  </Carousel>
+
+                </div>
+              </div>
+            </div>
+            <div className="col-sm-3" />
+          </div>
+        )
+      } else {
+        return (
           <div className="container">
-          <span id="top-row">
-            <InputGroup>
-              <FormControl
-                name="search"
-                value={search}
-                onChange={this.handleSearch}
-                maxLength="40"
-                placeholder="Search through your plants"
-              />
+            <span id="top-row">
+              <InputGroup>
+                <FormControl
+                  name="search"
+                  value={search}
+                  onChange={this.handleSearch}
+                  maxLength="40"
+                  placeholder="Search through your plants"
+                />
 
-              <Dropdown as={InputGroup.Append}>
-                <Dropdown.Toggle>{`Filter${filters.length ? ` (${filters.length})` : ''}`}</Dropdown.Toggle>
-                <Dropdown.Menu as={FilterMenu} onChange={this.setFilters} plants={plants} align="right" />
-              </Dropdown>
+                <Dropdown as={InputGroup.Append}>
+                  <Dropdown.Toggle>{`Filter${filters.length ? ` (${filters.length})` : ''}`}</Dropdown.Toggle>
+                  <Dropdown.Menu as={FilterMenu} onChange={this.setFilters} plants={plants} align="right" />
+                </Dropdown>
 
-              <DropdownButton
-                as={InputGroup.Append}
-                title={sort ? `${uppercaseFirst(sort)} ${asc ? '\u2191' : '\u2193'}` : 'Sort By'}
-              >
-                <Dropdown.Item onSelect={() => this.sortBy('name')}>Name</Dropdown.Item>
-                <Dropdown.Item onSelect={() => this.sortBy('type')}>Type</Dropdown.Item>
-                <Dropdown.Item onSelect={() => this.sortBy('ownedSince')}>Owned Since</Dropdown.Item>
-                <Dropdown.Item onSelect={() => this.sortBy('birth')}>Age</Dropdown.Item>
-              </DropdownButton>
-            </InputGroup>
+                <DropdownButton
+                  as={InputGroup.Append}
+                  title={sort ? `${uppercaseFirst(sort)} ${asc ? '\u2191' : '\u2193'}` : 'Sort By'}
+                >
+                  <Dropdown.Item onSelect={() => this.sortBy('name')}>Name</Dropdown.Item>
+                  <Dropdown.Item onSelect={() => this.sortBy('type')}>Type</Dropdown.Item>
+                  <Dropdown.Item onSelect={() => this.sortBy('ownedSince')}>Owned Since</Dropdown.Item>
+                  <Dropdown.Item onSelect={() => this.sortBy('birth')}>Age</Dropdown.Item>
+                </DropdownButton>
+              </InputGroup>
 
-            <Link className="nav-link" to={`/${username}/new`}>
-              <Button>New Plant</Button>
-            </Link>
-          </span>
-          <p>new account:{' '}{newAcc ? 'true' : 'false'}</p>
-          
-          {plantCards}
-        </div>
+              <Link className="nav-link" to={`/${username}/new`}>
+                <Button>New Plant</Button>
+              </Link>
+            </span>
+            <p>new account:{' '}{newAcc ? 'true' : 'false'}</p>
+
+            {plantCards}
+          </div>
         )
       }
     }
-    
+
 
     const plantCards = filteredAndSortedPets.length ? filteredAndSortedPets.map(([id, pet]) => (
       <span className="plant-link" key={id}>
