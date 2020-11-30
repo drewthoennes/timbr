@@ -38,7 +38,9 @@ const PetCareFreqsChart = ({ data, height, xLabel }) => (
 );
 
 PetCareFreqsChart.propTypes = {
-  data: PropTypes.object.isRequired,
+  data: PropTypes.array.isRequired,
   height: PropTypes.number.isRequired,
   xLabel: PropTypes.string.isRequired,
 };
+
+export default PetCareFreqsChart;

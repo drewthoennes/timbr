@@ -50,7 +50,7 @@ const PetsOverTimeChart = ({ data, height }) => {
 };
 
 PetsOverTimeChart.propTypes = {
-  data: PropTypes.object.isRequired,
+  data: PropTypes.array.isRequired,
   height: PropTypes.number.isRequired,
 };
 
