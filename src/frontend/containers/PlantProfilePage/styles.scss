@@ -32,6 +32,7 @@ $mint: #78C2AD;
   .card-img {
     padding: 12px;
     max-width: 100%;
+    height: 200px;
     cursor: pointer;
   }
 
@@ -44,10 +45,11 @@ $mint: #78C2AD;
     }
   }
   section.no-border {
-    border-bottom: 0px;
+    border-bottom: 0;
+    padding-bottom: 0;
   }
 
-  #plant-name-and-information {
+  #plant-picture-and-information {
     display: flex;
     flex-direction: row;
     justify-content: space-around;

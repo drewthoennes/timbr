@@ -39,6 +39,7 @@ class PlantProfilePage extends React.Component {
       carnivorous: false,
       feedFreq: '',
       fertFreq: 0,
+      rotateFreq: 0,
       profilePic: ProfilePicture,
       growthPics: {},
       eventList: [],
@@ -181,7 +182,7 @@ class PlantProfilePage extends React.Component {
     const { own, store: { users, pets, account: { username: ownUsername } } } = this.props;
     const { history, match: { params: { username, id } } } = this.props;
     const { speciesName, scientificName, description, carnivorous,
-      waterFreq, fertFreq, feedFreq, eventList,
+      waterFreq, fertFreq, feedFreq, rotateFreq, eventList,
       profilePic, growthPics, location, nextCycleDates } = this.state;
 
     let pet;
@@ -203,11 +204,13 @@ class PlantProfilePage extends React.Component {
         <Navbar />
 
         <div id="plant-profile-page" className="container">
-          <section id="plant-name-and-information" className="no-border">
+          <section id="plant-name">
+            <h1 className="text-center">{pet?.name}</h1>
+          </section>
+          <section id="plant-picture-and-information" className="no-border">
             <div>
-              <h1>{pet?.name}</h1>
               <span>
-                <img style={{ width: '150px' }} id="profile-picture" src={profilePic} alt="Profile" />
+                <img style={{ width: '200px', height: '200px' }} id="profile-picture" src={profilePic} alt="Profile" />
               </span>
             </div>
 
@@ -238,6 +241,7 @@ class PlantProfilePage extends React.Component {
                 dead={pet.dead ? pet.dead : 0}
                 waterFreq={waterFreq}
                 fertFreq={fertFreq}
+                rotateFreq={rotateFreq}
                 feedFreq={feedFreq}
                 carnivorous={carnivorous}
                 nextCycleDates={nextCycleDates}

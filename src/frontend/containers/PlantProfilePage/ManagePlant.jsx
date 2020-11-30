@@ -71,9 +71,11 @@ class ManagePlant extends React.PureComponent {
 
     return (
       <div>
-        <Button type="button" onClick={this.edit}>Edit</Button>
-        <Button type="button" onClick={this.toggleDeadModal}>Mark as Dead</Button>
-        <Button type="button" onClick={this.toggleDeleteModal}>Delete</Button>
+        <div className="d-flex justify-content-around">
+          <Button type="button" variant="link" onClick={this.edit}>Edit Plant</Button>
+          <Button type="button" variant="link" onClick={this.toggleDeleteModal}>Delete Plant</Button>
+          <Button type="button" variant="link" onClick={this.toggleDeadModal}>Mark As Dead</Button>
+        </div>
 
         <Modal show={showDelete} onHide={this.toggleDeleteModal}>
           <Modal.Header closeButton>
@@ -81,8 +83,8 @@ class ManagePlant extends React.PureComponent {
           </Modal.Header>
           <Modal.Body>Are you sure you want to delete {pet?.name}?</Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={this.toggleDeleteModal}>No</Button>
-            <Button variant="primary" onClick={this.delete}>Yes</Button>
+            <Button variant="link" onClick={this.toggleDeleteModal}>Cancel</Button>
+            <Button variant="primary" onClick={this.delete}>Confirm</Button>
           </Modal.Footer>
         </Modal>
 
@@ -99,7 +101,7 @@ class ManagePlant extends React.PureComponent {
             />
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={this.toggleDeadModal}>Wait, not dead yet!</Button>
+            <Button variant="link" onClick={this.toggleDeadModal}>Cancel</Button>
             <Button variant="primary" onClick={this.dead}>Confirm</Button>
           </Modal.Footer>
         </Modal>
