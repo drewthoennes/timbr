@@ -1,6 +1,7 @@
 @import "~@theme";
 
 #my-plants-page {
+
   .container {
     padding-top: 38px;
     padding-bottom: 38px;
@@ -45,5 +46,13 @@
     border-bottom: 1px solid rgba(0, 0, 0, 0.125);
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
+  }
+
+  .tutorial-page {
+    background-image: url('../../assets/images/background.jpg');
+    height: 78%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
   }
 }
