@@ -1,5 +1,5 @@
 import { firebase } from '../firebase/firebase';
-import { setUID, setUsername, setEmail, setTextsOn, setEmailsOn, setNewAcc,setAccountLoaded } from './actions/account';
+import { setUID, setUsername, setEmail, setTextsOn, setEmailsOn, setNewAcc, setAccountLoaded } from './actions/account';
 import { setPets } from './actions/pets';
 import setPlants from './actions/plants';
 
