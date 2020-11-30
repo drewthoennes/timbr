@@ -204,11 +204,13 @@ class PlantProfilePage extends React.Component {
         <Navbar />
 
         <div id="plant-profile-page" className="container">
-          <section id="plant-name-and-information">
+          <section id="plant-name">
+            <h1 className="text-center">{pet?.name}</h1>
+          </section>
+          <section id="plant-picture-and-information">
             <div>
-              <h1>{pet?.name}</h1>
               <span>
-                <img style={{ width: '150px' }} id="profile-picture" src={profilePic} alt="Profile" />
+                <img style={{ width: '200px', height: '200px' }} id="profile-picture" src={profilePic} alt="Profile" />
               </span>
             </div>
 
