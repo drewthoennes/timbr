@@ -1,9 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
-import { Button, Card, Dropdown, DropdownButton, FormControl, InputGroup, Nav } from 'react-bootstrap';
+import { Button, Card, Dropdown, DropdownButton, FormControl, InputGroup } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import Switch from 'react-switch';
 import { Carousel } from 'react-responsive-carousel';
 import ProfilePicture from '../../assets/images/pet_profile_picture.png';
 import Navbar from '../../components/Navbar';
@@ -60,12 +59,13 @@ class MyPlantsPage extends React.Component {
 
   componentDidUpdate(prevProps) {
     const { store: { account: { uid } }, history } = this.props;
+    const p = this.props;
 
     if (!uid) {
       history.push('/login');
     }
-    if (prevProps.store && this.props.store
-      && this.props.store.account.uid !== prevProps.store.account.uid) {
+    if (prevProps.store && p.store
+      && p.store.account.uid !== prevProps.store.account.uid) {
       this.getNewAcc();
     }
   }
@@ -127,15 +127,14 @@ class MyPlantsPage extends React.Component {
   }
 
   getNewAcc() {
+    const p = this.props;
     getNewAcc(
-      (user) => { this.setState({ newAcc: user.val() }); }, this.props.store,
+      (user) => { this.setState({ newAcc: user.val() }); }, p.store,
     );
   }
 
-  changeNewAcc(newAccEvent) {
+  changeNewAcc() {
     this.setState({ newAcc: false });
-    console.log("state now:");
-    console.log(newAccEvent);
     const newAcc = false;
     changeNewAcc(newAcc);
     /* Changes the email notifications status in the state. */
@@ -250,7 +249,7 @@ class MyPlantsPage extends React.Component {
         return (
           <body>
             <div className="tutorial-page">
-              <br/>
+              <br />
 
               <div className="row h-100 pt-5 ml-4 mr-4">
                 <div className="col-sm-3" />
@@ -320,7 +319,6 @@ class MyPlantsPage extends React.Component {
         </div>
       );
     };
-
 
     return (
       <div id="my-plants-page">
