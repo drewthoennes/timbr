@@ -2,6 +2,15 @@ import { firebase } from '../../firebase/firebase';
 import store from '../index';
 import constants from '../const';
 
+function buildTree(tree, root) {
+  const { pets } = store.getState();
+  const children = pets[root].children ?? [];
+
+  // eslint-disable-next-line no-param-reassign
+  tree[root] = children;
+  for (let i = 0; i < children.length; i++) buildTree(tree, children[i]);
+}
+
 export function constructGenealogy(petId) {
   const { pets } = store.getState();
 
@@ -12,22 +21,14 @@ export function constructGenealogy(petId) {
   }
 
   // Recursively build tree
-  let tree = {};
+  const tree = { root };
   buildTree(tree, root);
 
   return tree;
 }
 
-function buildTree(tree, root) {
-  const { pets } = store.getState();
-  const children = pets[root].children ?? [];
-
-  tree[root] = children;
-  for (let i = 0; i < children.length; i++) buildTree(tree, children[i]);
-}
-
 export function getPotentialParents(id) {
-  const { pets: { pets, genealogy: { trees } } } = store.getState();
+  const { pets } = store.getState();
 
   if (!pets[id]) return [];
 
@@ -52,14 +53,14 @@ export function setParent(petId, parentId) {
 
   // Remove pet from previous parent's children
   if (pets[petId].parent) {
-    const children = pets[pets[petId].parent].children.filter(child => child !== petId);
+    const children = pets[pets[petId].parent].children.filter((child) => child !== petId);
 
     firebase.database().ref(`/users/${uid}/pets/${pets[petId].parent}`).update({ children });
   }
 
   // Add pet to new parent's children
   if (pets[parentId]) {
-    const children = pets[parentId].children;
+    const { children } = pets[parentId];
     children.push(petId);
     firebase.database().ref(`/users/${uid}/pets/${parentId}`).update({ children });
   }
@@ -68,12 +69,9 @@ export function setParent(petId, parentId) {
 }
 
 export function setPets(pets) {
-  // const { families, trees } = constructGenealogy(pets);
   return store.dispatch({
     type: constants.SET_PETS,
     pets,
-    // families,
-    // trees,
   });
 }
 

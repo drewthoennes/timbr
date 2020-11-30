@@ -8,7 +8,7 @@ import Navbar from '../../components/Navbar';
 import map from '../../store/map';
 import './styles.scss';
 import { logout } from '../../store/actions/auth';
-import { getPetProfilePicture, constructGenealogy, getPotentialParents } from '../../store/actions/pets';
+import { getPetProfilePicture } from '../../store/actions/pets';
 
 import FilterMenu from './FilterMenu';
 
