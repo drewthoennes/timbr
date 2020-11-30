@@ -17,9 +17,6 @@ const Navbar = ({ store: { account: { username } } }) => (
           <Link className="nav-link" to={`/${username}`}>My Plants</Link>
         </span>
         <span className="plant-link">
-          <Link className="nav-link" to={`/${username}/new`}>New Plant</Link>
-        </span>
-        <span className="plant-link">
           <Link className="nav-link" to="/graveyard">My Graveyard</Link>
         </span>
       </Nav>

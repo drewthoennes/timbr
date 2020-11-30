@@ -17,11 +17,18 @@ const PetsOverTimeChart = ({ data, height }) => {
     tickValues.push(i);
   }
 
+  // Trim chart data for readability
+  let divisor = 1;
+  if (data.length > 12) {
+    while (data.length % 12 > 1) data.shift();
+    divisor = parseInt(data.length / 11, 10);
+  }
+
   return (
     <div>
       <FlexibleXYPlot xType="ordinal" height={height}>
         <HorizontalGridLines tickTotal={maxNumPlants} />
-        <XAxis />
+        <XAxis tickFormat={(v, i) => ((i % divisor) ? '' : v)} />
         <YAxis tickValues={tickValues} tickFormat={(v) => parseInt(v, 10)} />
         <ChartLabel
           text="Week"
