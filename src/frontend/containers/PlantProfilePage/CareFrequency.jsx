@@ -11,7 +11,6 @@ const getToday = () => {
 class CareFrequency extends React.PureComponent {
   constructor() {
     super();
-
     this.markWatered = this.markWatered.bind(this);
     this.markFertilized = this.markFertilized.bind(this);
     this.markTurned = this.markTurned.bind(this);
@@ -39,7 +38,7 @@ class CareFrequency extends React.PureComponent {
   }
 
   render() {
-    const { pet, waterFreq, fertFreq, feedFreq, carnivorous, dead } = this.props;
+    const { pet, waterFreq, fertFreq, feedFreq, carnivorous, dead, nextCycleDates } = this.props;
 
     const today = getToday();
     const hasWateredToday = !!pet?.watered?.history?.[today];
@@ -72,6 +71,11 @@ class CareFrequency extends React.PureComponent {
             <p>{`Fertilize Frequency: Every ${fertFreq} days`}</p>
             <p>{`Turn Frequency: Every ${fertFreq} days`}</p>
             {feedFreqJSX}
+
+            <p>{`Days remaining to next water cycle: ${nextCycleDates[0]} days`}</p>
+            <p>{`Days remaining to next fertilize cycle: ${nextCycleDates[1]} days`}</p>
+            <p>{`Days remaining to next rotate cycle: ${nextCycleDates[2]} days`}</p>
+            {carnivorous ? (<p>{`Days remaining to next feed cycle: ${nextCycleDates[3]} days`}</p>) : '' }
           </div>
 
           {dead ? <div />
@@ -135,6 +139,7 @@ CareFrequency.propTypes = {
   fertFreq: PropTypes.number.isRequired,
   feedFreq: PropTypes.any.isRequired,
   carnivorous: PropTypes.bool.isRequired,
+  nextCycleDates: PropTypes.array.isRequired,
   onChange: PropTypes.func,
 };
 
