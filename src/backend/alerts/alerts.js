@@ -115,16 +115,18 @@ cron.schedule('0 11 * * *', () => {
                 break;
               case 'rotate':
                 lastDate = e.val().turned;
-                freq = 7;
-                if (typeof (lastDate) !== 'undefined' && freq != null) {
-                  const lastActionDate = new Date(lastDate.last);
-                  const diffTime = Math.abs(new Date() - lastActionDate);
-                  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                  if (diffDays >= freq) {
+                admin.database().ref(`/plants/${species}/rotateFreq`).once('value', (data) => {
+                  freq = data.val();
+                  if (typeof (lastDate) !== 'undefined' && freq != null) {
+                    const lastActionDate = new Date(lastDate.last);
+                    const diffTime = Math.abs(new Date() - lastActionDate);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    if (diffDays >= freq) {
                     /* eslint-disable-next-line max-len */
-                    sendReminder(textsOn, emailsOn, userEmail, userPhoneNumber, reminder, plantName);
+                      sendReminder(textsOn, emailsOn, userEmail, userPhoneNumber, reminder, plantName);
+                    }
                   }
-                }
+                });
                 break;
               case 'feed':
                 admin.database().ref(`/plants/${species}/feedFreq`).once('value', (data) => {

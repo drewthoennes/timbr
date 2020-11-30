@@ -14,7 +14,7 @@ class GeneralInformation extends React.PureComponent {
         <p>{`Description: ${description}`}</p>
         <p>{`Born: ${birth}`}</p>
         <p>{`Owned Since: ${ownedSince}`}</p>
-        <p>{`Plant's Location: ${location}`}</p>
+        {location !== '' ? (<p>Plant's location: {location}</p>) : <p />}
         {dead === 1 ? (<p>Dead Since: {death}</p>) : <p />}
       </div>
     );

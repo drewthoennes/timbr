@@ -43,6 +43,7 @@ class PlantProfilePage extends React.Component {
       growthPics: {},
       eventList: [],
       location: '',
+      nextCycleDates: [],
     };
   }
 
@@ -55,6 +56,7 @@ class PlantProfilePage extends React.Component {
     this.getProfilePicture();
     this.getGrowthPictures();
     this.getPlantLocation();
+    this.getNextCycle();
 
     if (!username) return Promise.resolve();
     return setForeignUserPets(username, id).catch(() => history.push(`/${ownUsername}`));
@@ -114,11 +116,44 @@ class PlantProfilePage extends React.Component {
     this.setState({ location: pets[id].location });
   }
 
+  /* eslint-disable-next-line class-methods-use-this */
+  getTargetDate(date, daysToAdd) {
+    date.setDate(date.getDate() + daysToAdd);
+    const diffTime = Math.abs(date - new Date());
+    let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays > daysToAdd) {
+      diffDays = 0;
+    }
+    return [date, diffDays];
+  }
+
+  getNextCycle() {
+    const { match: { params: { id } } } = this.props;
+    const { store: { pets } } = this.props;
+    const { store: { plants } } = this.props;
+    const { type } = pets[id];
+
+    let nextFeedDates = [];
+    const nextWaterDates = this.getTargetDate(new Date(pets[id].watered.last),
+      plants[type].waterFreq);
+    const nextFertDates = this.getTargetDate(new Date(pets[id].fertilized.last),
+      plants[type].fertFreq);
+    const nextTurnDates = this.getTargetDate(new Date(pets[id].turned.last),
+      plants[type].rotateFreq);
+    if (plants[type].carnivorous) {
+      nextFeedDates = this.getTargetDate(new Date(pets[id].fed.last),
+        plants[type].feedFreq);
+    }
+
+    this.setState({ nextCycleDates: [nextWaterDates[1], nextFertDates[1],
+      nextTurnDates[1], nextFeedDates[1]] });
+  }
+
   fetchEventList() {
     // fetches action history
+    this.getNextCycle();
     const { match: { params: { id } } } = this.props;
     const { store: { pets } = {} } = this.props;
-
     const wateredDates = Object.keys(pets[id]?.watered.history || {});
     const fertilizedDates = Object.keys(pets[id]?.fertilized.history || {});
     const turnedDates = Object.keys(pets[id]?.turned.history || {});
@@ -147,7 +182,7 @@ class PlantProfilePage extends React.Component {
     const { history, match: { params: { username, id } } } = this.props;
     const { speciesName, scientificName, description, carnivorous,
       waterFreq, fertFreq, feedFreq, eventList,
-      profilePic, growthPics, location } = this.state;
+      profilePic, growthPics, location, nextCycleDates } = this.state;
 
     let pet;
     let dead = false;
@@ -183,6 +218,7 @@ class PlantProfilePage extends React.Component {
               birth={pet?.birth}
               ownedSince={pet?.ownedSince}
               location={location}
+
               dead={pet.dead ? pet.dead : 0}
               death={pet.death ? pet.death : ''}
             />
@@ -199,6 +235,7 @@ class PlantProfilePage extends React.Component {
                   fertFreq={fertFreq}
                   feedFreq={feedFreq}
                   carnivorous={carnivorous}
+                  nextCycleDates={nextCycleDates}
                   onChange={this.fetchEventList}
                 />
               </section>
