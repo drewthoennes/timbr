@@ -1,18 +1,18 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   FlexibleXYPlot,
   XAxis,
   YAxis,
   ChartLabel,
-  VerticalGridLines,
   HorizontalGridLines,
   LineSeries,
 } from 'react-vis';
 import 'react-vis/dist/style.css';
 
-export default ({ data, height }) => {
-  let tickValues = [];
-  let maxNumPlants = data.reduce((max, pt) => pt.y > max ? pt.y : max, 0);
+const PetsOverTimeChart = ({ data, height }) => {
+  const tickValues = [];
+  const maxNumPlants = data.reduce((max, pt) => (pt.y > max ? pt.y : max), 0);
   for (let i = 0; i <= maxNumPlants; i++) {
     tickValues.push(i);
   }
@@ -21,8 +21,8 @@ export default ({ data, height }) => {
     <div>
       <FlexibleXYPlot xType="ordinal" height={height}>
         <HorizontalGridLines tickTotal={maxNumPlants} />
-        <XAxis/>
-        <YAxis tickValues={tickValues} tickFormat={v => parseInt(v)} />
+        <XAxis />
+        <YAxis tickValues={tickValues} tickFormat={(v) => parseInt(v, 10)} />
         <ChartLabel
           text="Week"
           className="alt-x-label"
@@ -34,7 +34,7 @@ export default ({ data, height }) => {
         <ChartLabel
           text="Number of Plants"
           className="alt-y-label"
-          includeMargin={true}
+          includeMargin
           xPercent={0.01}
           yPercent={0.45}
           style={{ fontWeight: 'bold', transform: 'rotate(-90)' }}
@@ -47,4 +47,11 @@ export default ({ data, height }) => {
       </FlexibleXYPlot>
     </div>
   );
-}
+};
+
+PetsOverTimeChart.propTypes = {
+  data: PropTypes.object.isRequired,
+  height: PropTypes.number.isRequired,
+};
+
+export default PetsOverTimeChart;

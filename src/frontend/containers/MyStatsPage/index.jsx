@@ -1,22 +1,19 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
-import { Row, Col, Card, Jumbotron } from 'react-bootstrap';
+import { withRouter } from 'react-router-dom';
+import { Row, Col, Card } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import PetCareFreqChart from './PetCareFreqChart';
 import PetsOverTimeChart from './PetsOverTimeChart';
-import ProfilePicture from '../../assets/images/pet_profile_picture.png';
 import Navbar from '../../components/Navbar';
 import map from '../../store/map';
 import './styles.scss';
 import { logout } from '../../store/actions/auth';
-import { getPetProfilePicture } from '../../store/actions/pets';
 
 class MyStatsPage extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
-    this.state = { profilePics: {} };
     this.getNumPets = this.getNumPets.bind(this);
     this.getCareTotal = this.getCareTotal.bind(this);
     this.getPetCareFreqs = this.getPetCareFreqs.bind(this);
@@ -50,25 +47,31 @@ class MyStatsPage extends React.Component {
       });
   }
 
-  getNumPets(pets, living) {
+  getNumPets(living) {
+    const { store: { pets } } = this.props;
+
     let results = 0;
-    for (let i in pets) {
+    for (const i in pets) {
       if ((living ?? !pets[i].dead) === !pets[i].dead) results++;
     }
     return results;
   }
 
-  getCareTotal(pets, attr) {
+  getCareTotal(attr) {
+    const { store: { pets } } = this.props;
+
     let cares = 0;
-    for (let i in pets) {
-      for (let j in pets[i][attr].history) {
+    for (const i in pets) {
+      for (const j in pets[i][attr].history) {
         if (pets[i][attr].history[j]) cares++;
       }
     }
     return cares;
   }
 
-  getPetCareFreqs(pets, plants, attr) {
+  getPetCareFreqs(attr) {
+    const { store: { pets, plants } } = this.props;
+
     const chartData = [
       { x: '>1 week', y: 0 },
       { x: '1-2 weeks', y: 0 },
@@ -78,9 +81,9 @@ class MyStatsPage extends React.Component {
     ];
 
     const petTypes = [];
-    for (let i in pets) petTypes.push(pets[i].type);
+    for (const i in pets) petTypes.push(pets[i].type);
 
-    for (let i in petTypes) {
+    for (const i in petTypes) {
       const freq = Math.floor(plants[petTypes[i]][attr] / 7);
       chartData[freq].y++;
     }
@@ -88,11 +91,13 @@ class MyStatsPage extends React.Component {
     return chartData;
   }
 
-  getPetsOverTime(pets) {
+  getPetsOverTime() {
+    const { store: { pets } } = this.props;
+
     const chartData = [];
 
-    let d = new Date();
-    d.setHours(0,0,0,0);
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
 
     /* LCV is a date variable that decrements itself by one week every iteration
       Loop terminates when oldest ownership date is reached */
@@ -100,12 +105,14 @@ class MyStatsPage extends React.Component {
     for (d.setDate(d.getDate() - d.getDay()); olderPlants; d.setDate(d.getDate() - 7)) {
       let numAlive = 0;
       olderPlants = false;
-      for (let i in pets) {
+
+      for (const i in pets) {
         // If at least one pet is older than the current d value, flip olderPlants to true
         if (pets[i].ownedSince && new Date(pets[i].ownedSince) < d) olderPlants = true;
 
         // Check if the pet was alive during the current d value
-        if (new Date(pets[i].ownedSince ?? 0) < d && (!pets[i].dead || (new Date(pets[i].death) > d))) numAlive++;
+        if (new Date(pets[i].ownedSince ?? 0) < d
+          && (!pets[i].dead || (new Date(pets[i].death) > d))) numAlive++;
       }
 
       // Append results to chartData
@@ -116,23 +123,22 @@ class MyStatsPage extends React.Component {
   }
 
   render() {
-    const { store: { pets, plants, account: { username } } } = this.props;
-    console.log(pets);
-    const numPets = this.getNumPets(pets);
-    const numLivingPets = this.getNumPets(pets, true);
-    const numDeadPets = this.getNumPets(pets, false);
+    const { store: { account: { username } } } = this.props;
+    const numPets = this.getNumPets();
+    const numLivingPets = this.getNumPets(true);
+    const numDeadPets = this.getNumPets(false);
 
-    const totalWaterings = this.getCareTotal(pets, 'watered');
-    const totalTurnings = this.getCareTotal(pets, 'turned');
-    const totalFeedings = this.getCareTotal(pets, 'fed');
-    const totalFertilizings = this.getCareTotal(pets, 'fertilized');
+    const totalWaterings = this.getCareTotal('watered');
+    const totalTurnings = this.getCareTotal('turned');
+    const totalFeedings = this.getCareTotal('fed');
+    const totalFertilizings = this.getCareTotal('fertilized');
 
-    const waterFreqData = this.getPetCareFreqs(pets, plants, 'waterFreq');
-    const rotateFreqData = this.getPetCareFreqs(pets, plants, 'rotateFreq');
-    const feedFreqData = this.getPetCareFreqs(pets, plants, 'feedFreq');
-    const fertFreqData = this.getPetCareFreqs(pets, plants, 'fertFreq');
+    const waterFreqData = this.getPetCareFreqs('waterFreq');
+    const rotateFreqData = this.getPetCareFreqs('rotateFreq');
+    const feedFreqData = this.getPetCareFreqs('feedFreq');
+    const fertFreqData = this.getPetCareFreqs('fertFreq');
 
-    const plantsOverTimeData = this.getPetsOverTime(pets);
+    const plantsOverTimeData = this.getPetsOverTime();
 
     return (
       <div id="my-stats-page">
@@ -194,7 +200,7 @@ class MyStatsPage extends React.Component {
               <Card>
                 <Card.Body>
                   <Card.Title>Watering Requirements of My Plants</Card.Title>
-                  <PetCareFreqChart xLabel="Watering Frequency" data={waterFreqData} height={300}/>
+                  <PetCareFreqChart xLabel="Watering Frequency" data={waterFreqData} height={300} />
                 </Card.Body>
               </Card>
             </Col>
@@ -202,7 +208,7 @@ class MyStatsPage extends React.Component {
               <Card>
                 <Card.Body>
                   <Card.Title>Rotating Requirements of My Plants</Card.Title>
-                  <PetCareFreqChart xLabel="Rotating Frequency" data={rotateFreqData} height={300}/>
+                  <PetCareFreqChart xLabel="Rotating Frequency" data={rotateFreqData} height={300} />
                 </Card.Body>
               </Card>
             </Col>
@@ -212,7 +218,7 @@ class MyStatsPage extends React.Component {
               <Card>
                 <Card.Body>
                   <Card.Title>Feeding Requirements of My Plants</Card.Title>
-                  <PetCareFreqChart xLabel="Feeding Frequency" data={feedFreqData} height={300}/>
+                  <PetCareFreqChart xLabel="Feeding Frequency" data={feedFreqData} height={300} />
                 </Card.Body>
               </Card>
             </Col>
@@ -220,7 +226,7 @@ class MyStatsPage extends React.Component {
               <Card>
                 <Card.Body>
                   <Card.Title>Fertilizing Requirements of My Plants</Card.Title>
-                  <PetCareFreqChart xLabel="Fertilizing Frequency" data={fertFreqData} height={300}/>
+                  <PetCareFreqChart xLabel="Fertilizing Frequency" data={fertFreqData} height={300} />
                 </Card.Body>
               </Card>
             </Col>
@@ -228,10 +234,10 @@ class MyStatsPage extends React.Component {
           <Card>
             <Card.Body>
               <Card.Title>How Many Plants I've Owned Over Time</Card.Title>
-              <PetsOverTimeChart xLabel="Week" data={plantsOverTimeData} height={300}/>
+              <PetsOverTimeChart xLabel="Week" data={plantsOverTimeData} height={300} />
             </Card.Body>
           </Card>
-          <br/>
+          <br />
         </div>
       </div>
     );

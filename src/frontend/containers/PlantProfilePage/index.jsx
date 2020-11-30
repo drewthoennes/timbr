@@ -231,19 +231,19 @@ class PlantProfilePage extends React.Component {
           )}
 
           {!own ? '' : (
-              <section id="care-frequency">
-                <CareFrequency
-                  id={id}
-                  pet={pet}
-                  dead={pet.dead ? pet.dead : 0}
-                  waterFreq={waterFreq}
-                  fertFreq={fertFreq}
-                  feedFreq={feedFreq}
-                  carnivorous={carnivorous}
-                  nextCycleDates={nextCycleDates}
-                  onChange={this.fetchEventList}
-                />
-              </section>
+            <section id="care-frequency">
+              <CareFrequency
+                id={id}
+                pet={pet}
+                dead={pet.dead ? pet.dead : 0}
+                waterFreq={waterFreq}
+                fertFreq={fertFreq}
+                feedFreq={feedFreq}
+                carnivorous={carnivorous}
+                nextCycleDates={nextCycleDates}
+                onChange={this.fetchEventList}
+              />
+            </section>
           )}
 
           <section id="care-calendar">
