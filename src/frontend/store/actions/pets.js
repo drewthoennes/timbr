@@ -2,17 +2,15 @@ import { firebase } from '../../firebase/firebase';
 import store from '../index';
 import constants from '../const';
 
-function buildTree(tree, root) {
-  const { pets } = store.getState();
+function buildTree(tree, root, pets) {
   const children = pets[root].children ?? [];
 
   // eslint-disable-next-line no-param-reassign
   tree[root] = children;
-  for (let i = 0; i < children.length; i++) buildTree(tree, children[i]);
+  for (let i = 0; i < children.length; i++) buildTree(tree, children[i], pets);
 }
 
-export function constructGenealogy(petId) {
-  const { pets } = store.getState();
+export function constructGenealogy(petId, pets) {
 
   // Find root ancestor
   let root = petId;
@@ -22,7 +20,7 @@ export function constructGenealogy(petId) {
 
   // Recursively build tree
   const tree = { root };
-  buildTree(tree, root);
+  buildTree(tree, root, pets);
 
   return tree;
 }
