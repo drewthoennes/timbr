@@ -4,6 +4,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { Row, Col, Card, Jumbotron } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import PetCareFreqChart from './PetCareFreqChart';
+import PetsOverTimeChart from './PetsOverTimeChart';
 import ProfilePicture from '../../assets/images/pet_profile_picture.png';
 import Navbar from '../../components/Navbar';
 import map from '../../store/map';
@@ -19,6 +20,7 @@ class MyStatsPage extends React.Component {
     this.getNumPets = this.getNumPets.bind(this);
     this.getCareTotal = this.getCareTotal.bind(this);
     this.getPetCareFreqs = this.getPetCareFreqs.bind(this);
+    this.getPetsOverTime = this.getPetsOverTime.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
   }
 
@@ -51,7 +53,7 @@ class MyStatsPage extends React.Component {
   getNumPets(pets, living) {
     let results = 0;
     for (let i in pets) {
-      if (living ?? !pets[i].dead === !pets[i].dead) results++;
+      if ((living ?? !pets[i].dead) === !pets[i].dead) results++;
     }
     return results;
   }
@@ -86,8 +88,36 @@ class MyStatsPage extends React.Component {
     return chartData;
   }
 
+  getPetsOverTime(pets) {
+    const chartData = [];
+
+    let d = new Date();
+    d.setHours(0,0,0,0);
+
+    /* LCV is a date variable that decrements itself by one week every iteration
+      Loop terminates when oldest ownership date is reached */
+    let olderPlants = true;
+    for (d.setDate(d.getDate() - d.getDay()); olderPlants; d.setDate(d.getDate() - 7)) {
+      let numAlive = 0;
+      olderPlants = false;
+      for (let i in pets) {
+        // If at least one pet is older than the current d value, flip olderPlants to true
+        if (pets[i].ownedSince && new Date(pets[i].ownedSince) < d) olderPlants = true;
+
+        // Check if the pet was alive during the current d value
+        if (new Date(pets[i].ownedSince ?? 0) < d && (!pets[i].dead || (new Date(pets[i].death) > d))) numAlive++;
+      }
+
+      // Append results to chartData
+      chartData.unshift({ x: d.toISOString().split('T')[0], y: numAlive });
+    }
+
+    return chartData;
+  }
+
   render() {
     const { store: { pets, plants, account: { username } } } = this.props;
+    console.log(pets);
     const numPets = this.getNumPets(pets);
     const numLivingPets = this.getNumPets(pets, true);
     const numDeadPets = this.getNumPets(pets, false);
@@ -101,6 +131,8 @@ class MyStatsPage extends React.Component {
     const rotateFreqData = this.getPetCareFreqs(pets, plants, 'rotateFreq');
     const feedFreqData = this.getPetCareFreqs(pets, plants, 'feedFreq');
     const fertFreqData = this.getPetCareFreqs(pets, plants, 'fertFreq');
+
+    const plantsOverTimeData = this.getPetsOverTime(pets);
 
     return (
       <div id="my-stats-page">
@@ -162,7 +194,7 @@ class MyStatsPage extends React.Component {
               <Card>
                 <Card.Body>
                   <Card.Title>Watering Requirements of My Plants</Card.Title>
-                  <PetCareFreqChart xLabel="Watering Frequency" data={waterFreqData} height="300"/>
+                  <PetCareFreqChart xLabel="Watering Frequency" data={waterFreqData} height={300}/>
                 </Card.Body>
               </Card>
             </Col>
@@ -170,7 +202,7 @@ class MyStatsPage extends React.Component {
               <Card>
                 <Card.Body>
                   <Card.Title>Rotating Requirements of My Plants</Card.Title>
-                  <PetCareFreqChart xLabel="Rotating Frequency" data={rotateFreqData} height="300"/>
+                  <PetCareFreqChart xLabel="Rotating Frequency" data={rotateFreqData} height={300}/>
                 </Card.Body>
               </Card>
             </Col>
@@ -180,7 +212,7 @@ class MyStatsPage extends React.Component {
               <Card>
                 <Card.Body>
                   <Card.Title>Feeding Requirements of My Plants</Card.Title>
-                  <PetCareFreqChart xLabel="Feeding Frequency" data={feedFreqData} height="300"/>
+                  <PetCareFreqChart xLabel="Feeding Frequency" data={feedFreqData} height={300}/>
                 </Card.Body>
               </Card>
             </Col>
@@ -188,11 +220,18 @@ class MyStatsPage extends React.Component {
               <Card>
                 <Card.Body>
                   <Card.Title>Fertilizing Requirements of My Plants</Card.Title>
-                  <PetCareFreqChart xLabel="Fertilizing Frequency" data={fertFreqData} height="300"/>
+                  <PetCareFreqChart xLabel="Fertilizing Frequency" data={fertFreqData} height={300}/>
                 </Card.Body>
               </Card>
             </Col>
           </Row>
+          <Card>
+            <Card.Body>
+              <Card.Title>How Many Plants I've Owned Over Time</Card.Title>
+              <PetsOverTimeChart xLabel="Week" data={plantsOverTimeData} height={300}/>
+            </Card.Body>
+          </Card>
+          <br/>
         </div>
       </div>
     );
