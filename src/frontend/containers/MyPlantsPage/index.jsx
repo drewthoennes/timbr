@@ -7,6 +7,7 @@ import ProfilePicture from '../../assets/images/pet_profile_picture.png';
 import Navbar from '../../components/Navbar';
 import map from '../../store/map';
 import './styles.scss';
+import { getNewAcc } from '../../store/actions/account';
 import { logout } from '../../store/actions/auth';
 import { getPetProfilePicture } from '../../store/actions/pets';
 
@@ -24,6 +25,7 @@ class MyPlantsPage extends React.Component {
       sort: '',
       asc: true,
       filters: [],
+      newAcc: false,
       actionItems: [],
     };
 
@@ -34,6 +36,7 @@ class MyPlantsPage extends React.Component {
     this.setFilters = this.setFilters.bind(this);
     this.sortBy = this.sortBy.bind(this);
     this.filterBy = this.filterBy.bind(this);
+    this.getNewAcc = this.getNewAcc.bind(this);
   }
 
   componentDidMount() {
@@ -45,13 +48,18 @@ class MyPlantsPage extends React.Component {
 
     this.getProfilePictures();
     this.getCriticalActions();
+    this.getNewAcc();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     const { store: { account: { uid } }, history } = this.props;
 
     if (!uid) {
       history.push('/login');
+    }
+    if (prevProps.store && this.props.store
+      && this.props.store.account.uid !== prevProps.store.account.uid) {
+      this.getNewAcc();
     }
   }
 
@@ -111,6 +119,12 @@ class MyPlantsPage extends React.Component {
     });
   }
 
+  getNewAcc() {
+    getNewAcc(
+      (user) => { this.setState({ newAcc: user.val() }); }, this.props.store,
+    );
+  }
+
   handleSearch(e) {
     this.setState({ search: e.target.value });
   }
@@ -163,11 +177,11 @@ class MyPlantsPage extends React.Component {
 
       return aggregate;
     }, true);
-  }
+  }   
 
   render() {
     const { store: { pets, plants, account: { username } } } = this.props;
-    const { profilePics, search, sort, asc, filters, actionItems } = this.state;
+    const { profilePics, search, sort, asc, newAcc, filters, actionItems } = this.state;
 
     const lowerCaseSearch = search.toLowerCase();
     const defaultMessage = search || filters.length
@@ -195,26 +209,15 @@ class MyPlantsPage extends React.Component {
 
       return field1 < field2 ? 1 : -1;
     });
+    console.log("here");
+    console.log(newAcc);
 
-    const plantCards = filteredAndSortedPets.length ? filteredAndSortedPets.map(([id, pet]) => (
-      <span className="plant-link" key={id}>
-        <Link to={`/${username}/${id}`}>
-          <Card className="plant-card">
-            <Card.Img className="card-img" variant="top" src={profilePics[id]} />
-            <Card.Body>
-              <Card.Title>{pet.name}</Card.Title>
-              <Card.Text>{plants[pet.type].name}</Card.Text>
-              <Card.Text>{actionItems[id]}</Card.Text>
-            </Card.Body>
-          </Card>
-        </Link>
-      </span>
-    )) : defaultMessage;
-
-    return (
-      <div id="my-plants-page">
-        <Navbar />
-        <div className="container">
+    const tutorial = ()=>{
+      if(newAcc){
+        return <p>Welcome to timbr!</p>
+      } else{
+        return(
+          <div className="container">
           <span id="top-row">
             <InputGroup>
               <FormControl
@@ -245,9 +248,34 @@ class MyPlantsPage extends React.Component {
               <Button>New Plant</Button>
             </Link>
           </span>
-
+          <p>new account:{' '}{newAcc ? 'true' : 'false'}</p>
+          
           {plantCards}
         </div>
+        )
+      }
+    }
+    
+
+    const plantCards = filteredAndSortedPets.length ? filteredAndSortedPets.map(([id, pet]) => (
+      <span className="plant-link" key={id}>
+        <Link to={`/${username}/${id}`}>
+          <Card className="plant-card">
+            <Card.Img className="card-img" variant="top" src={profilePics[id]} />
+            <Card.Body>
+              <Card.Title>{pet.name}</Card.Title>
+              <Card.Text>{plants[pet.type].name}</Card.Text>
+              <Card.Text>{actionItems[id]}</Card.Text>
+            </Card.Body>
+          </Card>
+        </Link>
+      </span>
+    )) : defaultMessage;
+
+    return (
+      <div id="my-plants-page">
+        <Navbar />
+        {tutorial()}
       </div>
     );
   }

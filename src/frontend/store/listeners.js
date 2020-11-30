@@ -1,5 +1,5 @@
 import { firebase } from '../firebase/firebase';
-import { setUID, setUsername, setEmail, setTextsOn, setEmailsOn, setAccountLoaded } from './actions/account';
+import { setUID, setUsername, setEmail, setTextsOn, setEmailsOn, setNewAcc,setAccountLoaded } from './actions/account';
 import { setPets } from './actions/pets';
 import setPlants from './actions/plants';
 
@@ -13,13 +13,14 @@ firebase.auth().onAuthStateChanged((user) => {
 
     userRef.on('value', (snapshot) => {
       if (!snapshot.val()) return;
-      const { username, email, textsOn, emailsOn, pets } = snapshot.val();
+      const { username, email, textsOn, emailsOn, newAcc, pets } = snapshot.val();
 
       Promise.all([
         setUsername(username),
         setEmail(email),
         setTextsOn(textsOn),
         setEmailsOn(emailsOn),
+        setNewAcc(newAcc),
         setPets(pets),
       ]).then(setAccountLoaded);
     });
