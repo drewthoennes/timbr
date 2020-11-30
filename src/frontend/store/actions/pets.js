@@ -2,50 +2,28 @@ import { firebase } from '../../firebase/firebase';
 import store from '../index';
 import constants from '../const';
 
-export function constructGenealogy(plants) {
-  let trees = {};
-  const families = Object.entries(plants).reduce((aggregate, [id, plant]) => {
-    let index = aggregate.findIndex((family) => {
-      const hasPlant = family.indexOf(id) !== -1;
-      const hasParent = plant.parent && family.indexOf(plant.parent) !== -1;
-      return hasPlant || hasParent;
-    });
+export function constructGenealogy(petId) {
+  const { pets } = store.getState();
 
-    if (index === -1) {
-      aggregate.push(plant.parent ? [id, plant.parent] : [id]);
-      index = aggregate.length - 1;
-    } else if (plant.parent && aggregate[index].indexOf(plant.parent) !== -1) {
-      // eslint-disable-next-line no-param-reassign
-      aggregate[index] = [...aggregate[index], id];
-    } else if (plant.parent) {
-      // eslint-disable-next-line no-param-reassign
-      aggregate[index] = [...aggregate[index], id, plant.parent];
-    } else {
-      // eslint-disable-next-line no-param-reassign
-      aggregate[index] = [...aggregate[index], id];
-    }
+  // Find root ancestor
+  let root = petId;
+  while (pets[root].parent) {
+    root = pets[root].parent;
+  }
 
-    if (!trees[id]) {
-      trees[id] = { family: index, children: [] };
-    }
+  // Recursively build tree
+  let tree = {};
+  buildTree(tree, root);
 
-    if (plant.parent) {
-      if (!trees[plant.parent]) {
-        trees[plant.parent] = { family: index, children: [] };
-      }
+  return tree;
+}
 
-      trees[plant.parent].children.push(id);
-    }
+function buildTree(tree, root) {
+  const { pets } = store.getState();
+  const children = pets[root].children ?? [];
 
-    return aggregate;
-  }, []);
-
-  // eslint-disable-next-line arrow-body-style
-  trees = Object.entries(trees).reduce((aggregate, [id, { family, children }]) => {
-    return { ...aggregate, [id]: { family: families[family], children } };
-  }, {});
-
-  return { families, trees };
+  tree[root] = children;
+  for (let i = 0; i < children.length; i++) buildTree(tree, children[i]);
 }
 
 export function getPotentialParents(id) {
@@ -54,33 +32,48 @@ export function getPotentialParents(id) {
   if (!pets[id]) return [];
 
   const { type, birth } = pets[id];
-  const { family } = trees[id];
+  const descendants = Object.keys(constructGenealogy(id));
 
   return Object.entries(pets).filter(([petId, plant]) => {
-    const isInFamily = family.indexOf(petId) !== -1;
+    const isDescendant = descendants.indexOf(petId) !== -1;
     const isSameType = plant.type === type;
     const isYounger = birth > plant.birth;
 
-    return !isInFamily && isSameType && isYounger;
+    return !isDescendant && isSameType && isYounger;
   }).map(([petId]) => petId);
 }
 
-export function setParent(child, parent) {
+export function setParent(petId, parentId) {
+  const { pets } = store.getState();
   const uid = firebase.auth().currentUser?.uid;
 
-  if (!child || !parent) return Promise.resolve();
-  if (!getPotentialParents(child).includes(parent)) return Promise.reject();
+  if (!petId) return Promise.resolve();
+  if (pets[parentId] && !getPotentialParents(petId).includes(parentId)) return Promise.reject();
 
-  return firebase.database().ref(`/users/${uid}/pets/${child}`).update({ parent });
+  // Remove pet from previous parent's children
+  if (pets[petId].parent) {
+    const children = pets[pets[petId].parent].children.filter(child => child !== petId);
+
+    firebase.database().ref(`/users/${uid}/pets/${pets[petId].parent}`).update({ children });
+  }
+
+  // Add pet to new parent's children
+  if (pets[parentId]) {
+    const children = pets[parentId].children;
+    children.push(petId);
+    firebase.database().ref(`/users/${uid}/pets/${parentId}`).update({ children });
+  }
+
+  return firebase.database().ref(`/users/${uid}/pets/${petId}`).update({ parent: parentId });
 }
 
 export function setPets(pets) {
-  const { families, trees } = constructGenealogy(pets);
+  // const { families, trees } = constructGenealogy(pets);
   return store.dispatch({
     type: constants.SET_PETS,
     pets,
-    families,
-    trees,
+    // families,
+    // trees,
   });
 }
 

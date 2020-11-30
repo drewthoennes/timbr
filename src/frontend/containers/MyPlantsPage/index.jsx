@@ -8,7 +8,7 @@ import Navbar from '../../components/Navbar';
 import map from '../../store/map';
 import './styles.scss';
 import { logout } from '../../store/actions/auth';
-import { getPetProfilePicture } from '../../store/actions/pets';
+import { getPetProfilePicture, constructGenealogy, getPotentialParents } from '../../store/actions/pets';
 
 import FilterMenu from './FilterMenu';
 
@@ -167,6 +167,7 @@ class MyPlantsPage extends React.Component {
 
   render() {
     const { store: { pets, plants, account: { username } } } = this.props;
+
     const { profilePics, search, sort, asc, filters, actionItems } = this.state;
 
     const lowerCaseSearch = search.toLowerCase();
