@@ -205,8 +205,8 @@ class MyPlantsPage extends React.Component {
 
     const lowerCaseSearch = search.toLowerCase();
     const defaultMessage = search || filters.length
-      ? <div class="text-center"><br/><br/><h6>No plants match the given query</h6></div>
-      : <div class="text-center"><br/><br/><h6>Add a plant to get started</h6></div>;
+      ? <div className="text-center"><br /><br /><h6>No plants match the given query</h6></div>
+      : <div className="text-center"><br /><br /><h6>Add a plant to get started</h6></div>;
 
     const alivePlants = Object.entries(pets).filter(([, pet]) => !pet.dead);
     let filteredAndSortedPets = search || filters.length
