@@ -53,7 +53,7 @@ export function deadPet(petId, epitaph, death) {
   return firebase.database().ref().update(updates);
 }
 
-export function setForeignUserPets(username, petId) {
+export function setForeignUserPets(username) {
   return firebase.database().ref('/users').orderByChild('username').equalTo(username)
     .once('value')
     .then((user) => {
@@ -61,15 +61,11 @@ export function setForeignUserPets(username, petId) {
         throw new Error('No user with this username exists');
       }
 
-      const data = Object.values(user.val())[0];
-      if (!data.pets?.[petId]) {
-        throw new Error('No pet with this ID exists for this user');
-      }
-
+      const { pets = {} } = Object.values(user.val())[0];
       return store.dispatch({
         type: constants.SET_FOREIGN_USER_PETS,
         username,
-        pets: data.pets,
+        pets,
       });
     });
 }

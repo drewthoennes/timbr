@@ -19,12 +19,8 @@ import ManagePlant from './ManagePlant';
 class PlantProfilePage extends React.Component {
   constructor(props) {
     super(props);
-    // const { store: { pets }, history, match: { params: { id } } } = props;
-    // if (!pets[id]) {
-    //   history.push('/notfound');
-    //   return;
-    // }
 
+    this.pets = this.pets.bind(this);
     this.getPlantDetails = this.getPlantDetails.bind(this);
     this.getProfilePicture = this.getProfilePicture.bind(this);
     this.getGrowthPictures = this.getGrowthPictures.bind(this);
@@ -48,7 +44,7 @@ class PlantProfilePage extends React.Component {
   }
 
   componentDidMount() {
-    const { match: { params: { username, id } } } = this.props;
+    const { match: { params: { username } } } = this.props;
     const { history, store: { account: { username: ownUsername } } } = this.props;
 
     this.getPlantDetails();
@@ -59,13 +55,21 @@ class PlantProfilePage extends React.Component {
     this.getNextCycle();
 
     if (!username) return Promise.resolve();
-    return setForeignUserPets(username, id).catch(() => history.push(`/${ownUsername}`));
+    return setForeignUserPets(username)
+      .catch(() => history.push(`/${ownUsername}`));
   }
 
   componentDidUpdate(prevProps) {
     if (JSON.stringify(prevProps) !== JSON.stringify(this.props)) {
       this.getPlantDetails();
     }
+  }
+
+  pets() {
+    const { own, match: { params: { username } }, store: { pets, users } } = this.props;
+
+    if (own) return pets;
+    return users[username]?.pets || {};
   }
 
   getProfilePicture() {
@@ -87,33 +91,17 @@ class PlantProfilePage extends React.Component {
     });
   }
 
-  getPlantType() {
-    const { own, store: { users, pets } } = this.props;
-    const { history, match: { params: { username, id } } } = this.props;
-
-    let pet;
-    if (!own) {
-      pet = users[username] ? users[username].pets[id] : { name: '', type: '' };
-    } else if (!pets[id]) {
-      history.push('/notfound');
-    } else {
-      pet = pets[id];
-    }
-    return pet?.type;
-  }
-
   getPlantDetails() {
-    const { store: { plants } } = this.props;
-    const type = this.getPlantType();
-    const plant = plants[type];
+    const { match: { params: { id } }, store: { plants } } = this.props;
+    const { type } = this.pets()[id] || { type: '' };
+    const plant = plants[type] || {};
 
     this.setState({ ...plants[type], speciesName: plant?.name || '' });
   }
 
   getPlantLocation() {
     const { match: { params: { id } } } = this.props;
-    const { store: { pets } = {} } = this.props;
-    this.setState({ location: pets[id].location });
+    this.setState({ location: this.pets()[id]?.location });
   }
 
   /* eslint-disable-next-line class-methods-use-this */
@@ -129,20 +117,20 @@ class PlantProfilePage extends React.Component {
 
   getNextCycle() {
     const { match: { params: { id } } } = this.props;
-    const { store: { pets } } = this.props;
     const { store: { plants } } = this.props;
-    const { type } = pets[id];
+    const pets = this.pets();
+    const { type } = pets[id] || { type: '' };
 
     let nextFeedDates = [];
-    const nextWaterDates = this.getTargetDate(new Date(pets[id].watered.last),
-      plants[type].waterFreq);
-    const nextFertDates = this.getTargetDate(new Date(pets[id].fertilized.last),
-      plants[type].fertFreq);
-    const nextTurnDates = this.getTargetDate(new Date(pets[id].turned.last),
-      plants[type].rotateFreq);
-    if (plants[type].carnivorous) {
-      nextFeedDates = this.getTargetDate(new Date(pets[id].fed.last),
-        plants[type].feedFreq);
+    const nextWaterDates = this.getTargetDate(new Date(pets[id]?.watered.last),
+      plants[type]?.waterFreq);
+    const nextFertDates = this.getTargetDate(new Date(pets[id]?.fertilized.last),
+      plants[type]?.fertFreq);
+    const nextTurnDates = this.getTargetDate(new Date(pets[id]?.turned.last),
+      plants[type]?.rotateFreq);
+    if (plants[type]?.carnivorous) {
+      nextFeedDates = this.getTargetDate(new Date(pets[id]?.fed.last),
+        plants[type]?.feedFreq);
     }
 
     this.setState({ nextCycleDates: [nextWaterDates[1], nextFertDates[1],
@@ -153,7 +141,8 @@ class PlantProfilePage extends React.Component {
     // fetches action history
     this.getNextCycle();
     const { match: { params: { id } } } = this.props;
-    const { store: { pets } = {} } = this.props;
+    const pets = this.pets();
+
     const wateredDates = Object.keys(pets[id]?.watered.history || {});
     const fertilizedDates = Object.keys(pets[id]?.fertilized.history || {});
     const turnedDates = Object.keys(pets[id]?.turned.history || {});
@@ -178,25 +167,14 @@ class PlantProfilePage extends React.Component {
   }
 
   render() {
-    const { own, store: { users, pets, account: { username: ownUsername } } } = this.props;
-    const { history, match: { params: { username, id } } } = this.props;
+    const { own, store: { account: { username: ownUsername } } } = this.props;
+    const { match: { params: { id } } } = this.props;
     const { speciesName, scientificName, description, carnivorous,
       waterFreq, fertFreq, feedFreq, eventList,
       profilePic, growthPics, location, nextCycleDates } = this.state;
+    const pets = this.pets();
 
-    let pet;
-    let dead = false;
-    if (!own) {
-      pet = users[username]
-        ? users[username].pets[id]
-        : { name: '', type: '', birth: '', ownedSince: '', death: '', watered: {}, fertilized: {}, turned: {}, fed: {}, dead: 0 };
-    } else if (!pets[id]) {
-      history.push('/notfound');
-      return null;
-    } else {
-      pet = pets[id];
-      dead = (pet?.dead === 1);
-    }
+    const pet = pets[id] || { name: '', birth: '', ownedSince: '', dead: false, death: '' };
 
     return (
       <div>
@@ -219,8 +197,8 @@ class PlantProfilePage extends React.Component {
               ownedSince={pet?.ownedSince}
               location={location}
 
-              dead={pet.dead ? pet.dead : 0}
-              death={pet.death ? pet.death : ''}
+              dead={pet?.dead ? pet.dead : 0}
+              death={pet?.death ? pet.death : ''}
             />
           </section>
 
@@ -251,7 +229,7 @@ class PlantProfilePage extends React.Component {
           </section>
 
           {
-            (!own || dead) ? '' : (
+            (!own || pet?.dead === 1) ? '' : (
               <section id="manage-plant">
                 <ManagePlant id={id} pet={pet} username={ownUsername} />
               </section>

@@ -8,7 +8,7 @@ import Navbar from '../../components/Navbar';
 import map from '../../store/map';
 import './styles.scss';
 import { logout } from '../../store/actions/auth';
-import { getPetProfilePicture } from '../../store/actions/pets';
+import { getPetProfilePicture, setForeignUserPets } from '../../store/actions/pets';
 
 import FilterMenu from './FilterMenu';
 
@@ -27,6 +27,7 @@ class MyPlantsPage extends React.Component {
       actionItems: [],
     };
 
+    this.pets = this.pets.bind(this);
     this.getProfilePictures = this.getProfilePictures.bind(this);
     this.getCriticalActions = this.getCriticalActions.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
@@ -37,16 +38,19 @@ class MyPlantsPage extends React.Component {
   }
 
   componentDidMount() {
-    const { store: { account: { uid } }, history } = this.props;
-
-    if (!uid) {
-      history.push('/login');
-    }
+    const { match: { params: { username } }, history } = this.props;
+    const { store: { account: { username: ownUsername } } } = this.props;
 
     this.getProfilePictures();
     this.getCriticalActions();
+
+    if (!username) return Promise.resolve();
+    return setForeignUserPets(username)
+      .then(this.getProfilePictures)
+      .catch(() => history.push(`/${ownUsername}`));
   }
 
+  // TODO: Remove this to allow unauthenticated users to view profiles?
   componentDidUpdate() {
     const { store: { account: { uid } }, history } = this.props;
 
@@ -55,10 +59,16 @@ class MyPlantsPage extends React.Component {
     }
   }
 
+  pets() {
+    const { own, match: { params: { username } }, store: { pets, users } } = this.props;
+
+    if (own) return pets;
+    return users[username]?.pets || {};
+  }
+
   getProfilePictures() {
-    const { store: { pets } } = this.props;
     const { profilePics } = this.state;
-    Object.keys(pets).forEach((id) => {
+    Object.keys(this.pets()).forEach((id) => {
       profilePics[id] = ProfilePicture;
       this.setState({ profilePics });
 
@@ -72,36 +82,35 @@ class MyPlantsPage extends React.Component {
   }
 
   getCriticalActions() {
-    const { store: { pets } } = this.props;
     const { store: { plants } } = this.props;
     const { actionItems } = this.state;
-    Object.keys(pets).forEach((id) => {
-      const { type } = pets[id];
+    Object.entries(this.pets()).forEach(([id, pet]) => {
+      const { type } = pet;
       if (actionItems[id] === undefined) {
         actionItems[id] = '';
       }
       // water
-      const diffWTime = Math.abs(new Date() - (new Date(pets[id].watered.last)));
+      const diffWTime = Math.abs(new Date() - (new Date(pet.watered.last)));
       const diffWDays = Math.ceil(diffWTime / (1000 * 60 * 60 * 24));
       if (diffWDays >= plants[type].waterFreq) {
         actionItems[id] = `${actionItems[id]}\n💦\n`;
         this.setState({ actionItems });
       }
 
-      const diffFTime = Math.abs(new Date() - (new Date(pets[id].fertilized.last)));
+      const diffFTime = Math.abs(new Date() - (new Date(pet.fertilized.last)));
       const diffFDays = Math.ceil(diffFTime / (1000 * 60 * 60 * 24));
       if (diffFDays >= plants[type].fertFreq) {
         actionItems[id] = `${actionItems[id]}\n🌱\n`;
         this.setState({ actionItems });
       }
-      const diffRTime = Math.abs(new Date() - (new Date(pets[id].turned.last)));
+      const diffRTime = Math.abs(new Date() - (new Date(pet.turned.last)));
       const diffRDays = Math.ceil(diffRTime / (1000 * 60 * 60 * 24));
       if (diffRDays >= plants[type].rotateFreq) {
         actionItems[id] = `${actionItems[id]}\n💃\n`;
         this.setState({ actionItems });
       }
       if (plants[type].carnivorous === true) {
-        const diffTimeFeed = Math.abs(new Date() - (new Date(pets[id].fed.last)));
+        const diffTimeFeed = Math.abs(new Date() - (new Date(pet.fed.last)));
         const diffDaysFeed = Math.ceil(diffTimeFeed / (1000 * 60 * 60 * 24));
         if (diffDaysFeed >= plants[type].feedFreq) {
           actionItems[id] = `${actionItems[id]}\n🍽️\n`;
@@ -166,7 +175,7 @@ class MyPlantsPage extends React.Component {
   }
 
   render() {
-    const { store: { pets, plants, account: { username } } } = this.props;
+    const { match: { params: { username } }, store: { plants } } = this.props;
     const { profilePics, search, sort, asc, filters, actionItems } = this.state;
 
     const lowerCaseSearch = search.toLowerCase();
@@ -174,7 +183,7 @@ class MyPlantsPage extends React.Component {
       ? <p>No plants match the given query</p>
       : <p>Add a plant to get started</p>;
 
-    const alivePlants = Object.entries(pets).filter(([, pet]) => !pet.dead);
+    const alivePlants = Object.entries(this.pets()).filter(([, pet]) => !pet.dead);
     let filteredAndSortedPets = search || filters.length
       ? alivePlants.filter(([, pet]) => {
         const name = pet.name.toLowerCase().indexOf(lowerCaseSearch) !== -1;
