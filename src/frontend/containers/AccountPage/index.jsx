@@ -13,7 +13,7 @@ import { Modal } from 'react-bootstrap';
 import { Container, Row, Col } from 'reactstrap';
 import map from '../../store/map';
 import './styles.scss';
-import { getNewAcc, changeNewAcc, getUsername, getPhoneNumber, getProfilePicture, getTextsOn, getEmailsOn, changeUsername, changePhoneNumber, changeEmailsOn, changeTextsOn, changeProfilePicture, isEmailVerified, sendVerificationEmail, deleteAccount } from '../../store/actions/account';
+import { getUsername, getPhoneNumber, getProfilePicture, getTextsOn, getEmailsOn, changeUsername, changePhoneNumber, changeEmailsOn, changeTextsOn, changeProfilePicture, isEmailVerified, sendVerificationEmail, deleteAccount } from '../../store/actions/account';
 import { getProviderId } from '../../store/actions/auth';
 import ProfilePicture from '../../assets/images/profile_picture.png';
 import Navbar from '../../components/Navbar';
@@ -31,8 +31,6 @@ class AccountPage extends React.Component {
     this.changeTextsOn = this.changeTextsOn.bind(this);
     this.getEmailsOn = this.getEmailsOn.bind(this);
     this.changeEmailsOn = this.changeEmailsOn.bind(this);
-    this.getNewAcc = this.getNewAcc.bind(this);
-    this.changeNewAcc = this.changeNewAcc.bind(this);
     this.changePhoneNumber = this.changePhoneNumber.bind(this);
     this.changeProfilePicture = this.changeProfilePicture.bind(this);
     this.deleteAccount = this.deleteAccount.bind(this);
@@ -44,7 +42,6 @@ class AccountPage extends React.Component {
       username: 'timbr-user',
       textsOn: false,
       emailsOn: false,
-      newAcc: false,
       phoneNumber: '',
       phoneError: '',
       profilePic: ProfilePicture,
@@ -66,7 +63,6 @@ class AccountPage extends React.Component {
     this.getCurrentProfilePicture();
     this.getTextsOn();
     this.getEmailsOn();
-    this.getNewAcc();
 
     // this function will set the canChangePassword and providerId in the state
     this.canChangePassword();
@@ -88,7 +84,6 @@ class AccountPage extends React.Component {
       this.getCurrentPhoneNumber();
       this.getTextsOn();
       this.getEmailsOn();
-      this.getNewAcc();
     }
   }
 
@@ -108,12 +103,6 @@ class AccountPage extends React.Component {
   getCurrentUsername() {
     getUsername(
       (user) => { this.mounted && this.setState({ username: user.val() }); }, this.props.store,
-    );
-  }
-
-  getNewAcc() {
-    getNewAcc(
-      (user) => { this.mounted && this.setState({ newAcc: user.val() }); }, this.props.store,
     );
   }
 
@@ -189,14 +178,6 @@ class AccountPage extends React.Component {
     changeEmailsOn(emailsOn);
     /* Changes the email notifications status in the state. */
     this.getEmailsOn();
-  }
-
-  changeNewAcc(newAccEvent) {
-    this.setState({ newAcc: newAccEvent });
-    const newAcc = newAccEvent;
-    changeEmailsOn(newAcc);
-    /* Changes the email notifications status in the state. */
-    this.getNewAcc();
   }
 
   changePhoneNumber() {
@@ -398,19 +379,6 @@ class AccountPage extends React.Component {
                 <Switch
                   onChange={this.changeTextsOn}
                   checked={this.state.textsOn || false}
-                />
-              </label>
-            </Col>
-          </Row>
-          <Row className="align-items-center mt-2">
-            <Col sm={3}><h5 className="text-right">New Account</h5></Col>
-            <Col sm={1} />
-            <Col sm={8}>
-              <label htmlFor="text-switch">
-                <input type="hidden" id="text-switch" />
-                <Switch
-                  onChange={this.changeNewAcc}
-                  checked={this.state.newAcc || false}
                 />
               </label>
             </Col>
