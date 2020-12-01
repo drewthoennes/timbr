@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
+import { Container, Row, Col } from 'reactstrap';
 import { addDate } from '../../store/actions/pets';
 import { Container, Row, Col } from 'reactstrap';
 
@@ -39,7 +40,8 @@ class CareFrequency extends React.PureComponent {
   }
 
   render() {
-    const { pet, waterFreq, fertFreq, feedFreq, rotateFreq, carnivorous, dead, nextCycleDates } = this.props;
+    const { pet, waterFreq, fertFreq, feedFreq,
+      rotateFreq, carnivorous, dead, nextCycleDates } = this.props;
 
     const today = getToday();
     const hasWateredToday = !!pet?.watered?.history?.[today];
@@ -47,10 +49,8 @@ class CareFrequency extends React.PureComponent {
     const hasTurnedToday = !!pet?.turned?.history?.[today];
     const hasFedToday = !!pet?.fed?.history?.[today];
 
-    let feedFreqJSX;
     let feedButtonJSX;
     if (carnivorous) {
-      feedFreqJSX = <p>{`Feed Frequency: Every ${feedFreq} days`}</p>;
       feedButtonJSX = (
         <Button
           type="button"
@@ -62,77 +62,151 @@ class CareFrequency extends React.PureComponent {
       );
     }
 
+    const isCarnivorous = () => {
+      if (carnivorous) {
+        return (
+          <div>
+            <Container className="mt-3">
+              <Row className="align-items-center mt-2">
+                <Col sm={3}>
+                  {dead
+                    ? (<h6 className="text-center">{`Required water every ${waterFreq} days`}</h6>)
+                    : (
+                      <div id="care-buttons">
+                        <h6 className="text-center">Water in</h6>
+                        <h4 className="text-center">{nextCycleDates[0]} days</h4>
+                        <Button
+                          type="button"
+                          disabled={hasWateredToday}
+                          onClick={hasWateredToday ? () => { } : this.markWatered}
+                        >
+                          {hasWateredToday ? 'Watered' : 'Water'}
+                        </Button>
+                        <p className="text-center"><i>{`Cycle lasts ${waterFreq} days`}</i></p>
+                      </div>
+                    )}
+                </Col>
+                <Col sm={3}>
+                  {dead
+                    ? (<h6 className="text-center">{`Required fertilization every ${fertFreq} days`}</h6>)
+                    : (
+                      <div id="care-buttons">
+                        <h6 className="text-center">Fertilize in</h6>
+                        <h4 className="text-center">{nextCycleDates[1]} days</h4>
+                        <Button
+                          type="button"
+                          disabled={hasFertilizedToday}
+                          onClick={hasFertilizedToday ? () => { } : this.markFertilized}
+                        >
+                          {hasFertilizedToday ? 'Fertilized' : 'Fertilize'}
+                        </Button>
+                        <p className="text-center"><i>{`Cycle lasts ${fertFreq} days`}</i></p>
+                      </div>
+                    )}
+                </Col>
+                <Col sm={3}>
+                  {dead
+                    ? (<h6 className="text-center">{`Required rotation every ${rotateFreq} days`}</h6>)
+                    : (
+                      <div id="care-buttons">
+                        <h6 className="text-center">Rotate in</h6>
+                        <h4 className="text-center">{nextCycleDates[2]} days</h4>
+                        <Button
+                          type="button"
+                          disabled={hasTurnedToday}
+                          onClick={hasTurnedToday ? () => { } : this.markTurned}
+                        >
+                          {hasTurnedToday ? 'Turned' : 'Turn'}
+                        </Button>
+                        <p className="text-center"><i>{`Cycle lasts ${rotateFreq} days`}</i></p>
+                      </div>
+                    )}
+                </Col>
+                <Col sm={3}>
+                  {dead
+                    ? (<h6 className="text-center">{`Required water every ${feedFreq} days`}</h6>)
+                    : (
+                      <div id="care-buttons">
+                        <h6 className="text-center">Feed in</h6>
+                        <h4 className="text-center">{nextCycleDates[3]} days</h4>
+                        {feedButtonJSX}
+                        <p className="text-center"><i>{`Cycle lasts ${waterFreq} days`}</i></p>
+                      </div>
+                    )}
+                </Col>
+              </Row>
+            </Container>
+          </div>
+        );
+      }
+      return (
+        <div>
+          <Container className="mt-3">
+            <Row className="align-items-center mt-2">
+              <Col sm={4}>
+                {dead
+                  ? (<h6 className="text-center">{`Required water every ${waterFreq} days`}</h6>)
+                  : (
+                    <div id="care-buttons">
+                      <h6 className="text-center">Water in</h6>
+                      <h4 className="text-center">{nextCycleDates[0]} days</h4>
+                      <Button
+                        type="button"
+                        disabled={hasWateredToday}
+                        onClick={hasWateredToday ? () => { } : this.markWatered}
+                      >
+                        {hasWateredToday ? 'Watered' : 'Water'}
+                      </Button>
+                      <p className="text-center"><i>{`Cycle lasts ${waterFreq} days`}</i></p>
+                    </div>
+                  )}
+              </Col>
+              <Col sm={4}>
+                {dead
+                  ? (<h6 className="text-center">{`Required fertilization every ${fertFreq} days`}</h6>)
+                  : (
+                    <div id="care-buttons">
+                      <h6 className="text-center">Fertilize in</h6>
+                      <h4 className="text-center">{nextCycleDates[1]} days</h4>
+                      <Button
+                        type="button"
+                        disabled={hasFertilizedToday}
+                        onClick={hasFertilizedToday ? () => { } : this.markFertilized}
+                      >
+                        {hasFertilizedToday ? 'Fertilized' : 'Fertilize'}
+                      </Button>
+                      <p className="text-center"><i>{`Cycle lasts ${fertFreq} days`}</i></p>
+                    </div>
+                  )}
+              </Col>
+              <Col sm={4}>
+                {dead
+                  ? (<h6 className="text-center">{`Required rotation every ${rotateFreq} days`}</h6>)
+                  : (
+                    <div id="care-buttons">
+                      <h6 className="text-center">Rotate in</h6>
+                      <h4 className="text-center">{nextCycleDates[2]} days</h4>
+                      <Button
+                        type="button"
+                        disabled={hasTurnedToday}
+                        onClick={hasTurnedToday ? () => { } : this.markTurned}
+                      >
+                        {hasTurnedToday ? 'Turned' : 'Turn'}
+                      </Button>
+                      <p className="text-center"><i>{`Cycle lasts ${rotateFreq} days`}</i></p>
+                    </div>
+                  )}
+              </Col>
+            </Row>
+          </Container>
+        </div>
+      );
+    };
+
     return (
       <div>
-        <Container className="mt-3">
-          <Row className="align-items-center mt-2">
-            <Col sm={4}>
-              {dead ? <div />
-                : (
-                  <div id="care-buttons">
-                    <Button
-                      type="button"
-                      disabled={hasWateredToday}
-                      onClick={hasWateredToday ? () => { } : this.markWatered}
-                    >
-                      {hasWateredToday ? 'Watered' : 'Water'}
-                    </Button>
-                    {feedButtonJSX}
-                  </div>
-                )}
-                {dead ? 
-                (<h6 className="text-center">{`Required water every ${waterFreq} days`}</h6>) 
-                : (
-                  <h6 className="text-center">{`every ${waterFreq} days`}</h6>
-                )}
-              
-            </Col>
-            <Col sm={4}>
-              {dead ? <div />
-                : (
-                  <div id="care-buttons">
-                    <Button
-                      type="button"
-                      disabled={hasFertilizedToday}
-                      onClick={hasFertilizedToday ? () => { } : this.markFertilized}
-                    >
-                      {hasFertilizedToday ? 'Fertilized' : 'Fertilize'}
-                    </Button>
-                    {feedButtonJSX}
-                  </div>
-                )}
-              {dead ? 
-                (<h6 className="text-center">{`Required fertilization every ${fertFreq} days`}</h6>) 
-                : (
-                  <h6 className="text-center">{`every ${fertFreq} days`}</h6>
-                )}
-            </Col>
-            <Col sm={4}>
-              {dead ? <div />
-                : (
-                  <div id="care-buttons">
-                    <Button
-                      type="button"
-                      disabled={hasTurnedToday}
-                      onClick={hasTurnedToday ? () => { } : this.markTurned}
-                    >
-                      {hasTurnedToday ? 'Turned' : 'Turn'}
-                    </Button>
-                    {feedButtonJSX}
-                  </div>
-                )}
-              {dead ? 
-                (<h6 className="text-center">{`Required rotation every ${rotateFreq} days`}</h6>) 
-                : (
-                  <h6 className="text-center">{`every ${rotateFreq} days`}</h6>
-                )}
-            </Col>
-          </Row>
-        </Container>
-        <p>{`Days remaining to next water cycle: ${nextCycleDates[0]} days`}</p>
-            <p>{`Days remaining to next fertilize cycle: ${nextCycleDates[1]} days`}</p>
-            <p>{`Days remaining to next rotate cycle: ${nextCycleDates[2]} days`}</p>
-            {carnivorous ? (<p>{`Days remaining to next feed cycle: ${nextCycleDates[3]} days`}</p>) : '' }
+        <h2 className="text-center">Plant Care</h2>
+        {isCarnivorous()}
       </div>
     );
   }

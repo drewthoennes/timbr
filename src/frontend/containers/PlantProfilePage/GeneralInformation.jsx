@@ -8,18 +8,18 @@ class GeneralInformation extends React.PureComponent {
       location } = this.props;
 
     const locationProvided = () => {
-      if (location == '' && !dead) {
+      if (location === '' && !dead) {
         return (
           <div>
             <Container className="mt-4">
               <Row className="align-items-center mt-2">
                 <Col sm={6}>
                   <h4 className="text-center">{`${birth}`}</h4>
-                  <h5 className="text-center">{`🎂`}</h5>
+                  <h5 className="text-center"><span role="img" aria-label="cake">🎂</span></h5>
                 </Col>
                 <Col sm={6}>
                   <h4 className="text-center">{`${ownedSince}`}</h4>
-                  <h5 className="text-center">{`💞`}</h5>
+                  <h5 className="text-center"><span role="img" aria-label="heart">💞</span></h5>
                 </Col>
               </Row>
             </Container>
@@ -32,15 +32,17 @@ class GeneralInformation extends React.PureComponent {
             <Row className="align-items-center mt-2">
               <Col sm={4}>
                 <h4 className="text-center">{`${birth}`}</h4>
-                <h5 className="text-center">{`🎂`}</h5>
+                <h5 className="text-center"><span role="img" aria-label="cake">🎂</span></h5>
               </Col>
               <Col sm={4}>
                 <h4 className="text-center">{`${ownedSince}`}</h4>
-                <h5 className="text-center">{`💞`}</h5>
+                <h5 className="text-center"><span role="img" aria-label="heart">💞</span></h5>
               </Col>
               <Col sm={4}>
-                {dead === 1 ? (<h4 className="text-center">{death}</h4>) : <h4 className="text-center">{`${location}`}</h4>}
-                {dead === 1 ? (<h5 className="text-center">{`💀`}</h5>) : <h5 className="text-center">{`📍`}</h5>}
+                {dead === 1 ? (<h4 className="text-center">{death}</h4>)
+                  : <h4 className="text-center">{`${location}`}</h4>}
+                {dead === 1 ? (<h5 className="text-center"><span role="img" aria-label="skull">💀</span></h5>)
+                  : <h5 className="text-center"><span role="img" aria-label="location">📍</span></h5>}
               </Col>
             </Row>
           </Container>
