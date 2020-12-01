@@ -1,5 +1,4 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const apiRoutes = require('../../../src/backend/routes');
 
 let app;
@@ -7,9 +6,6 @@ let session;
 
 const createApp = () => {
   app = express();
-
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: false }));
 
   app.use((err, req, res, next) => {
     if (err instanceof SyntaxError) {
