@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
-import { Button, Card, Dropdown, DropdownButton, FormControl, InputGroup } from 'react-bootstrap';
+import { Button, Card, Container, Dropdown, DropdownButton, FormControl, InputGroup, Row, Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import ProfilePicture from '../../assets/images/pet_profile_picture.png';
 import Navbar from '../../components/Navbar';
@@ -245,8 +245,11 @@ class MyPlantsPage extends React.Component {
               <Button>New Plant</Button>
             </Link>
           </span>
-
-          {plantCards}
+          <Container className="mt-3">
+            <Row className="align-items-center mt-2">
+              <Col className="text-center">{plantCards}</Col>
+            </Row>
+          </Container>
         </div>
       </div>
     );
