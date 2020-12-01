@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Button, Card, Form, FormControl } from 'react-bootstrap';
+import { Button, ButtonGroup, Card, Form, FormControl, ToggleButton } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import {
   Dropdown,
@@ -31,7 +31,9 @@ class EditPlantProfilePage extends React.Component {
     this.state = {
       currPet: { ...pet },
       pet: { ...pet },
-      dropdownOpen: false,
+      isOffshoot: !!pet.parent,
+      typeDropdownOpen: false,
+      parentDropdownOpen: false,
       profilePic: ProfilePicture,
       profilePictureFeedback: '',
       profilePictureValidationState: 'default',
@@ -40,6 +42,11 @@ class EditPlantProfilePage extends React.Component {
       growthPictureFeedback: '',
       growthPictureValidationState: 'default',
       resetGrowthPicInput: 0,
+      errors: {
+        isBirthInvalid: false,
+        birthErrorMessage: '',
+        typeErrorMessage: '',
+      }
     };
 
     this.getProfilePicture = this.getProfilePicture.bind(this);
@@ -210,21 +217,39 @@ class EditPlantProfilePage extends React.Component {
     });
   }
 
-  handleDropdown(type) {
+  toggleTypeDropdown() {
+    this.setState((prevState) => ({
+      typeDropdownOpen: !prevState.typeDropdownOpen,
+    }));
+  }
+
+  handleChangeType(type) {
     const { pet } = this.state;
     this.setState({ pet: { ...pet, type } });
   }
 
-  toggleDropdown() {
+  toggleParentDropdown() {
     this.setState((prevState) => ({
-      dropdownOpen: !prevState.dropdownOpen,
+      parentDropdownOpen: !prevState.parentDropdownOpen,
     }));
   }
 
+  setIsOffshoot(isOffshoot) {
+    this.setState({ isOffshoot });
+  }
+
+  handleChangeParent(parent) {
+    const { pet } = this.state;
+    this.setState({ pet: { ...pet, parent } });
+  }
+
   render() {
-    const { pet, currPet, profilePic, growthPics,
+    const {
+      pet, currPet, profilePic, growthPics,
       profilePictureFeedback, profilePictureValidationState, resetProfilePicInput,
-      growthPictureFeedback, growthPictureValidationState, resetGrowthPicInput } = this.state;
+      growthPictureFeedback, growthPictureValidationState, resetGrowthPicInput,
+      typeDropdownOpen, parentDropdownOpen, type, isOffshoot, parent, errors
+    } = this.state;
     const { store: { plants } } = this.props;
     const today = (new Date()).toISOString().split('T')[0];
     const past = new Date((new Date().getFullYear() - 50)).toISOString().split('T')[0];
@@ -334,11 +359,9 @@ class EditPlantProfilePage extends React.Component {
             </Form.Group>
             <Form.Group controlId="type">
               <Form.Label>Plant's Type:</Form.Label>
-              { /* eslint-disable-next-line react/destructuring-assignment */}
-              <Dropdown name="type" isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
+              <Dropdown name="type" isOpen={typeDropdownOpen} toggle={this.toggleTypeDropdown}>
                 <DropdownToggle caret id="size-dropdown">
-                  { /* eslint-disable-next-line react/destructuring-assignment */}
-                  {plants[this.state.pet.type]?.name}
+                  {plants[pet.type]?.name}
                 </DropdownToggle>
                 <DropdownMenu required>
                   {Object.entries(plants)
@@ -347,14 +370,60 @@ class EditPlantProfilePage extends React.Component {
                     .map(([key, plant]) => (
                       <DropdownItem
                         key={key}
-                        onClick={() => this.handleDropdown(key)}
+                        onClick={() => this.handleChangeType(key)}
                       >
                         {plant.name}
                       </DropdownItem>
                     ))}
                 </DropdownMenu>
               </Dropdown>
+              <p className="error-message">{errors.typeErrorMessage}</p>
             </Form.Group>
+
+            <Form.Group>
+              <Form.Label>Is this plant an offshoot of another plant?</Form.Label>
+              <br />
+              <ButtonGroup toggle>
+                <ToggleButton
+                  type="radio"
+                  name="is-not-offshoot"
+                  value={false}
+                  checked={!isOffshoot}
+                  onChange={(e) => this.setIsOffshoot(e.currentTarget.value)}
+                >No</ToggleButton>
+                <ToggleButton
+                  type="radio"
+                  name="is-offshoot"
+                  value={true}
+                  checked={isOffshoot === "true"}
+                  onChange={(e) => this.setIsOffshoot(e.currentTarget.value)}
+                >Yes</ToggleButton>
+              </ButtonGroup>
+            </Form.Group>
+
+            { (isOffshoot === "true") && (
+              <Form.Group controlId="parent">
+                <Form.Label>Parent Plant:</Form.Label>
+                <Dropdown name="type" isOpen={parentDropdownOpen} toggle={this.toggleParentDropdown}>
+                  <DropdownToggle caret id="size-dropdown">
+                    {pets[parent]?.name}
+                  </DropdownToggle>
+                  <DropdownMenu required>
+                    {Object.entries(pets)
+                      .sort(([_, p1], [__, p2]) => p1.name < p2.name ? -1 : 1)
+                      .map(([key, pet]) => (
+                        <DropdownItem
+                          key={key}
+                          onClick={() => this.handleChangeParent(key)}
+                        >
+                          {pet.name}
+                        </DropdownItem>
+                      ))}
+                  </DropdownMenu>
+                </Dropdown>
+              </Form.Group>
+            )}
+
             <Form.Group>
               <Form.Label>Growth Pictures</Form.Label>
               <br />

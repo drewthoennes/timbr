@@ -19,11 +19,6 @@ import ManagePlant from './ManagePlant';
 class PlantProfilePage extends React.Component {
   constructor(props) {
     super(props);
-    // const { store: { pets }, history, match: { params: { id } } } = props;
-    // if (!pets[id]) {
-    //   history.push('/notfound');
-    //   return;
-    // }
 
     this.getPlantDetails = this.getPlantDetails.bind(this);
     this.getProfilePicture = this.getProfilePicture.bind(this);
@@ -198,7 +193,7 @@ class PlantProfilePage extends React.Component {
       pet = pets[id];
       dead = (pet?.dead === 1);
     }
-
+    
     return (
       <div>
         <Navbar />
@@ -218,12 +213,13 @@ class PlantProfilePage extends React.Component {
               speciesName={speciesName}
               scientificName={scientificName}
               description={description}
+              name={pet.name}
               birth={pet?.birth}
               ownedSince={pet?.ownedSince}
-              location={location}
-
-              dead={pet.dead ? pet.dead : 0}
-              death={pet.death ? pet.death : ''}
+              plantLocation={location ?? ''}
+              parent={pet.parent}
+              dead={pet.dead}
+              death={pet.death}
             />
           </section>
 
