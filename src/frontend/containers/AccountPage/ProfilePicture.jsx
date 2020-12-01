@@ -25,8 +25,7 @@ class ProfilePicture extends React.PureComponent {
 
   componentDidUpdate(prevProps) {
     const { uid } = this.props;
-    /* Changes username, text notifications status,
-    and email notifications status when uid changes. */
+    /* Changes profile picture when uid changes. */
     if (uid !== prevProps.uid) {
       this.getCurrentProfilePicture();
     }

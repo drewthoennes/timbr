@@ -13,18 +13,16 @@ import { Modal } from 'react-bootstrap';
 import { Container, Row, Col } from 'reactstrap';
 import map from '../../store/map';
 import './styles.scss';
-import { getUsername, getPhoneNumber, getTextsOn, getEmailsOn, changeUsername, changePhoneNumber, changeEmailsOn, changeTextsOn, isEmailVerified, sendVerificationEmail, deleteAccount } from '../../store/actions/account';
+import { getPhoneNumber, getTextsOn, getEmailsOn, changePhoneNumber, changeEmailsOn, changeTextsOn, isEmailVerified, sendVerificationEmail, deleteAccount } from '../../store/actions/account';
 import { getProviderId } from '../../store/actions/auth';
 import Navbar from '../../components/Navbar';
 import constants from '../../store/const';
 import ProfilePicture from './ProfilePicture';
+import Username from './Username';
 
 class AccountPage extends React.Component {
   constructor() {
     super();
-
-    this.changeUsername = this.changeUsername.bind(this);
-    this.getCurrentUsername = this.getCurrentUsername.bind(this);
     this.getCurrentPhoneNumber = this.getCurrentPhoneNumber.bind(this);
     this.getTextsOn = this.getTextsOn.bind(this);
     this.changeTextsOn = this.changeTextsOn.bind(this);
@@ -37,7 +35,6 @@ class AccountPage extends React.Component {
     this.canChangePassword = this.canChangePassword.bind(this);
 
     this.state = {
-      username: 'timbr-user',
       textsOn: false,
       emailsOn: false,
       phoneNumber: '',
@@ -54,7 +51,6 @@ class AccountPage extends React.Component {
 
   componentDidMount() {
     this.mounted = true;
-    this.getCurrentUsername();
     this.getCurrentPhoneNumber();
     this.getTextsOn();
     this.getEmailsOn();
@@ -70,11 +66,10 @@ class AccountPage extends React.Component {
       history.push('/login');
     }
 
-    /* Changes username, text notifications status,
+    /* Changes text notifications status,
     and email notifications status when uid changes. */
     if (prevProps.store && this.props.store
       && this.props.store.account.uid !== prevProps.store.account.uid) {
-      this.getCurrentUsername();
       this.getCurrentPhoneNumber();
       this.getTextsOn();
       this.getEmailsOn();
@@ -91,13 +86,6 @@ class AccountPage extends React.Component {
       providerId,
     });
     return providerId;
-  }
-
-  /* Calls the function to get current username and sets the state. */
-  getCurrentUsername() {
-    getUsername(
-      (user) => { this.mounted && this.setState({ username: user.val() }); }, this.props.store,
-    );
   }
 
   getCurrentPhoneNumber() {
@@ -135,19 +123,6 @@ class AccountPage extends React.Component {
       default:
         this.setState({ canChangePassword: false });
     }
-  }
-
-  changeUsername() {
-    const username = document.getElementById('username').value;
-    if (this.state.username === username) {
-      // no op if the current username and new username are the same
-      document.getElementById('username').value = '';
-      return;
-    }
-    changeUsername(username);
-    /* Changes the username in the state. */
-    this.getCurrentUsername();
-    document.getElementById('username').value = '';
   }
 
   changeTextsOn(textsEvent) {
@@ -236,28 +211,9 @@ class AccountPage extends React.Component {
           <ProfilePicture
             uid={uid}
           />
-          <Row className="align-items-center mt-3">
-            <Col sm={3}><h5 className="text-right">Username</h5></Col>
-            <Col sm={1} />
-            <Col sm={5}>
-              <input
-                id="username"
-                type="text"
-                className="form-control"
-                placeholder={this.state.username}
-              />
-            </Col>
-            <Col sm={3}>
-              <button
-                id="change-username"
-                type="button"
-                className="btn btn-outline-primary"
-                onClick={this.changeUsername}
-              >
-                Change Username
-              </button>
-            </Col>
-          </Row>
+          <Username
+            uid={uid}
+          />
           <Row className="align-items-center mt-3">
             <Col sm={3}><h5 className="text-right">Phone Number</h5></Col>
             <Col sm={1} />
