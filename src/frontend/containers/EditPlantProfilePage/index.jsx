@@ -397,11 +397,12 @@ class EditPlantProfilePage extends React.Component {
                   </Form.Group>
                 </Col>
               </Row>
-              <Row className="align-items-center mt-2 mb-5">
+              <Row className="align-items-center mt-2">
                 <Col className="text-center">
                   <Button variant="primary" type="submit">
                     Submit
                   </Button>
+                  <br/>
                 </Col>
               </Row>
             </Container>
