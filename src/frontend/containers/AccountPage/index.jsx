@@ -8,34 +8,28 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Switch from 'react-switch';
 import { Modal } from 'react-bootstrap';
 import { Container, Row, Col } from 'reactstrap';
 import map from '../../store/map';
 import './styles.scss';
-import { getTextsOn, getEmailsOn, changeEmailsOn, changeTextsOn, isEmailVerified, sendVerificationEmail, deleteAccount } from '../../store/actions/account';
+import { isEmailVerified, sendVerificationEmail, deleteAccount } from '../../store/actions/account';
 import { getProviderId } from '../../store/actions/auth';
 import Navbar from '../../components/Navbar';
 import constants from '../../store/const';
 import ProfilePicture from './ProfilePicture';
 import Username from './Username';
 import PhoneNumber from './PhoneNumber';
+import Notifications from './Notifications';
 
 class AccountPage extends React.Component {
   constructor() {
     super();
-    this.getTextsOn = this.getTextsOn.bind(this);
-    this.changeTextsOn = this.changeTextsOn.bind(this);
-    this.getEmailsOn = this.getEmailsOn.bind(this);
-    this.changeEmailsOn = this.changeEmailsOn.bind(this);
     this.deleteAccount = this.deleteAccount.bind(this);
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.canChangePassword = this.canChangePassword.bind(this);
 
     this.state = {
-      textsOn: false,
-      emailsOn: false,
       isModalOpen: false,
       isOauthModalOpen: false,
       confirmPassword: '',
@@ -48,8 +42,6 @@ class AccountPage extends React.Component {
 
   componentDidMount() {
     this.mounted = true;
-    this.getTextsOn();
-    this.getEmailsOn();
 
     // this function will set the canChangePassword and providerId in the state
     this.canChangePassword();
@@ -83,20 +75,6 @@ class AccountPage extends React.Component {
     return providerId;
   }
 
-  /* Calls the function to get current text notifications status and sets the state. */
-  getTextsOn() {
-    getTextsOn(
-      (user) => { this.mounted && this.setState({ textsOn: user.val() }); }, this.props.store,
-    );
-  }
-
-  /* Calls the function to get current email notifications status and sets the state. */
-  getEmailsOn() {
-    getEmailsOn(
-      (user) => { this.mounted && this.setState({ emailsOn: user.val() }); }, this.props.store,
-    );
-  }
-
   canChangePassword() {
     switch (this.getProvider()) {
       case constants.EMAIL_PROVIDER_ID:
@@ -107,22 +85,6 @@ class AccountPage extends React.Component {
       default:
         this.setState({ canChangePassword: false });
     }
-  }
-
-  changeTextsOn(textsEvent) {
-    this.setState({ textsOn: textsEvent });
-    const textsOn = textsEvent;
-    changeTextsOn(textsOn);
-    /* Changes the text notifications status in the state. */
-    this.getTextsOn();
-  }
-
-  changeEmailsOn(emailsEvent) {
-    this.setState({ emailsOn: emailsEvent });
-    const emailsOn = emailsEvent;
-    changeEmailsOn(emailsOn);
-    /* Changes the email notifications status in the state. */
-    this.getEmailsOn();
   }
 
   deleteAccount() {
@@ -188,32 +150,9 @@ class AccountPage extends React.Component {
               <p id="phone-error">{this.state.phoneError}</p>
             </Col>
           </Row>
-          <Row className="align-items-center">
-            <Col sm={3}><h5 className="text-right">Email Notifications</h5></Col>
-            <Col sm={1} />
-            <Col sm={8}>
-              <label htmlFor="email-switch">
-                <input type="hidden" id="email-switch" />
-                <Switch
-                  onChange={this.changeEmailsOn}
-                  checked={this.state.emailsOn || false}
-                />
-              </label>
-            </Col>
-          </Row>
-          <Row className="align-items-center mt-2">
-            <Col sm={3}><h5 className="text-right">Text Notifications</h5></Col>
-            <Col sm={1} />
-            <Col sm={8}>
-              <label htmlFor="text-switch">
-                <input type="hidden" id="text-switch" />
-                <Switch
-                  onChange={this.changeTextsOn}
-                  checked={this.state.textsOn || false}
-                />
-              </label>
-            </Col>
-          </Row>
+          <Notifications
+            uid={uid}
+          />
           { isEmailVerified() ? ''
             : (
               <Row className="align-items-center mt-2">

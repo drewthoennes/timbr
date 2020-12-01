@@ -127,8 +127,7 @@ export function changeTextsOn(textsOn) {
 }
 
 /* This function is used to get the texts status of the current user. */
-export function getTextsOn(cb, myStore) {
-  const { account: { uid } } = myStore;
+export function getTextsOn(cb, uid) {
   if (!uid) {
     return;
   }
@@ -154,8 +153,7 @@ export function changeEmailsOn(emailsOn) {
 }
 
 /* This function is used to get the texts status of the current user. */
-export function getEmailsOn(cb, myStore) {
-  const { account: { uid } } = myStore;
+export function getEmailsOn(cb, uid) {
   if (!uid) {
     return;
   }
