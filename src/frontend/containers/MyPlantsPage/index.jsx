@@ -167,6 +167,7 @@ class MyPlantsPage extends React.Component {
 
   render() {
     const { store: { pets, plants, account: { username } } } = this.props;
+
     const { profilePics, search, sort, asc, filters, actionItems } = this.state;
 
     const lowerCaseSearch = search.toLowerCase();
