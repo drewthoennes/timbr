@@ -44,6 +44,10 @@ $mint: #78C2AD;
       border-bottom: 0px;
     }
   }
+  section.no-border {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
 
   #plant-picture-and-information {
     display: flex;
