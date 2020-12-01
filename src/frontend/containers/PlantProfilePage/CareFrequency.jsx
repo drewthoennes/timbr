@@ -52,7 +52,7 @@ class CareFrequency extends React.PureComponent {
       feedFreqJSX = <p>{`Feed Frequency: Every ${feedFreq} days`}</p>;
       feedButtonJSX = (
         <div>
-          <p>{`Feed streak is: ${feedStreak}`}</p>
+          <p>{`Feed streak is: ${feedStreak} 🔥`}</p>
           <Button
             type="button"
             disabled={hasFedToday}
@@ -84,7 +84,7 @@ class CareFrequency extends React.PureComponent {
           {dead ? <div />
             : (
               <div id="care-buttons">
-                <p>{`Water streak is: ${waterStreak}`}</p>
+                <p>{`Water streak is: ${waterStreak} 🔥`}</p>
                 <Button
                   type="button"
                   disabled={hasWateredToday}
@@ -92,7 +92,7 @@ class CareFrequency extends React.PureComponent {
                 >
                   { hasWateredToday ? 'Watered' : 'Water' }
                 </Button>
-                <p>{`Fert streak is: ${fertStreak}`}</p>
+                <p>{`Fert streak is: ${fertStreak} 🔥`}</p>
                 <Button
                   type="button"
                   disabled={hasFertilizedToday}
@@ -100,7 +100,7 @@ class CareFrequency extends React.PureComponent {
                 >
                   { hasFertilizedToday ? 'Fertilized' : 'Fertilize' }
                 </Button>
-                <p>{`Turn streak is: ${turnStreak}`}</p>
+                <p>{`Turn streak is: ${turnStreak} 🔥`}</p>
                 <Button
                   type="button"
                   disabled={hasTurnedToday}
