@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
-import { Button, Card, Container, Dropdown, DropdownButton, FormControl, InputGroup, Row, Col } from 'react-bootstrap';
+import { Button, Card, Dropdown, DropdownButton, FormControl, InputGroup } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { Carousel } from 'react-responsive-carousel';
 import ProfilePicture from '../../assets/images/pet_profile_picture.png';
