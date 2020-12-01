@@ -264,6 +264,10 @@ class PlantProfilePage extends React.Component {
     this.getNextCycle();
     const { match: { params: { id } } } = this.props;
     const { store: { pets } = {} } = this.props;
+    this.setState({ waterStreak: pets[id].watered.streak });
+    this.setState({ fertStreak: pets[id].fertilized.streak });
+    this.setState({ turnStreak: pets[id].turned.streak });
+    this.setState({ feedStreak: pets[id].fed.streak });
     const wateredDates = Object.keys(pets[id]?.watered.history || {});
     const fertilizedDates = Object.keys(pets[id]?.fertilized.history || {});
     const turnedDates = Object.keys(pets[id]?.turned.history || {});
