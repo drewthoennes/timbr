@@ -38,7 +38,7 @@ class CareFrequency extends React.PureComponent {
   }
 
   render() {
-    const { pet, waterFreq, fertFreq, feedFreq, carnivorous, dead, nextCycleDates,waterStreak} = this.props;
+    const { pet, waterFreq, fertFreq, feedFreq, carnivorous, dead, nextCycleDates,waterStreak,fertStreak, turnStreak,feedStreak,streaks} = this.props;
     
     const today = getToday();
     const hasWateredToday = !!pet?.watered?.history?.[today];
@@ -50,6 +50,8 @@ class CareFrequency extends React.PureComponent {
     if (carnivorous) {
       feedFreqJSX = <p>{`Feed Frequency: Every ${feedFreq} days`}</p>;
       feedButtonJSX = (
+        <div>
+        <p>{`Feed streak is: ${feedStreak}`}</p>
         <Button
           type="button"
           disabled={hasFedToday}
@@ -57,6 +59,7 @@ class CareFrequency extends React.PureComponent {
         >
           { hasFedToday ? 'Fed' : 'Feed' }
         </Button>
+        </div>
       );
     }
 
@@ -66,6 +69,7 @@ class CareFrequency extends React.PureComponent {
 
         <span>
           <div>
+            <p>{`STREAKS ARE ${streaks}`}</p>
             <p>{`Water Frequency: Every ${waterFreq} days`}</p>
             <p>{`Fertilize Frequency: Every ${fertFreq} days`}</p>
             <p>{`Turn Frequency: Every ${fertFreq} days`}</p>
@@ -88,7 +92,7 @@ class CareFrequency extends React.PureComponent {
                 >
                   { hasWateredToday ? 'Watered' : 'Water' }
                 </Button>
-
+                <p>{`Fert streak is: ${fertStreak}`}</p>
                 <Button
                   type="button"
                   disabled={hasFertilizedToday}
@@ -96,7 +100,7 @@ class CareFrequency extends React.PureComponent {
                 >
                   { hasFertilizedToday ? 'Fertilized' : 'Fertilize' }
                 </Button>
-
+                <p>{`Turn streak is: ${turnStreak}`}</p>
                 <Button
                   type="button"
                   disabled={hasTurnedToday}
@@ -104,7 +108,6 @@ class CareFrequency extends React.PureComponent {
                 >
                   { hasTurnedToday ? 'Turned' : 'Turn' }
                 </Button>
-
                 {feedButtonJSX}
               </div>
             ) }
