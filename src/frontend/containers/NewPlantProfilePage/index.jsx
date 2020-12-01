@@ -312,7 +312,7 @@ class NewPlantProfilePage extends React.Component {
                       { /* eslint-disable-next-line react/destructuring-assignment */}
                       {plants[this.state.type]?.name}
                     </DropdownToggle>
-                    <DropdownMenu color="primary" required>
+                    <DropdownMenu className="dropdown-menu" color="primary" required>
                       {Object.entries(plants)
                         // eslint-disable-next-line
                         .sort(([_, p1], [__, p2]) => p1.name < p2.name ? -1 : 1)

@@ -31,4 +31,9 @@
     height: 100%;
     cursor: pointer;
   }
+
+  .dropdown-menu {
+    height: 200px;
+    overflow-y: scroll;
+  }
 }
