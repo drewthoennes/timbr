@@ -13,11 +13,11 @@ import { Modal } from 'react-bootstrap';
 import { Container, Row, Col } from 'reactstrap';
 import map from '../../store/map';
 import './styles.scss';
-import { getUsername, getPhoneNumber, getProfilePicture, getTextsOn, getEmailsOn, changeUsername, changePhoneNumber, changeEmailsOn, changeTextsOn, changeProfilePicture, isEmailVerified, sendVerificationEmail, deleteAccount } from '../../store/actions/account';
+import { getUsername, getPhoneNumber, getTextsOn, getEmailsOn, changeUsername, changePhoneNumber, changeEmailsOn, changeTextsOn, isEmailVerified, sendVerificationEmail, deleteAccount } from '../../store/actions/account';
 import { getProviderId } from '../../store/actions/auth';
-import ProfilePicture from '../../assets/images/profile_picture.png';
 import Navbar from '../../components/Navbar';
 import constants from '../../store/const';
+import ProfilePicture from './ProfilePicture';
 
 class AccountPage extends React.Component {
   constructor() {
@@ -26,13 +26,11 @@ class AccountPage extends React.Component {
     this.changeUsername = this.changeUsername.bind(this);
     this.getCurrentUsername = this.getCurrentUsername.bind(this);
     this.getCurrentPhoneNumber = this.getCurrentPhoneNumber.bind(this);
-    this.getCurrentProfilePicture = this.getCurrentProfilePicture.bind(this);
     this.getTextsOn = this.getTextsOn.bind(this);
     this.changeTextsOn = this.changeTextsOn.bind(this);
     this.getEmailsOn = this.getEmailsOn.bind(this);
     this.changeEmailsOn = this.changeEmailsOn.bind(this);
     this.changePhoneNumber = this.changePhoneNumber.bind(this);
-    this.changeProfilePicture = this.changeProfilePicture.bind(this);
     this.deleteAccount = this.deleteAccount.bind(this);
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -44,14 +42,12 @@ class AccountPage extends React.Component {
       emailsOn: false,
       phoneNumber: '',
       phoneError: '',
-      profilePic: ProfilePicture,
       isModalOpen: false,
       isOauthModalOpen: false,
       confirmPassword: '',
       reauthError: '',
       providerId: '',
       canChangePassword: false,
-      pictureFeedback: '',
     };
     this.mounted = false;
   }
@@ -60,7 +56,6 @@ class AccountPage extends React.Component {
     this.mounted = true;
     this.getCurrentUsername();
     this.getCurrentPhoneNumber();
-    this.getCurrentProfilePicture();
     this.getTextsOn();
     this.getEmailsOn();
 
@@ -80,7 +75,6 @@ class AccountPage extends React.Component {
     if (prevProps.store && this.props.store
       && this.props.store.account.uid !== prevProps.store.account.uid) {
       this.getCurrentUsername();
-      this.getCurrentProfilePicture();
       this.getCurrentPhoneNumber();
       this.getTextsOn();
       this.getEmailsOn();
@@ -114,14 +108,6 @@ class AccountPage extends React.Component {
           phoneNumber: phoneNumber.val().substring(2),
         });
       },
-    );
-  }
-
-  /* Calls the function to get the url for the current profile picture and sets the state. */
-  getCurrentProfilePicture() {
-    // Comment out the following lines when not testing profile picture.
-    getProfilePicture(
-      (picture) => { picture && this.mounted && this.setState({ profilePic: picture }); },
     );
   }
 
@@ -200,36 +186,6 @@ class AccountPage extends React.Component {
     document.getElementById('phone-number').value = '';
   }
 
-  // The following function changes the profile picture in the database.
-  changeProfilePicture(file) {
-    if (!file) {
-      return;
-    }
-    const fileSize = file.size / (1024 * 1024); // gets the file size in MB
-    if (fileSize > 1) {
-      this.setState({
-        pictureFeedback: 'File too large! Please upload a file of size less than 1 MB.',
-      });
-      return;
-    }
-    changeProfilePicture(file)
-      .then(() => {
-        this.getCurrentProfilePicture();
-        if (this.mounted) {
-          this.setState({
-            pictureFeedback: 'Profile picture updated!',
-          });
-        }
-      })
-      .catch((error) => {
-        if (this.mounted) {
-          this.setState({
-            pictureFeedback: error.message,
-          });
-        }
-      });
-  }
-
   deleteAccount() {
     deleteAccount(this.state.confirmPassword)
       .then(() => {
@@ -270,36 +226,16 @@ class AccountPage extends React.Component {
   }
 
   render() {
-    const { history } = this.props;
-    const styles = {
-      width: '150px',
-    };
+    const { store: { account: { uid } }, history } = this.props;
     return (
       <div id="account-page">
         <Navbar />
         <br />
         <h2 className="mt-1 mb-4 text-center">My Account</h2>
         <Container className="mt-3">
-          <Row className="align-items-center mt-2">
-            <Col sm={3}><h5 className="text-right">Profile Picture</h5></Col>
-            <Col sm={1} />
-            <Col sm={2}>
-              <img style={styles} id="profile-picture" src={this.state.profilePic} alt="Profile" />
-            </Col>
-            <Col sm={6}>
-              <label htmlFor="image-uploader">
-                Change Profile Picture:
-                <br />
-                <input
-                  type="file"
-                  id="image-uploader"
-                  accept="image/jpg,image/jpeg,image/png"
-                  onChange={(event) => { this.changeProfilePicture(event.target.files[0]); }}
-                />
-              </label>
-              <p id="picture-feedback">{this.state.pictureFeedback}</p>
-            </Col>
-          </Row>
+          <ProfilePicture
+            uid={uid}
+          />
           <Row className="align-items-center mt-3">
             <Col sm={3}><h5 className="text-right">Username</h5></Col>
             <Col sm={1} />
