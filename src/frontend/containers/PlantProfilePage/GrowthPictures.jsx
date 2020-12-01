@@ -12,7 +12,7 @@ class GrowthPictures extends React.PureComponent {
         <Card className="growth-pic-card" key={index}>
           <Card.Img className="card-img" variant="top" src={picture} />
           <Card.Body>
-            <Card.Title>{(new Date(index)).toISOString().split('T')[0]}</Card.Title>
+            <Card.Title className="text-center">{(new Date(index)).toISOString().split('T')[0]}</Card.Title>
           </Card.Body>
         </Card>
       ));
@@ -23,8 +23,10 @@ class GrowthPictures extends React.PureComponent {
 
     return (
       <div>
-        <h2>Growth Pictures</h2>
-        {cards?.length ? cards : <p style={{ margin: '0px' }}>{hintText}</p>}
+        <h2 className="text-center">Growth Pictures</h2>
+        <div className="d-flex justify-content-center">
+          {cards?.length ? cards : <p style={{ margin: '0px' }}>{hintText}</p>}
+        </div>
       </div>
     );
   }
