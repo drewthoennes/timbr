@@ -1,0 +1,50 @@
+@import "~@theme";
+
+#graveyard-page {
+  .container {
+    padding-top: 38px;
+    padding-bottom: 38px;
+  }
+
+  .container #top-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    & > a {
+      width: 110px;
+      min-width: 110px;
+      padding: 0px;
+      margin-left: 30px;
+
+      & > button {
+        width: 100%;
+      }
+    }
+  }
+
+  .plant-card {
+    width: 14rem;
+    height: 50rem;
+    margin-top: 19px;
+    display: inline-block;
+    box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.05);
+    transition: all 0.15s ease-in-out;
+
+    &:hover {
+      transform: scale(1.02);
+    }
+  }
+
+  .plant-link {
+    color: inherit;
+    padding-right: 19px;
+  }
+
+  .card-img {
+    max-width: 100-px;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+  }
+}

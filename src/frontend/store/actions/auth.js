@@ -22,6 +22,7 @@ export function addToDatabase() {
   let username = constants.USERNAME_PREFIX;
   const textsOn = false;
   const emailsOn = false;
+  const newAcc = true;
   const phoneNumber = constants.DEFAULT_PHONE_NUMBER;
   const profilePic = false;
 
@@ -40,6 +41,7 @@ export function addToDatabase() {
           phoneNumber,
           textsOn, // Stores a boolean value if the user has text notifications on or off
           emailsOn, // Stores a boolean value if the user has email notifications on or off
+          newAcc,
           profilePic,
         });
       });
