@@ -296,7 +296,7 @@ class PlantProfilePage extends React.Component {
     const { own, store: { users, pets, account: { username: ownUsername } } } = this.props;
     const { history, match: { params: { username, id } } } = this.props;
     const { speciesName, scientificName, description, carnivorous,
-      waterFreq, fertFreq, feedFreq, rotateFreq,eventList,
+      waterFreq, fertFreq, feedFreq, rotateFreq, eventList,
       profilePic, growthPics, location, nextCycleDates,
       waterStreak, fertStreak, turnStreak, feedStreak } = this.state;
 

@@ -47,7 +47,7 @@ class CareFrequency extends React.PureComponent {
     const hasFertilizedToday = !!pet?.fertilized?.history?.[today];
     const hasTurnedToday = !!pet?.turned?.history?.[today];
     const hasFedToday = !!pet?.fed?.history?.[today];
-    
+
     let feedButtonJSX;
     if (carnivorous) {
       feedButtonJSX = (
