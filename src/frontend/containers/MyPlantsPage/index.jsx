@@ -289,6 +289,7 @@ class MyPlantsPage extends React.Component {
       return (
         <div>
           <Navbar />
+          <br/>
           <div className="container">
             <span id="top-row">
               <InputGroup>

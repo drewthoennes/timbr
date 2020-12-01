@@ -95,6 +95,7 @@ class ManagePlant extends React.PureComponent {
           <Modal.Body>
             <input
               type="text"
+              maxlength="70"
               placeholder="Add an epitaph to remember your plant, if you'd like."
               onChange={(event) => { this.setState({ epitaph: event.target.value }); }}
               className="form-control w-100"

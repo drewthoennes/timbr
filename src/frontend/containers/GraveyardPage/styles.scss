@@ -2,31 +2,23 @@
 
 #my-graveyard-page {
 
-
   .container {
-    padding-top: 38px;
     padding-bottom: 38px;
   }
 
   .container #top-row {
     display: flex;
+    width: 100%;
     flex-direction: row;
     justify-content: space-between;
 
-    & > a {
-      width: 110px;
-      min-width: 110px;
-      padding: 0px;
-      margin-left: 30px;
-
-      & > button {
-        width: 100%;
-      }
-    }
   }
 
   .plant-card {
-    width: 16rem;
+    width: 14rem;
+    flex: 1;
+    padding: 16px;
+    background-color: #D3D3D3;
     // border-radius: 100%;
     border-top-right-radius: 47%;
     border-top-left-radius: 47%;
@@ -40,14 +32,18 @@
     }
   }
 
+  .dead-body-color{
+    color: black;
+  }
+
   .plant-link {
     color: inherit;
     padding-right: 19px;
   }
 
   .card-img {
-    width: 12rem;
-    height: 12rem;
+    width: 10rem;
+    height: 10rem;
     object-fit: cover;
     border: 1px solid rgba(0, 0, 0, 0.125);
     border-radius: 75%;
