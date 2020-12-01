@@ -1,6 +1,8 @@
 @import "~@theme";
 
-#graveyard-page {
+#my-graveyard-page {
+
+
   .container {
     padding-top: 38px;
     padding-bottom: 38px;
@@ -24,8 +26,10 @@
   }
 
   .plant-card {
-    width: 14rem;
-    height: 50rem;
+    width: 16rem;
+    // border-radius: 100%;
+    border-top-right-radius: 47%;
+    border-top-left-radius: 47%;
     margin-top: 19px;
     display: inline-block;
     box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.05);
@@ -42,9 +46,10 @@
   }
 
   .card-img {
-    max-width: 100-px;
+    width: 12rem;
+    height: 12rem;
+    object-fit: cover;
     border: 1px solid rgba(0, 0, 0, 0.125);
-    border-bottom-left-radius: 0px;
-    border-bottom-right-radius: 0px;
+    border-radius: 75%;
   }
 }

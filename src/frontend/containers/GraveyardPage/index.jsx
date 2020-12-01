@@ -71,7 +71,7 @@ class GraveyardPage extends React.Component {
           <span className="plant-link" key={id}>
             <Link to={`/${username}/${id}`}>
               <Card className="plant-card">
-                <Card.Img className="card-img" variant="top" src={profilePics[id]} />
+                <Card.Img className="card-img mt-3" variant="top" src={profilePics[id]} />
                 <Card.Body>
                   <Card.Title>{pet.name}</Card.Title>
                   <Card.Text>{pet.birth} to {pet.death}</Card.Text>
@@ -87,10 +87,10 @@ class GraveyardPage extends React.Component {
 
     return (
 
-      <div id="my-plants-page">
+      <div id="my-graveyard-page">
         <Navbar />
         <h2>My Graveyard</h2>
-        <div className="container">
+        <div className="container text-center">
           {plantCards}
         </div>
       </div>

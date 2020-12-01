@@ -42,10 +42,15 @@
   }
 
   .card-img {
-    max-width: 100%;
+    width: 12rem;
+    height: 12rem;
+    object-fit: cover;
     border: 1px solid rgba(0, 0, 0, 0.125);
-    border-bottom-left-radius: 0px;
-    border-bottom-right-radius: 0px;
+    border-radius: 75%;
+  }
+
+  .action-items {
+    color:white;
   }
 
   .tutorial-page {

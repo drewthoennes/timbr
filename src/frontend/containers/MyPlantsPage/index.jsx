@@ -123,6 +123,10 @@ class MyPlantsPage extends React.Component {
           this.setState({ actionItems });
         }
       }
+      if (actionItems[id] === '') {
+        actionItems[id] = 'No Actions Needed!';
+        this.setState({ actionItems });
+      }
     });
   }
 
@@ -229,15 +233,17 @@ class MyPlantsPage extends React.Component {
       return field1 < field2 ? 1 : -1;
     });
 
+    
+
     const plantCards = filteredAndSortedPets.length ? filteredAndSortedPets.map(([id, pet]) => (
       <span className="plant-link" key={id}>
         <Link to={`/${username}/${id}`}>
           <Card className="plant-card">
-            <Card.Img className="card-img" variant="top" src={profilePics[id]} />
+            <Card.Img className="card-img mt-2" variant="top" src={profilePics[id]} />
             <Card.Body>
-              <Card.Title>{pet.name}</Card.Title>
-              <Card.Text>{plants[pet.type].name}</Card.Text>
-              <Card.Text>{actionItems[id]}</Card.Text>
+              <Card.Title><h6><b>{pet.name}</b></h6></Card.Title>
+              <Card.Text><h6><small><i>{plants[pet.type].name}</i></small></h6></Card.Text>
+              <Card.Text className="action-items">{actionItems[id]}</Card.Text>
             </Card.Body>
           </Card>
         </Link>
@@ -314,7 +320,7 @@ class MyPlantsPage extends React.Component {
                 <Button>New Plant</Button>
               </Link>
             </span>
-            <Container className="mt-3">
+            <Container id="plant-content" className="mt-3">
             <Row className="align-items-center mt-2">
               <Col className="text-center">{plantCards}</Col>
             </Row>
