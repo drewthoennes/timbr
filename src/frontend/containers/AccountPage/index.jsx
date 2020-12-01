@@ -13,22 +13,21 @@ import { Modal } from 'react-bootstrap';
 import { Container, Row, Col } from 'reactstrap';
 import map from '../../store/map';
 import './styles.scss';
-import { getPhoneNumber, getTextsOn, getEmailsOn, changePhoneNumber, changeEmailsOn, changeTextsOn, isEmailVerified, sendVerificationEmail, deleteAccount } from '../../store/actions/account';
+import { getTextsOn, getEmailsOn, changeEmailsOn, changeTextsOn, isEmailVerified, sendVerificationEmail, deleteAccount } from '../../store/actions/account';
 import { getProviderId } from '../../store/actions/auth';
 import Navbar from '../../components/Navbar';
 import constants from '../../store/const';
 import ProfilePicture from './ProfilePicture';
 import Username from './Username';
+import PhoneNumber from './PhoneNumber';
 
 class AccountPage extends React.Component {
   constructor() {
     super();
-    this.getCurrentPhoneNumber = this.getCurrentPhoneNumber.bind(this);
     this.getTextsOn = this.getTextsOn.bind(this);
     this.changeTextsOn = this.changeTextsOn.bind(this);
     this.getEmailsOn = this.getEmailsOn.bind(this);
     this.changeEmailsOn = this.changeEmailsOn.bind(this);
-    this.changePhoneNumber = this.changePhoneNumber.bind(this);
     this.deleteAccount = this.deleteAccount.bind(this);
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -37,8 +36,6 @@ class AccountPage extends React.Component {
     this.state = {
       textsOn: false,
       emailsOn: false,
-      phoneNumber: '',
-      phoneError: '',
       isModalOpen: false,
       isOauthModalOpen: false,
       confirmPassword: '',
@@ -51,7 +48,6 @@ class AccountPage extends React.Component {
 
   componentDidMount() {
     this.mounted = true;
-    this.getCurrentPhoneNumber();
     this.getTextsOn();
     this.getEmailsOn();
 
@@ -70,7 +66,6 @@ class AccountPage extends React.Component {
     and email notifications status when uid changes. */
     if (prevProps.store && this.props.store
       && this.props.store.account.uid !== prevProps.store.account.uid) {
-      this.getCurrentPhoneNumber();
       this.getTextsOn();
       this.getEmailsOn();
     }
@@ -86,17 +81,6 @@ class AccountPage extends React.Component {
       providerId,
     });
     return providerId;
-  }
-
-  getCurrentPhoneNumber() {
-    // Get the phone number from the database, hard coded for now
-    getPhoneNumber(
-      (phoneNumber) => {
-        this.mounted && this.setState({
-          phoneNumber: phoneNumber.val().substring(2),
-        });
-      },
-    );
   }
 
   /* Calls the function to get current text notifications status and sets the state. */
@@ -139,26 +123,6 @@ class AccountPage extends React.Component {
     changeEmailsOn(emailsOn);
     /* Changes the email notifications status in the state. */
     this.getEmailsOn();
-  }
-
-  changePhoneNumber() {
-    // removes the leading zeroes
-    const number = parseInt(document.getElementById('phone-number').value, 10);
-
-    // Error handling for phone number
-    if (number < 0 || number.toString().length !== 10) {
-      this.setState({
-        phoneError: 'Phone number invalid!',
-      });
-      return;
-    }
-    this.setState({
-      phoneError: '',
-    });
-    changePhoneNumber(number);
-    /* Changes the phone number in the state. */
-    this.getCurrentPhoneNumber();
-    document.getElementById('phone-number').value = '';
   }
 
   deleteAccount() {
@@ -214,34 +178,9 @@ class AccountPage extends React.Component {
           <Username
             uid={uid}
           />
-          <Row className="align-items-center mt-3">
-            <Col sm={3}><h5 className="text-right">Phone Number</h5></Col>
-            <Col sm={1} />
-            <Col sm={5}>
-              <div className="input-group">
-                <div className="input-group-prepend">
-                  <span className="input-group-text">+1</span>
-                </div>
-                <input
-                  type="tel"
-                  className="form-control"
-                  placeholder={this.state.phoneNumber}
-                  id="phone-number"
-                />
-              </div>
-            </Col>
-            <Col sm={3}>
-              <button
-                id="change-phone-number"
-                type="button"
-                className="btn btn-outline-primary"
-                onClick={this.changePhoneNumber}
-              >
-                Change Phone Number
-              </button>
-
-            </Col>
-          </Row>
+          <PhoneNumber
+            uid={uid}
+          />
           <Row>
             <Col sm={3} />
             <Col sm={1} />
