@@ -195,14 +195,13 @@ class PlantProfilePage extends React.Component {
    // }
     else{
       //reset streak to 0 
-      console.log("inside else");
       if(pets[id].watered.streak>0 && waterHistory.includes(yesterday)===false){
       console.log("else case");
       updateStreak(id,'watered',0,today);
       this.setState({waterStreak:pets[id].watered.streak});
       }
       if(waterHistory.includes(yesterday) && waterHistory.includes(today)===false){
-      console.log("cond 2,did it yesterday but no today")
+      console.log("cond 2,user watered yesterday but hasnt yet watered today")
       
         this.setState({waterStreak:pets[id].watered.streak});
       }
