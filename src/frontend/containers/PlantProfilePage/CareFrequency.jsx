@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 import { Container, Row, Col } from 'reactstrap';
 import { addDate } from '../../store/actions/pets';
+import { Container, Row, Col } from 'reactstrap';
+import { addDate } from '../../store/actions/pets';
 
 const getToday = () => {
   const now = new Date();
