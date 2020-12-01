@@ -39,8 +39,8 @@ class CareFrequency extends React.PureComponent {
   }
 
   render() {
-    const { pet, waterFreq, fertFreq, feedFreq,
-      rotateFreq, carnivorous, dead, nextCycleDates } = this.props;
+    const { pet, waterFreq, fertFreq, feedFreq, rotateFreq, carnivorous, dead, nextCycleDates,
+      waterStreak, fertStreak, turnStreak, feedStreak } = this.props;
 
     const today = getToday();
     const hasWateredToday = !!pet?.watered?.history?.[today];
@@ -51,13 +51,17 @@ class CareFrequency extends React.PureComponent {
     let feedButtonJSX;
     if (carnivorous) {
       feedButtonJSX = (
-        <Button
-          type="button"
-          disabled={hasFedToday}
-          onClick={hasFedToday ? () => { } : this.markFed}
-        >
-          { hasFedToday ? 'Fed' : 'Feed'}
-        </Button>
+        <div>
+          {feedStreak === 0 || feedStreak === '0' ? (<p>Feed Streak: {0}</p>) : (<p> Feed Streak: {feedStreak + 1}</p>) }
+
+          <Button
+            type="button"
+            disabled={hasFedToday}
+            onClick={hasFedToday ? () => {} : this.markFed}
+          >
+            { hasFedToday ? 'Fed' : 'Feed' }
+          </Button>
+        </div>
       );
     }
 
@@ -74,6 +78,7 @@ class CareFrequency extends React.PureComponent {
                       <div id="care-buttons">
                         <h6 className="text-center">Water in</h6>
                         <h4 className="text-center">{nextCycleDates[0]} days</h4>
+                        {waterStreak === 0 || waterStreak === '0' ? (<p>Water Streak: {0}</p>) : (<p> Water Streak: {waterStreak + 1}</p>) }
                         <Button
                           type="button"
                           disabled={hasWateredToday}
@@ -92,6 +97,8 @@ class CareFrequency extends React.PureComponent {
                       <div id="care-buttons">
                         <h6 className="text-center">Fertilize in</h6>
                         <h4 className="text-center">{nextCycleDates[1]} days</h4>
+                        {fertStreak === 0 || fertStreak === '0' ? (<p>Fert Streak: {0}</p>) : (<p> Fert Streak: {fertStreak + 1}</p>) }
+
                         <Button
                           type="button"
                           disabled={hasFertilizedToday}
@@ -110,6 +117,8 @@ class CareFrequency extends React.PureComponent {
                       <div id="care-buttons">
                         <h6 className="text-center">Rotate in</h6>
                         <h4 className="text-center">{nextCycleDates[2]} days</h4>
+                        {turnStreak === 0 || turnStreak === '0' ? (<p>Turn Streak: {0}</p>) : (<p> Turn Streak: {turnStreak + 1}</p>) }
+
                         <Button
                           type="button"
                           disabled={hasTurnedToday}
@@ -149,6 +158,7 @@ class CareFrequency extends React.PureComponent {
                     <div id="care-buttons">
                       <h6 className="text-center">Water in</h6>
                       <h4 className="text-center">{nextCycleDates[0]} days</h4>
+                      {waterStreak === 0 || waterStreak === '0' ? (<p>Water Streak: {0}</p>) : (<p> Water Streak: {waterStreak + 1}</p>) }
                       <Button
                         type="button"
                         disabled={hasWateredToday}
@@ -167,6 +177,7 @@ class CareFrequency extends React.PureComponent {
                     <div id="care-buttons">
                       <h6 className="text-center">Fertilize in</h6>
                       <h4 className="text-center">{nextCycleDates[1]} days</h4>
+                      {fertStreak === 0 || fertStreak === '0' ? (<p>Fert Streak: {0}</p>) : (<p> Fert Streak: {fertStreak + 1}</p>) }
                       <Button
                         type="button"
                         disabled={hasFertilizedToday}
@@ -185,6 +196,7 @@ class CareFrequency extends React.PureComponent {
                     <div id="care-buttons">
                       <h6 className="text-center">Rotate in</h6>
                       <h4 className="text-center">{nextCycleDates[2]} days</h4>
+                      {turnStreak === 0 || turnStreak === '0' ? (<p>Turn Streak: {0}</p>) : (<p> Turn Streak: {turnStreak + 1}</p>) }
                       <Button
                         type="button"
                         disabled={hasTurnedToday}
@@ -238,6 +250,10 @@ CareFrequency.propTypes = {
   rotateFreq: PropTypes.number.isRequired,
   carnivorous: PropTypes.bool.isRequired,
   nextCycleDates: PropTypes.array.isRequired,
+  waterStreak: PropTypes.number.isRequired,
+  fertStreak: PropTypes.number.isRequired,
+  turnStreak: PropTypes.number.isRequired,
+  feedStreak: PropTypes.number.isRequired,
   onChange: PropTypes.func,
 };
 
