@@ -3,12 +3,18 @@ import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import { Button, Card, Container, Dropdown, DropdownButton, FormControl, InputGroup, Row, Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import { Carousel } from 'react-responsive-carousel';
 import ProfilePicture from '../../assets/images/pet_profile_picture.png';
 import Navbar from '../../components/Navbar';
 import map from '../../store/map';
 import './styles.scss';
+import { getNewAcc, changeNewAcc } from '../../store/actions/account';
 import { logout } from '../../store/actions/auth';
 import { getPetProfilePicture } from '../../store/actions/pets';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import tuto1 from '../../assets/images/tut1.png';
+import tuto2 from '../../assets/images/tut2.png';
+import careforplants from '../../assets/images/careforplants.gif';
 
 import FilterMenu from './FilterMenu';
 
@@ -24,6 +30,7 @@ class MyPlantsPage extends React.Component {
       sort: '',
       asc: true,
       filters: [],
+      newAcc: false,
       actionItems: [],
     };
 
@@ -34,6 +41,8 @@ class MyPlantsPage extends React.Component {
     this.setFilters = this.setFilters.bind(this);
     this.sortBy = this.sortBy.bind(this);
     this.filterBy = this.filterBy.bind(this);
+    this.getNewAcc = this.getNewAcc.bind(this);
+    this.changeNewAcc = this.changeNewAcc.bind(this);
   }
 
   componentDidMount() {
@@ -45,13 +54,19 @@ class MyPlantsPage extends React.Component {
 
     this.getProfilePictures();
     this.getCriticalActions();
+    this.getNewAcc();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     const { store: { account: { uid } }, history } = this.props;
+    const p = this.props;
 
     if (!uid) {
       history.push('/login');
+    }
+    if (prevProps.store && p.store
+      && p.store.account.uid !== prevProps.store.account.uid) {
+      this.getNewAcc();
     }
   }
 
@@ -111,6 +126,21 @@ class MyPlantsPage extends React.Component {
     });
   }
 
+  getNewAcc() {
+    const p = this.props;
+    getNewAcc(
+      (user) => { this.setState({ newAcc: user.val() }); }, p.store,
+    );
+  }
+
+  changeNewAcc() {
+    this.setState({ newAcc: false });
+    const newAcc = false;
+    changeNewAcc(newAcc);
+    /* Changes the email notifications status in the state. */
+    this.getNewAcc();
+  }
+
   handleSearch(e) {
     this.setState({ search: e.target.value });
   }
@@ -167,7 +197,10 @@ class MyPlantsPage extends React.Component {
 
   render() {
     const { store: { pets, plants, account: { username } } } = this.props;
-    const { profilePics, search, sort, asc, filters, actionItems } = this.state;
+    const {
+      profilePics, search, sort, asc, newAcc,
+      filters, actionItems,
+    } = this.state;
 
     const lowerCaseSearch = search.toLowerCase();
     const defaultMessage = search || filters.length
@@ -211,46 +244,89 @@ class MyPlantsPage extends React.Component {
       </span>
     )) : defaultMessage;
 
-    return (
-      <div id="my-plants-page">
-        <Navbar />
-        <div className="container">
-          <span id="top-row">
-            <InputGroup>
-              <FormControl
-                name="search"
-                value={search}
-                onChange={this.handleSearch}
-                maxLength="40"
-                placeholder="Search through your plants"
-              />
+    const tutorial = () => {
+      if (newAcc) {
+        return (
+          <body>
+            <div className="tutorial-page">
+              <br />
 
-              <Dropdown as={InputGroup.Append}>
-                <Dropdown.Toggle>{`Filter${filters.length ? ` (${filters.length})` : ''}`}</Dropdown.Toggle>
-                <Dropdown.Menu as={FilterMenu} onChange={this.setFilters} plants={plants} align="right" />
-              </Dropdown>
+              <div className="row h-100 pt-5 ml-4 mr-4">
+                <div className="col-sm-3" />
+                <div className="col-sm-6 my-auto">
+                  <div className="card h-100 border-primary">
+                    <div className="card-body text-center my-auto">
+                      <Carousel className="mb-0">
+                        <div>
+                          <img alt="" src={tuto1} />
+                        </div>
+                        <div>
+                          <img alt="" src={tuto2} />
+                        </div>
+                        <div>
+                          <img src={careforplants} alt="care" />
+                        </div>
+                      </Carousel>
+                      <Button type="button" className="btn btn-primary mt-0" onClick={this.changeNewAcc}>
+                        Finish
+                      </Button>
+                    </div>
+                    <div className="col-sm-3" />
 
-              <DropdownButton
-                as={InputGroup.Append}
-                title={sort ? `${uppercaseFirst(sort)} ${asc ? '\u2191' : '\u2193'}` : 'Sort By'}
-              >
-                <Dropdown.Item onSelect={() => this.sortBy('name')}>Name</Dropdown.Item>
-                <Dropdown.Item onSelect={() => this.sortBy('type')}>Type</Dropdown.Item>
-                <Dropdown.Item onSelect={() => this.sortBy('ownedSince')}>Owned Since</Dropdown.Item>
-                <Dropdown.Item onSelect={() => this.sortBy('birth')}>Age</Dropdown.Item>
-              </DropdownButton>
-            </InputGroup>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </body>
+        );
+      }
+      return (
+        <div>
+          <Navbar />
+          <div className="container">
+            <span id="top-row">
+              <InputGroup>
+                <FormControl
+                  name="search"
+                  value={search}
+                  onChange={this.handleSearch}
+                  maxLength="40"
+                  placeholder="Search through your plants"
+                />
 
-            <Link className="nav-link" to={`/${username}/new`}>
-              <Button>New Plant</Button>
-            </Link>
-          </span>
-          <Container className="mt-3">
+                <Dropdown as={InputGroup.Append}>
+                  <Dropdown.Toggle>{`Filter${filters.length ? ` (${filters.length})` : ''}`}</Dropdown.Toggle>
+                  <Dropdown.Menu as={FilterMenu} onChange={this.setFilters} plants={plants} align="right" />
+                </Dropdown>
+
+                <DropdownButton
+                  as={InputGroup.Append}
+                  title={sort ? `${uppercaseFirst(sort)} ${asc ? '\u2191' : '\u2193'}` : 'Sort By'}
+                >
+                  <Dropdown.Item onSelect={() => this.sortBy('name')}>Name</Dropdown.Item>
+                  <Dropdown.Item onSelect={() => this.sortBy('type')}>Type</Dropdown.Item>
+                  <Dropdown.Item onSelect={() => this.sortBy('ownedSince')}>Owned Since</Dropdown.Item>
+                  <Dropdown.Item onSelect={() => this.sortBy('birth')}>Age</Dropdown.Item>
+                </DropdownButton>
+              </InputGroup>
+
+              <Link className="nav-link" to={`/${username}/new`}>
+                <Button>New Plant</Button>
+              </Link>
+            </span>
+            <Container className="mt-3">
             <Row className="align-items-center mt-2">
               <Col className="text-center">{plantCards}</Col>
             </Row>
           </Container>
+          </div>
         </div>
+      );
+    };
+
+    return (
+      <div id="my-plants-page">
+        {tutorial()}
       </div>
     );
   }
