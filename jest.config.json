@@ -9,6 +9,6 @@
   "moduleNameMapper": {
     "^@fullcalendar\/": "identity-obj-proxy",
     "^react-phone-number-input\/input": "identity-obj-proxy",
-    ".+\\.(png|jpg|jpeg)$": "identity-obj-proxy"
+    ".+\\.(css|png|jpg|jpeg)$": "identity-obj-proxy"
   }
 }
