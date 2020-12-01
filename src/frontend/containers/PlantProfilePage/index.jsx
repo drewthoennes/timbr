@@ -364,7 +364,7 @@ class PlantProfilePage extends React.Component {
                   fertStreak={fertStreak}
                   turnStreak={turnStreak}
                   feedStreak={feedStreak}
-                  streaks={streaks}
+                  
                 
                 />
               </section>
