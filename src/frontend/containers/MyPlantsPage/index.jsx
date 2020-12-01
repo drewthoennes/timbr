@@ -14,7 +14,7 @@ import { getPetProfilePicture } from '../../store/actions/pets';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import tuto1 from '../../assets/images/tut1.png';
 import tuto2 from '../../assets/images/tut2.png';
-import tuto3 from '../../assets/images/tut3.png';
+import careforplants from '../../assets/images/careforplants.gif';
 
 import FilterMenu from './FilterMenu';
 
@@ -264,7 +264,7 @@ class MyPlantsPage extends React.Component {
                           <img alt="" src={tuto2} />
                         </div>
                         <div>
-                          <img alt="" src={tuto3} />
+                          <img src={careforplants} alt="care" />
                         </div>
                       </Carousel>
                       <Button type="button" className="btn btn-primary mt-0" onClick={this.changeNewAcc}>
