@@ -305,7 +305,7 @@ class NewPlantProfilePage extends React.Component {
                 </Form.Group>
 
                 <Form.Group controlId="type">
-                  <Form.Label>Plant's Type:</Form.Label>
+                  <Form.Label>Plant's Type</Form.Label>
                   { /* eslint-disable-next-line react/destructuring-assignment */}
                   <Dropdown color="primary" name="type" isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
                     <DropdownToggle color="primary" caret id="size-dropdown">
