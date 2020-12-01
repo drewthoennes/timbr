@@ -71,10 +71,11 @@ class ManagePlant extends React.PureComponent {
 
     return (
       <div>
-        <h2>Manage Plant</h2>
-        <Button type="button" onClick={this.edit}>Edit</Button>
-        <Button type="button" onClick={this.toggleDeleteModal}>Delete</Button>
-        <Button type="button" onClick={this.toggleDeadModal}>Ded</Button>
+        <div className="d-flex justify-content-around">
+          <Button type="button" variant="link" onClick={this.edit}>Edit Plant</Button>
+          <Button type="button" variant="link" onClick={this.toggleDeleteModal}>Delete Plant</Button>
+          <Button type="button" variant="link" onClick={this.toggleDeadModal}>Mark As Dead</Button>
+        </div>
 
         <Modal show={showDelete} onHide={this.toggleDeleteModal}>
           <Modal.Header closeButton>
@@ -82,18 +83,25 @@ class ManagePlant extends React.PureComponent {
           </Modal.Header>
           <Modal.Body>Are you sure you want to delete {pet?.name}?</Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={this.toggleDeleteModal}>No</Button>
-            <Button variant="primary" onClick={this.delete}>Yes</Button>
+            <Button variant="link" onClick={this.toggleDeleteModal}>Cancel</Button>
+            <Button variant="primary" onClick={this.delete}>Confirm</Button>
           </Modal.Footer>
         </Modal>
 
         <Modal show={showDead} onHide={this.toggleDeadModal}>
           <Modal.Header closeButton>
-            <Modal.Title>We're sorry about your loss.</Modal.Title>
+            <Modal.Title>We're sorry for your loss.</Modal.Title>
           </Modal.Header>
-          <input type="text" placeholder="Add an epitaph to remember your plant, if you'd like." onChange={(event) => { this.setState({ epitaph: event.target.value }); }} />
+          <Modal.Body>
+            <input
+              type="text"
+              placeholder="Add an epitaph to remember your plant, if you'd like."
+              onChange={(event) => { this.setState({ epitaph: event.target.value }); }}
+              className="form-control w-100"
+            />
+          </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={this.toggleDeadModal}>Wait, not dead yet!</Button>
+            <Button variant="link" onClick={this.toggleDeadModal}>Cancel</Button>
             <Button variant="primary" onClick={this.dead}>Confirm</Button>
           </Modal.Footer>
         </Modal>

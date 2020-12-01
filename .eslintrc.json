@@ -20,6 +20,8 @@
         "react"
     ],
     "rules": {
+        "no-restricted-syntax": "off",
+        "guard-for-in": "off",
         "react/forbid-prop-types": "off",
         "react/jsx-props-no-spreading": "off",
         "react/no-unescaped-entities": "off",

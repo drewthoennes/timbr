@@ -1,6 +1,7 @@
 @import "~@theme";
 
 #my-plants-page {
+
   .container {
     padding-top: 38px;
     padding-bottom: 38px;
@@ -24,7 +25,7 @@
   }
 
   .plant-card {
-    width: 12rem;
+    width: 14rem;
     margin-top: 19px;
     display: inline-block;
     box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.05);
@@ -42,8 +43,16 @@
 
   .card-img {
     max-width: 100%;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    border: 1px solid rgba(0, 0, 0, 0.125);
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
+  }
+
+  .tutorial-page {
+    background-image: url('../../assets/images/background.jpg');
+    height: 78%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
   }
 }

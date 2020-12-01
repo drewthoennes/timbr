@@ -52,6 +52,7 @@ class PlantProfilePage extends React.Component {
       carnivorous: false,
       feedFreq: '',
       fertFreq: 0,
+      rotateFreq: 0,
       profilePic: ProfilePicture,
       growthPics: {},
       eventList: [],
@@ -295,7 +296,7 @@ class PlantProfilePage extends React.Component {
     const { own, store: { users, pets, account: { username: ownUsername } } } = this.props;
     const { history, match: { params: { username, id } } } = this.props;
     const { speciesName, scientificName, description, carnivorous,
-      waterFreq, fertFreq, feedFreq, eventList,
+      waterFreq, fertFreq, feedFreq, rotateFreq,eventList,
       profilePic, growthPics, location, nextCycleDates,
       waterStreak, fertStreak, turnStreak, feedStreak } = this.state;
 
@@ -312,17 +313,18 @@ class PlantProfilePage extends React.Component {
       pet = pets[id];
       dead = (pet?.dead === 1);
     }
-
     return (
       <div>
         <Navbar />
 
         <div id="plant-profile-page" className="container">
-          <section id="plant-name-and-information">
+          <section id="plant-name">
+            <h1 className="text-center">{pet?.name}</h1>
+          </section>
+          <section id="plant-picture-and-information" className="no-border">
             <div>
-              <h1>{pet?.name}</h1>
               <span>
-                <img style={{ width: '150px' }} id="profile-picture" src={profilePic} alt="Profile" />
+                <img style={{ width: '200px', height: '200px' }} id="profile-picture" src={profilePic} alt="Profile" />
               </span>
             </div>
 
@@ -333,33 +335,38 @@ class PlantProfilePage extends React.Component {
               birth={pet?.birth}
               ownedSince={pet?.ownedSince}
               location={location}
+
               dead={pet.dead ? pet.dead : 0}
               death={pet.death ? pet.death : ''}
             />
           </section>
 
-          {
-            !own ? '' : (
-              <section id="care-frequency">
-                <CareFrequency
-                  id={id}
-                  pet={pet}
-                  dead={pet.dead ? pet.dead : 0}
-                  waterFreq={waterFreq}
-                  fertFreq={fertFreq}
-                  feedFreq={feedFreq}
-                  carnivorous={carnivorous}
-                  nextCycleDates={nextCycleDates}
-                  onChange={this.fetchEventList}
-                  waterStreak={waterStreak}
-                  fertStreak={fertStreak}
-                  turnStreak={turnStreak}
-                  feedStreak={feedStreak}
+          {(!own || dead) ? '' : (
+            <section id="manage-plant">
+              <ManagePlant id={id} pet={pet} username={ownUsername} />
+            </section>
+          )}
 
-                />
-              </section>
-            )
-          }
+          {!own ? '' : (
+            <section id="care-frequency">
+              <CareFrequency
+                id={id}
+                pet={pet}
+                dead={pet.dead ? pet.dead : 0}
+                waterFreq={waterFreq}
+                fertFreq={fertFreq}
+                rotateFreq={rotateFreq}
+                feedFreq={feedFreq}
+                carnivorous={carnivorous}
+                nextCycleDates={nextCycleDates}
+                waterStreak={waterStreak}
+                fertStreak={fertStreak}
+                turnStreak={turnStreak}
+                feedStreak={feedStreak}
+                onChange={this.fetchEventList}
+              />
+            </section>
+          )}
 
           <section id="care-calendar">
             <CareCalendar events={eventList} />
@@ -368,14 +375,6 @@ class PlantProfilePage extends React.Component {
           <section id="growth-pictures">
             <GrowthPictures pictures={growthPics} foreignPlant={!own} />
           </section>
-
-          {
-            (!own || dead) ? '' : (
-              <section id="manage-plant">
-                <ManagePlant id={id} pet={pet} username={ownUsername} />
-              </section>
-            )
-          }
         </div>
       </div>
     );

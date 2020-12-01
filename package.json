@@ -77,8 +77,10 @@
     "react-modal": "^3.11.2",
     "react-phone-number-input": "^3.1.0",
     "react-redux": "^7.1.0",
+    "react-responsive-carousel": "^3.2.10",
     "react-router-dom": "^4.3.1",
     "react-switch": "^5.0.1",
+    "react-vis": "^1.11.7",
     "reactstrap": "^8.6.0",
     "redux": "^4.0.1",
     "twilio": "^3.49.4"
