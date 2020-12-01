@@ -199,6 +199,33 @@ export function changeProfilePicture(file) {
     });
 }
 
+/* This function changes the new account status of the current user. */
+export function changeNewAcc(newAcc) {
+  const { uid } = firebase.auth().currentUser || { uid: '' };
+  if (!uid) {
+    return Promise.resolve();
+  }
+
+  return firebase.database().ref(`users/${uid}`).once('value').then((user) => {
+    if (user.exists()) {
+      firebase.database().ref(`users/${uid}`).update({
+        newAcc,
+      });
+    }
+  });
+}
+
+/* This function is used to get the new account status of the current user. */
+export function getNewAcc(cb, myStore) {
+  const { account: { uid } } = myStore;
+  if (!uid) {
+    return;
+  }
+  firebase.database().ref().child('users').child(uid)
+    .child('newAcc')
+    .on('value', cb);
+}
+
 /* This function is used to delete a user. */
 export function deleteAccount(password) {
   const { uid } = firebase.auth().currentUser || { uid: '' };
@@ -255,6 +282,13 @@ export function setEmailsOn(emailsOn) {
   store.dispatch({
     type: constants.SET_EMAILS_ON,
     emailsOn,
+  });
+}
+
+export function setNewAcc(newAcc) {
+  store.dispatch({
+    type: constants.SET_NEW_ACC,
+    newAcc,
   });
 }
 
