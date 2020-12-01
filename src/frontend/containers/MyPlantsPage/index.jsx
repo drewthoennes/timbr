@@ -233,8 +233,6 @@ class MyPlantsPage extends React.Component {
       return field1 < field2 ? 1 : -1;
     });
 
-    
-
     const plantCards = filteredAndSortedPets.length ? filteredAndSortedPets.map(([id, pet]) => (
       <span className="plant-link" key={id}>
         <Link to={`/${username}/${id}`}>
@@ -289,7 +287,7 @@ class MyPlantsPage extends React.Component {
       return (
         <div>
           <Navbar />
-          <br/>
+          <br />
           <div className="container">
             <span id="top-row">
               <InputGroup>
@@ -322,10 +320,10 @@ class MyPlantsPage extends React.Component {
               </Link>
             </span>
             <Container id="plant-content" className="mt-3">
-            <Row className="align-items-center mt-2">
-              <Col className="text-center">{plantCards}</Col>
-            </Row>
-          </Container>
+              <Row className="align-items-center mt-2">
+                <Col className="text-center">{plantCards}</Col>
+              </Row>
+            </Container>
           </div>
         </div>
       );
