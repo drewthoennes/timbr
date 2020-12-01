@@ -38,14 +38,13 @@ class CareFrequency extends React.PureComponent {
   }
 
   render() {
-    const { pet, waterFreq, fertFreq, feedFreq, carnivorous, dead, nextCycleDates } = this.props;
-
+    const { pet, waterFreq, fertFreq, feedFreq, carnivorous, dead, nextCycleDates,waterStreak} = this.props;
+    
     const today = getToday();
     const hasWateredToday = !!pet?.watered?.history?.[today];
     const hasFertilizedToday = !!pet?.fertilized?.history?.[today];
     const hasTurnedToday = !!pet?.turned?.history?.[today];
     const hasFedToday = !!pet?.fed?.history?.[today];
-
     let feedFreqJSX;
     let feedButtonJSX;
     if (carnivorous) {
@@ -81,6 +80,7 @@ class CareFrequency extends React.PureComponent {
           {dead ? <div />
             : (
               <div id="care-buttons">
+              <p>{`Water streak is: ${waterStreak}`}</p>
                 <Button
                   type="button"
                   disabled={hasWateredToday}
@@ -140,6 +140,7 @@ CareFrequency.propTypes = {
   feedFreq: PropTypes.any.isRequired,
   carnivorous: PropTypes.bool.isRequired,
   nextCycleDates: PropTypes.array.isRequired,
+  waterStreak:PropTypes.number.isRequired,
   onChange: PropTypes.func,
 };
 

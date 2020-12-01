@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ProfilePicture from '../../assets/images/pet_profile_picture.png';
 import Navbar from '../../components/Navbar';
-import { setForeignUserPets, getPetProfilePicture, getPetGrowthPictures } from '../../store/actions/pets';
+import { setForeignUserPets, getPetProfilePicture, getPetGrowthPictures,updateStreak } from '../../store/actions/pets';
 import map from '../../store/map';
 import './styles.scss';
 
@@ -15,6 +15,20 @@ import CareFrequency from './CareFrequency';
 import CareCalendar from './CareCalendar';
 import GrowthPictures from './GrowthPictures';
 import ManagePlant from './ManagePlant';
+import { exportDefaultSpecifier } from '@babel/types';
+
+
+const getToday = () => {
+  const now = new Date();
+  return new Date(now.getTime() - now.getTimezoneOffset() * 60 * 1000).toISOString().slice(0, 10);
+};
+
+const getYesterday= ()=>{
+  var date = new Date(); 
+  // subtract one day from current time                           
+  date.setDate(date.getDate() - 1); 
+ return new Date(date.getTime() - date.getTimezoneOffset() * 60 * 1000).toISOString().slice(0, 10);
+}
 
 class PlantProfilePage extends React.Component {
   constructor(props) {
@@ -30,6 +44,9 @@ class PlantProfilePage extends React.Component {
     this.getGrowthPictures = this.getGrowthPictures.bind(this);
     this.fetchEventList = this.fetchEventList.bind(this);
     this.getPlantLocation = this.getPlantLocation.bind(this);
+    this.getStreaks=this.getStreaks.bind(this);
+    
+    
 
     this.state = {
       speciesName: '',
@@ -44,6 +61,9 @@ class PlantProfilePage extends React.Component {
       eventList: [],
       location: '',
       nextCycleDates: [],
+      waterStreak:0,
+   
+
     };
   }
 
@@ -57,7 +77,8 @@ class PlantProfilePage extends React.Component {
     this.getGrowthPictures();
     this.getPlantLocation();
     this.getNextCycle();
-
+    this.getStreaks();
+  
     if (!username) return Promise.resolve();
     return setForeignUserPets(username, id).catch(() => history.push(`/${ownUsername}`));
   }
@@ -67,6 +88,7 @@ class PlantProfilePage extends React.Component {
       this.getPlantDetails();
     }
   }
+  
 
   getProfilePicture() {
     const { match: { params: { id } } } = this.props;
@@ -148,12 +170,62 @@ class PlantProfilePage extends React.Component {
     this.setState({ nextCycleDates: [nextWaterDates[1], nextFertDates[1],
       nextTurnDates[1], nextFeedDates[1]] });
   }
+  getStreaks(){
+    console.log("-----streaks");
+    const { match: { params: { id } } } = this.props;
+    const { store: { pets } = {} } = this.props;
+    const { store: { plants } } = this.props;
+    const today=getToday();
+    const yesterday=getYesterday();
+    const lastWaterDate=pets[id].watered.last;
+    const waterHistory=Object.keys(pets[id].watered.history|| {});
+    const streakUpdated=pets[id].watered.streakUpdated;
+    console.log("yesterday was",yesterday,"today is",today,"lastWaterDate is",lastWaterDate," history is",waterHistory);
+    //user has watered today and did so yesterday (ongoing streak)
+    if(waterHistory.includes(yesterday) && waterHistory.includes(today) && streakUpdated!==today){
+      //add to streak
+      updateStreak(id,'watered',pets[id].watered.streak+1,today);
 
+    }
+    //user has watered yesterday and hasn't watered yet today
+    //else if(waterHistory.includes(yesterday) && waterHistory.includes(today)===false){
+      
+      
+      //this.setState({waterStreak:pets[id].watered.streak});
+   // }
+    else{
+      //reset streak to 0 
+      console.log("inside else");
+      if(pets[id].watered.streak>0 && waterHistory.includes(yesterday)===false){
+      console.log("else case");
+      updateStreak(id,'watered',0,today);
+      this.setState({waterStreak:pets[id].watered.streak});
+      }
+      if(waterHistory.includes(yesterday) && waterHistory.includes(today)===false){
+      console.log("cond 2,did it yesterday but no today")
+      
+        this.setState({waterStreak:pets[id].watered.streak});
+      }
+      
+      
+    }
+  
+
+    
+    this.setState({waterStreak:pets[id].watered.streak});
+    console.log("waterStreak is",pets[id].watered.streak)
+    
+  }
+  
+
+  
   fetchEventList() {
     // fetches action history
+    this.getStreaks();
     this.getNextCycle();
     const { match: { params: { id } } } = this.props;
     const { store: { pets } = {} } = this.props;
+    this.setState({waterStreak:pets[id].watered.streak});
     const wateredDates = Object.keys(pets[id]?.watered.history || {});
     const fertilizedDates = Object.keys(pets[id]?.fertilized.history || {});
     const turnedDates = Object.keys(pets[id]?.turned.history || {});
@@ -182,7 +254,7 @@ class PlantProfilePage extends React.Component {
     const { history, match: { params: { username, id } } } = this.props;
     const { speciesName, scientificName, description, carnivorous,
       waterFreq, fertFreq, feedFreq, eventList,
-      profilePic, growthPics, location, nextCycleDates } = this.state;
+      profilePic, growthPics, location, nextCycleDates,waterStreak } = this.state;
 
     let pet;
     let dead = false;
@@ -218,7 +290,6 @@ class PlantProfilePage extends React.Component {
               birth={pet?.birth}
               ownedSince={pet?.ownedSince}
               location={location}
-
               dead={pet.dead ? pet.dead : 0}
               death={pet.death ? pet.death : ''}
             />
@@ -237,6 +308,8 @@ class PlantProfilePage extends React.Component {
                   carnivorous={carnivorous}
                   nextCycleDates={nextCycleDates}
                   onChange={this.fetchEventList}
+                  waterStreak={waterStreak}
+                
                 />
               </section>
             )

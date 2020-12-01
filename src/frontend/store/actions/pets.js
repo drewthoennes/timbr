@@ -23,10 +23,10 @@ export function createNewPet({ parent = '', type = '', name, ownedSince, birth, 
     dead,
     location,
     profilePic: false,
-    watered: { last: '0', streak: '0' },
-    fertilized: { last: '0', streak: '0' },
-    turned: { last: '0', streak: '0' },
-    fed: { last: '0', streak: '0' },
+    watered: { last: '0', streak: 0, streakUpdated:'' },
+    fertilized: { last: '0', streak:0 ,streakUpdated:''},
+    turned: { last: '0', streak:0 ,streakUpdated:''},
+    fed: { last: '0', streak:0 ,streakUpdated:''},
   });
 }
 
@@ -85,6 +85,17 @@ export function addDate(petId, action, currDate) {
     firebase.database().ref(`users/${uid}/pets/${petId}/${action}/history/`).child(currDate).set(true),
     firebase.database().ref(`users/${uid}/pets/${petId}/${action}/last/`).set(currDate),
   ]);
+}
+export function updateStreak(petId,action,newStreak,lastUpdated){
+  const uid = firebase.auth().currentUser?.uid;
+  if (!uid) {
+    return Promise.resolve();
+  }
+  console.log("NEW STREAK WILL BE ",newStreak,"lastUpdates is",lastUpdated)
+  return Promise.all([
+  firebase.database().ref(`users/${uid}/pets/${petId}/${action}/streak/`).set(newStreak),
+  firebase.database().ref(`users/${uid}/pets/${petId}/${action}/streakUpdated/`).set(lastUpdated)
+   ]); 
 }
 
 export function getPetProfilePicture(petId) {
