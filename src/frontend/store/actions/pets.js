@@ -11,7 +11,6 @@ function buildTree(tree, root, pets) {
 }
 
 export function constructGenealogy(petId, pets) {
-
   // Find root ancestor
   let root = petId;
   while (pets[root].parent) {
