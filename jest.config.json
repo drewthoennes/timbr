@@ -10,6 +10,6 @@
     "^@fullcalendar\/": "identity-obj-proxy",
     "^react-responsive-carousel/lib/styles/carousel.min.css": "identity-obj-proxy",
     "^react-phone-number-input\/input": "identity-obj-proxy",
-    ".+\\.(png|jpg|jpeg|gif)$": "identity-obj-proxy"
+    ".+\\.(css|png|jpg|jpeg)$": "identity-obj-proxy"
   }
 }

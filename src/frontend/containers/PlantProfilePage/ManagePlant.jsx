@@ -90,10 +90,15 @@ class ManagePlant extends React.PureComponent {
 
         <Modal show={showDead} onHide={this.toggleDeadModal}>
           <Modal.Header closeButton>
-            <Modal.Title>We're sorry about your loss.</Modal.Title>
+            <Modal.Title>We're sorry for your loss.</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <input type="text" className="form-control" placeholder="Add an epitaph to remember your plant, if you'd like." onChange={(event) => { this.setState({ epitaph: event.target.value }); }} />
+            <input
+              type="text"
+              placeholder="Add an epitaph to remember your plant, if you'd like."
+              onChange={(event) => { this.setState({ epitaph: event.target.value }); }}
+              className="form-control w-100"
+            />
           </Modal.Body>
           <Modal.Footer>
             <Button variant="link" onClick={this.toggleDeadModal}>Cancel</Button>

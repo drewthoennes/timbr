@@ -207,7 +207,7 @@ class PlantProfilePage extends React.Component {
           <section id="plant-name">
             <h1 className="text-center">{pet?.name}</h1>
           </section>
-          <section id="plant-picture-and-information">
+          <section id="plant-picture-and-information" className="no-border">
             <div>
               <span>
                 <img style={{ width: '200px', height: '200px' }} id="profile-picture" src={profilePic} alt="Profile" />
@@ -227,24 +227,28 @@ class PlantProfilePage extends React.Component {
             />
           </section>
 
-          {
-            !own ? '' : (
-              <section id="care-frequency">
-                <CareFrequency
-                  id={id}
-                  pet={pet}
-                  dead={pet.dead ? pet.dead : 0}
-                  waterFreq={waterFreq}
-                  fertFreq={fertFreq}
-                  rotateFreq={rotateFreq}
-                  feedFreq={feedFreq}
-                  carnivorous={carnivorous}
-                  nextCycleDates={nextCycleDates}
-                  onChange={this.fetchEventList}
-                />
-              </section>
-            )
-          }
+          {(!own || dead) ? '' : (
+            <section id="manage-plant">
+              <ManagePlant id={id} pet={pet} username={ownUsername} />
+            </section>
+          )}
+
+          {!own ? '' : (
+            <section id="care-frequency">
+              <CareFrequency
+                id={id}
+                pet={pet}
+                dead={pet.dead ? pet.dead : 0}
+                waterFreq={waterFreq}
+                fertFreq={fertFreq}
+                rotateFreq={rotateFreq}
+                feedFreq={feedFreq}
+                carnivorous={carnivorous}
+                nextCycleDates={nextCycleDates}
+                onChange={this.fetchEventList}
+              />
+            </section>
+          )}
 
           <section id="care-calendar">
             <CareCalendar events={eventList} />
@@ -253,14 +257,6 @@ class PlantProfilePage extends React.Component {
           <section id="growth-pictures">
             <GrowthPictures pictures={growthPics} foreignPlant={!own} />
           </section>
-
-          {
-            (!own || dead) ? '' : (
-              <section id="manage-plant">
-                <ManagePlant id={id} pet={pet} username={ownUsername} />
-              </section>
-            )
-          }
         </div>
       </div>
     );
