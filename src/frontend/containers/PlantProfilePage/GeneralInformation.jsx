@@ -2,17 +2,31 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Container, Row, Col } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import map from '../../store/map';
 
 class GeneralInformation extends React.PureComponent {
   render() {
     const {
-      store: { pets, account: { username } },
       speciesName, scientificName, description,
       birth, ownedSince, dead, death, plantLocation,
-      name, parent,
+      name, parent, petChildren,
+      store: { pets },
     } = this.props;
+
+    let childrenNames;
+    if (petChildren.length) {
+      childrenNames = petChildren
+        .map((child) => pets[child].name)
+        .sort((a, b) => (a < b ? -1 : 1));
+
+      if (childrenNames.length === 1) [childrenNames] = childrenNames;
+      else if (childrenNames.length === 2) childrenNames = childrenNames.join(' and ');
+      else {
+        childrenNames[childrenNames.length - 1] = `and ${childrenNames[childrenNames.length - 1]}`;
+        childrenNames = childrenNames.join(', ');
+      }
+    }
 
     return (
       <div>
@@ -44,13 +58,18 @@ class GeneralInformation extends React.PureComponent {
         <h6 className="text-center">{description}</h6>
         <br />
         { parent && <h6 className="text-center">{name} is an offshoot of {pets[parent].name}.</h6> }
+        { petChildren.length > 0 && (
+        <h6 className="text-center">
+          {name} has {petChildren.length} offshoot
+          {petChildren.length === 1 ? '' : 's'}: {childrenNames}.
+        </h6>
+        ) }
       </div>
     );
   }
 }
 
 GeneralInformation.propTypes = {
-  history: PropTypes.object.isRequired,
   name: PropTypes.string.isRequired,
   speciesName: PropTypes.string.isRequired,
   scientificName: PropTypes.string.isRequired,
@@ -60,12 +79,9 @@ GeneralInformation.propTypes = {
   dead: PropTypes.number,
   death: PropTypes.string,
   parent: PropTypes.string,
+  petChildren: PropTypes.array,
   plantLocation: PropTypes.string.isRequired,
   store: PropTypes.shape({
-    account: PropTypes.shape({
-      uid: PropTypes.string,
-      username: PropTypes.string,
-    }),
     pets: PropTypes.object.isRequired,
   }).isRequired,
 };

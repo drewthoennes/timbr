@@ -11,7 +11,6 @@ function buildTree(tree, root, pets) {
 }
 
 export function constructGenealogy(petId, pets) {
-
   // Find root ancestor
   let root = petId;
   while (pets[root].parent) {
@@ -22,28 +21,30 @@ export function constructGenealogy(petId, pets) {
   const tree = { root };
   buildTree(tree, root, pets);
 
+  // console.log(tree);
   return tree;
 }
 
 export function getPotentialParents(id) {
-  const { pets } = store.getState();
+  const { pets: { pets } } = store.getState();
 
   if (!pets[id]) return [];
 
   const { type, birth } = pets[id];
-  const descendants = Object.keys(constructGenealogy(id));
+  const tree = { root: id };
+  buildTree(tree, id, pets);
+  const descendants = Object.keys(tree).slice(1);
 
-  return Object.entries(pets).filter(([petId, plant]) => {
+  return Object.entries(pets).filter(([petId, parent]) => {
     const isDescendant = descendants.indexOf(petId) !== -1;
-    const isSameType = plant.type === type;
-    const isYounger = birth > plant.birth;
-
+    const isSameType = parent.type === type;
+    const isYounger = new Date(birth) > new Date(parent.birth);
     return !isDescendant && isSameType && isYounger;
   }).map(([petId]) => petId);
 }
 
 export function setParent(petId, parentId) {
-  const { pets } = store.getState();
+  const { pets: { pets } } = store.getState();
   const uid = firebase.auth().currentUser?.uid;
 
   if (!petId) return Promise.resolve();
@@ -51,15 +52,16 @@ export function setParent(petId, parentId) {
 
   // Remove pet from previous parent's children
   if (pets[petId].parent) {
-    const children = pets[pets[petId].parent].children.filter((child) => child !== petId);
-
+    const children = pets[pets[petId].parent].children?.filter((child) => child !== petId) ?? [];
     firebase.database().ref(`/users/${uid}/pets/${pets[petId].parent}`).update({ children });
   }
 
   // Add pet to new parent's children
   if (pets[parentId]) {
-    const { children } = pets[parentId];
-    children.push(petId);
+    let { children } = pets[parentId];
+    if (children && children.length) children.push(petId);
+    else children = [petId];
+
     firebase.database().ref(`/users/${uid}/pets/${parentId}`).update({ children });
   }
 
@@ -78,7 +80,6 @@ export function createNewPet({ parent = '', type = '', name, ownedSince, birth, 
   const uid = firebase.auth().currentUser?.uid;
 
   return firebase.database().ref(`/users/${uid}/pets`).push({
-    parent,
     type,
     name,
     ownedSince,
@@ -86,6 +87,8 @@ export function createNewPet({ parent = '', type = '', name, ownedSince, birth, 
     death,
     dead,
     location,
+    parent,
+    children: [],
     profilePic: false,
     watered: { last: '0', streak: 0, streakUpdated: '' },
     fertilized: { last: '0', streak: 0, streakUpdated: '' },
@@ -97,6 +100,7 @@ export function createNewPet({ parent = '', type = '', name, ownedSince, birth, 
 export function editPet(petId, newData) {
   const uid = firebase.auth().currentUser?.uid;
 
+  setParent(petId, newData.parent);
   return firebase.database().ref(`/users/${uid}/pets`).child(petId).update(newData);
 }
 

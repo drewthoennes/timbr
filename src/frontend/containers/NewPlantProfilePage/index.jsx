@@ -29,7 +29,7 @@ class NewPlantProfilePage extends React.Component {
       ownedSince: '',
       location: '',
       type: 'alocasia-amazonica',
-      isOffshoot: false,
+      isOffshoot: 'false',
       parent: null,
       typeDropdownOpen: false,
       parentDropdownOpen: false,
@@ -43,7 +43,8 @@ class NewPlantProfilePage extends React.Component {
         isBirthInvalid: false,
         birthErrorMessage: '',
         typeErrorMessage: '',
-      }
+        parentErrorMessage: '',
+      },
     };
 
     this.getProfilePicture = this.getProfilePicture.bind(this);
@@ -151,10 +152,19 @@ class NewPlantProfilePage extends React.Component {
     e.preventDefault();
     e.stopPropagation();
     const { store: { pets, plants, account: { uid, username } } } = this.props;
-    const { name, birth, ownedSince, type, profilePic, profilePicSub, location, parent, errors } = this.state;
+    const {
+      name, birth, ownedSince, location,
+      profilePic, profilePicSub,
+      type, isOffshoot, parent, errors,
+    } = this.state;
 
     // Check parent
-    if (parent) {
+    if (isOffshoot === 'true') {
+      if (!parent) {
+        errors.parentErrorMessage = `If ${name} is an offshoot, please select a parent plant.`;
+        this.setState({ errors });
+        return;
+      } errors.parentErrorMessage = '';
       let isError = false;
 
       if (type !== pets[parent].type) {
@@ -184,7 +194,7 @@ class NewPlantProfilePage extends React.Component {
       ownedSince: ownedSince.length ? ownedSince : (new Date()).toISOString().split('T')[0],
       type,
       location,
-      parent,
+      parent: isOffshoot === 'true' ? parent : null,
       profilePic: profilePicSub,
     }).then((snap) => {
       const { history } = this.props;
@@ -250,10 +260,23 @@ class NewPlantProfilePage extends React.Component {
       profilePic, profilePictureFeedback,
       profilePictureValidationState, resetProfilePicInput, verifyEmailFeedback,
       typeDropdownOpen, parentDropdownOpen, type, isOffshoot, parent,
-      errors
+      errors,
     } = this.state;
     const today = (new Date()).toISOString().split('T')[0];
     const past = new Date((new Date().getFullYear() - 50)).toISOString().split('T')[0];
+
+    const potentialParents = Object.entries(pets)
+      // eslint-disable-next-line no-unused-vars
+      .sort(([_, p1], [__, p2]) => (p1.name < p2.name ? -1 : 1))
+      .map(([key, pet]) => (
+        <DropdownItem
+          key={key}
+          onClick={() => this.handleChangeParent(key)}
+        >
+          {pet.name}
+        </DropdownItem>
+      ));
+
     return (
       <div id="new-plant-page">
         <Navbar />
@@ -392,44 +415,38 @@ class NewPlantProfilePage extends React.Component {
                       type="radio"
                       name="is-not-offshoot"
                       value={false}
-                      checked={!isOffshoot}
+                      checked={isOffshoot === 'false'}
                       onChange={(e) => this.setIsOffshoot(e.currentTarget.value)}
-                    >No</ToggleButton>
+                    >No
+                    </ToggleButton>
                     <ToggleButton
                       type="radio"
                       name="is-offshoot"
-                      value={true}
-                      checked={isOffshoot === "true"}
+                      value
+                      checked={isOffshoot === 'true'}
                       onChange={(e) => this.setIsOffshoot(e.currentTarget.value)}
-                    >Yes</ToggleButton>
+                    >Yes
+                    </ToggleButton>
                   </ButtonGroup>
                 </Form.Group>
 
-                { (isOffshoot === "true") && (
+                { (isOffshoot === 'true') && (
                   <Form.Group controlId="parent">
                     <Form.Label>Parent Plant:</Form.Label>
                     <Dropdown name="type" isOpen={parentDropdownOpen} toggle={this.toggleParentDropdown}>
                       <DropdownToggle caret id="size-dropdown">
-                        {pets[parent]?.name}
+                        {pets[parent]?.name ?? 'Select Parent'}
                       </DropdownToggle>
                       <DropdownMenu required>
-                        {Object.entries(pets)
-                          .sort(([_, p1], [__, p2]) => p1.name < p2.name ? -1 : 1)
-                          .map(([key, pet]) => (
-                            <DropdownItem
-                              key={key}
-                              onClick={() => this.handleChangeParent(key)}
-                            >
-                              {pet.name}
-                            </DropdownItem>
-                          ))}
+                        {potentialParents}
                       </DropdownMenu>
                     </Dropdown>
+                    <p className="error-message">{errors.parentErrorMessage}</p>
                   </Form.Group>
                 )}
               </Col>
             </Row>
-            
+
             <Row className="align-items-center mt-2">
               <Col className="d-flex justify-content-around">
                 <Button variant="primary" type="submit">

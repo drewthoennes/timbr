@@ -332,7 +332,8 @@ class PlantProfilePage extends React.Component {
               birth={pet?.birth}
               ownedSince={pet?.ownedSince}
               plantLocation={location ?? ''}
-              parent={pet.parent}
+              parent={pet.parent ?? null}
+              petChildren={pet.children ?? []}
               dead={pet.dead}
               death={pet.death}
             />
@@ -387,7 +388,6 @@ PlantProfilePage.propTypes = {
       username: PropTypes.string,
     }),
     pets: PropTypes.object.isRequired,
-    genealogy: PropTypes.object.isRequired,
     users: PropTypes.object.isRequired,
     plants: PropTypes.object.isRequired,
   }).isRequired,
