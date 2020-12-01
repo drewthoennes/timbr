@@ -1,6 +1,6 @@
 @import "~@theme";
 
-#my-plants-page {
+#graveyard-page {
   .container {
     padding-top: 38px;
     padding-bottom: 38px;
@@ -25,6 +25,7 @@
 
   .plant-card {
     width: 14rem;
+    height: 50rem;
     margin-top: 19px;
     display: inline-block;
     box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.05);
@@ -41,7 +42,7 @@
   }
 
   .card-img {
-    max-width: 100%;
+    max-width: 100-px;
     border: 1px solid rgba(0, 0, 0, 0.125);
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;

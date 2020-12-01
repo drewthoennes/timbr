@@ -7,6 +7,7 @@ import Navbar from '../../components/Navbar';
 import map from '../../store/map';
 import ProfilePicture from '../../assets/images/pet_profile_picture.png';
 import { getPetProfilePicture } from '../../store/actions/pets';
+import './styles.scss';
 
 class GraveyardPage extends React.Component {
   constructor() {
@@ -56,6 +57,16 @@ class GraveyardPage extends React.Component {
     const { profilePics } = this.state;
     const plantCards = Object.entries(pets).map(([id, pet]) => {
       if (pet.dead) {
+        const noEpitaph = () => {
+          if (pet.epitaph==='') {
+            return(
+              <Card.Text>{pet.name} was very loved and will be missed.</Card.Text>
+            );
+          }
+          return(
+            <Card.Text>{pet.epitaph}</Card.Text>
+          )
+        };
         return (
           <span className="plant-link" key={id}>
             <Link to={`/${username}/${id}`}>
@@ -64,7 +75,7 @@ class GraveyardPage extends React.Component {
                 <Card.Body>
                   <Card.Title>{pet.name}</Card.Title>
                   <Card.Text>{pet.birth} to {pet.death}</Card.Text>
-                  <Card.Text>{pet.epitaph}</Card.Text>
+                  {noEpitaph()}
                 </Card.Body>
               </Card>
             </Link>
@@ -73,6 +84,7 @@ class GraveyardPage extends React.Component {
       }
       return null;
     });
+    
     return (
 
       <div id="my-plants-page">
