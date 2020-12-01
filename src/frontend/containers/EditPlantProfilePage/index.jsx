@@ -2,14 +2,15 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Button, Card, Form, FormControl } from 'react-bootstrap';
-import { Container, Row, Col } from 'reactstrap';
-import PropTypes from 'prop-types';
 import {
+  Container, Row, Col,
   Dropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
 } from 'reactstrap';
+import PropTypes from 'prop-types';
+
 import Plus from '../../assets/images/plus.png';
 import ProfilePicture from '../../assets/images/pet_profile_picture.png';
 import Navbar from '../../components/Navbar';
@@ -17,7 +18,7 @@ import map from '../../store/map';
 import {
   editPet, getPetProfilePicture, getPetGrowthPictures,
   addPetGrowthPicture, setPetProfilePicture,
-  removePetProfilePicture, removePetGrowthPicture
+  removePetProfilePicture, removePetGrowthPicture,
 } from '../../store/actions/pets';
 import './styles.scss';
 
@@ -260,149 +261,150 @@ class EditPlantProfilePage extends React.Component {
         <div id="edit-plant-page" className="container">
           <h1 className="text-center mt-4 mb-3">Edit {currPet.name}</h1>
           <Form onSubmit={this.handleSubmit}>
-            <Row className="align-items-center mt-2">
-              <Col sm={3} className="d-flex justify-content-around">
-                <Form.Group
-                  controlId="profilePic"
-                  validationstate={profilePictureValidationState}
-                >
-                  <Form.Label>{profilePic === ProfilePicture ? 'Add' : 'Set'} Profile Picture:</Form.Label>
-                  <br />
-                  <img style={{ width: '150px' }} id="profile-picture" src={profilePic} alt="Profile" />
-                  <Form.Control
-                    key={`profile-${resetProfilePicInput}`}
-                    name="profilePic"
-                    type="file"
-                    accept="image/jpg,image/jpeg,image/png"
-                    onChange={(event) => { this.setProfilePicture(event.target.files[0]); }}
-                  />
-                  {profilePic !== ProfilePicture && (
-                    <>
-                      <Button
-                        className="btn btn-danger"
-                        style={{ marginTop: '10px', marginBottom: '10px' }}
-                        onClick={() => { this.removeProfilePicture(); }}
-                      >
-                        Remove Picture
+            <Container className="mt-3">
+              <Row className="align-items-center mt-2">
+                <Col sm={3} className="d-flex justify-content-around">
+                  <Form.Group
+                    controlId="profilePic"
+                    validationstate={profilePictureValidationState}
+                  >
+                    <Form.Label>{profilePic === ProfilePicture ? 'Add' : 'Set'} Profile Picture:</Form.Label>
+                    <br />
+                    <img style={{ width: '150px' }} id="profile-picture" src={profilePic} alt="Profile" />
+                    <Form.Control
+                      key={`profile-${resetProfilePicInput}`}
+                      name="profilePic"
+                      type="file"
+                      accept="image/jpg,image/jpeg,image/png"
+                      onChange={(event) => { this.setProfilePicture(event.target.files[0]); }}
+                    />
+                    {profilePic !== ProfilePicture && (
+                      <>
+                        <Button
+                          className="btn btn-danger"
+                          style={{ marginTop: '10px', marginBottom: '10px' }}
+                          onClick={() => { this.removeProfilePicture(); }}
+                        >
+                          Remove Picture
+                        </Button>
+                        <br />
+                      </>
+                    )}
+                    <FormControl.Feedback />
+                    <Form.Label className={`text-${profilePictureValidationState === 'error' ? 'danger' : profilePictureValidationState}`}>
+                      {profilePictureFeedback}
+                    </Form.Label>
+                  </Form.Group>
+                </Col>
+                <Col sm={9}>
+                  <Form.Group controlId="name">
+                    <Form.Label>Plant's Name</Form.Label>
+                    <Form.Control
+                      required
+                      name="name"
+                      value={pet.name}
+                      onChange={this.handleChange}
+                      maxLength="40"
+                      placeholder="Name"
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="location">
+                    <Form.Label>Plant's Location</Form.Label>
+                    <Form.Control
+
+                      name="location"
+                      value={pet.location}
+                      onChange={this.handleChange}
+                      maxLength="40"
+                      placeholder="eg:living room"
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="birth">
+                    <Form.Label>Plant's Birthday</Form.Label>
+                    <Form.Control
+                      name="birth"
+                      type="date"
+                      min={past}
+                      max={today}
+                      value={pet.birth}
+                      onChange={this.handleChange}
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="ownedSince">
+                    <Form.Label>Owned Since</Form.Label>
+                    <Form.Control
+                      name="ownedSince"
+                      type="date"
+                      min={pet.birth?.length ? pet.birth : past}
+                      max={today}
+                      value={pet.ownedSince}
+                      onChange={this.handleChange}
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="type">
+                    <Form.Label>Plant's Type</Form.Label>
+                    { /* eslint-disable-next-line react/destructuring-assignment */}
+                    <Dropdown color="primary" name="type" isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
+                      <DropdownToggle color="primary" caret id="size-dropdown">
+                        { /* eslint-disable-next-line react/destructuring-assignment */}
+                        {plants[this.state.pet.type]?.name}
+                      </DropdownToggle>
+                      <DropdownMenu color="primary" required>
+                        {Object.entries(plants)
+                          // eslint-disable-next-line
+                          .sort(([_, p1], [__, p2]) => p1.name < p2.name ? -1 : 1)
+                          .map(([key, plant]) => (
+                            <DropdownItem
+                              color="primary"
+                              key={key}
+                              onClick={() => this.handleDropdown(key)}
+                            >
+                              {plant.name}
+                            </DropdownItem>
+                          ))}
+                      </DropdownMenu>
+                    </Dropdown>
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Row className="align-items-center mt-2">
+                <Col className="text-center">
+                  <Form.Group>
+                    {/* <Form.Label>Growth Pictures</Form.Label> */}
+                    <h4 className="text-center mt-2">Growth Pictures</h4>
+                    <br />
+                    {growthPicCards}
+                    {Object.keys(growthPics).length < 5 && (
+                      <Card className="growth-pic-card">
+                        <input
+                          key={`growth-${resetGrowthPicInput}`}
+                          type="file"
+                          className="file-select"
+                          onChange={(event) => { this.addGrowthPicture(event.target.files[0]); }}
+                        />
+                        <Card.Img className="card-img" variant="top" src={Plus} />
+                        <Card.Body>
+                          <Card.Title>Add Growth Picture</Card.Title>
+                        </Card.Body>
+                      </Card>
+                    )}
+
+                    <br />
+                    <FormControl.Feedback />
+                    <Form.Label className={`text-${growthPictureValidationState === 'error' ? 'danger' : growthPictureValidationState}`}>
+                      {growthPictureFeedback}
+                    </Form.Label>
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Row className="align-items-center mt-2 mb-5">
+                <Col className="text-center">
+                  <Button variant="primary" type="submit">
+                    Submit
                   </Button>
-                      <br />
-                    </>
-                  )}
-                  <FormControl.Feedback />
-                  <Form.Label className={`text-${profilePictureValidationState === 'error' ? 'danger' : profilePictureValidationState}`}>
-                    {profilePictureFeedback}
-                  </Form.Label>
-                </Form.Group>
-              </Col>
-              <Col sm={9}>
-                <Form.Group controlId="name">
-                  <Form.Label>Plant's Name</Form.Label>
-                  <Form.Control
-                    required
-                    name="name"
-                    value={pet.name}
-                    onChange={this.handleChange}
-                    maxLength="40"
-                    placeholder="Name"
-                  />
-                </Form.Group>
-                <Form.Group controlId="location">
-                  <Form.Label>Plant's Location</Form.Label>
-                  <Form.Control
-
-                    name="location"
-                    value={pet.location}
-                    onChange={this.handleChange}
-                    maxLength="40"
-                    placeholder="eg:living room"
-                  />
-                </Form.Group>
-                <Form.Group controlId="birth">
-                  <Form.Label>Plant's Birthday</Form.Label>
-                  <Form.Control
-                    name="birth"
-                    type="date"
-                    min={past}
-                    max={today}
-                    value={pet.birth}
-                    onChange={this.handleChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="ownedSince">
-                  <Form.Label>Owned Since</Form.Label>
-                  <Form.Control
-                    name="ownedSince"
-                    type="date"
-                    min={pet.birth?.length ? pet.birth : past}
-                    max={today}
-                    value={pet.ownedSince}
-                    onChange={this.handleChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="type">
-                  <Form.Label>Plant's Type</Form.Label>
-                  { /* eslint-disable-next-line react/destructuring-assignment */}
-                  <Dropdown color="primary" name="type" isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
-                    <DropdownToggle color="primary" caret id="size-dropdown">
-                      { /* eslint-disable-next-line react/destructuring-assignment */}
-                      {plants[this.state.pet.type]?.name}
-                    </DropdownToggle>
-                    <DropdownMenu color="primary" required>
-                      {Object.entries(plants)
-                        // eslint-disable-next-line
-                        .sort(([_, p1], [__, p2]) => p1.name < p2.name ? -1 : 1)
-                        .map(([key, plant]) => (
-                          <DropdownItem
-                            color="primary"
-                            key={key}
-                            onClick={() => this.handleDropdown(key)}
-                          >
-                            {plant.name}
-                          </DropdownItem>
-                        ))}
-                    </DropdownMenu>
-                  </Dropdown>
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row className="align-items-center mt-2">
-              <Col className="text-center">
-                <Form.Group>
-                  {/* <Form.Label>Growth Pictures</Form.Label> */}
-                  <h4 className="text-center mt-2">Growth Pictures</h4>
-                  <br />
-                  {growthPicCards}
-                  {Object.keys(growthPics).length < 5 && (
-                    <Card className="growth-pic-card">
-                      <input
-                        key={`growth-${resetGrowthPicInput}`}
-                        type="file"
-                        className="file-select"
-                        onChange={(event) => { this.addGrowthPicture(event.target.files[0]); }}
-                      />
-                      <Card.Img className="card-img" variant="top" src={Plus} />
-                      <Card.Body>
-                        <Card.Title>Add Growth Picture</Card.Title>
-                      </Card.Body>
-                    </Card>
-                  )}
-
-                  <br />
-                  <FormControl.Feedback />
-                  <Form.Label className={`text-${growthPictureValidationState === 'error' ? 'danger' : growthPictureValidationState}`}>
-                    {growthPictureFeedback}
-                  </Form.Label>
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row className="align-items-center mt-2 mb-5">
-              <Col className="text-center">
-                <Button variant="primary" type="submit">
-                  Submit
-                </Button>
-              </Col>
-            </Row>
-
+                </Col>
+              </Row>
+            </Container>
           </Form>
         </div>
       </>

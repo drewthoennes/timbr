@@ -58,14 +58,14 @@ class GraveyardPage extends React.Component {
     const plantCards = Object.entries(pets).map(([id, pet]) => {
       if (pet.dead) {
         const noEpitaph = () => {
-          if (pet.epitaph==='') {
-            return(
+          if (pet.epitaph === '') {
+            return (
               <Card.Text>{pet.name} was very loved and will be missed.</Card.Text>
             );
           }
-          return(
+          return (
             <Card.Text>{pet.epitaph}</Card.Text>
-          )
+          );
         };
         return (
           <span className="plant-link" key={id}>
@@ -84,7 +84,7 @@ class GraveyardPage extends React.Component {
       }
       return null;
     });
-    
+
     return (
 
       <div id="my-plants-page">

@@ -9,7 +9,7 @@ import {
   DropdownItem,
   Container,
   Row,
-  Col
+  Col,
 } from 'reactstrap';
 import { Button, Form, FormControl, Modal } from 'react-bootstrap';
 import ProfilePicture from '../../assets/images/pet_profile_picture.png';
@@ -246,7 +246,7 @@ class NewPlantProfilePage extends React.Component {
                         onClick={() => { this.removeProfilePicture(); }}
                       >
                         Remove Picture
-                </Button>
+                      </Button>
                       <br />
                     </>
                   )}
@@ -317,8 +317,8 @@ class NewPlantProfilePage extends React.Component {
                         // eslint-disable-next-line
                         .sort(([_, p1], [__, p2]) => p1.name < p2.name ? -1 : 1)
                         .map(([key, plant]) => (
-                          <DropdownItem 
-                            color="primary" 
+                          <DropdownItem
+                            color="primary"
                             key={key}
                             onClick={() => this.handleDropdown(key)}
                           >
