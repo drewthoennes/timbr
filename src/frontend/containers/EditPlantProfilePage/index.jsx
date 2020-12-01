@@ -402,7 +402,7 @@ class EditPlantProfilePage extends React.Component {
                   <Button variant="primary" type="submit">
                     Submit
                   </Button>
-                  <br/>
+                  <br />
                 </Col>
               </Row>
             </Container>
