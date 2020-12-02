@@ -76,7 +76,10 @@ class PlantProfilePage extends React.Component {
     this.getNextCycle();
     this.getStreaks();
 
-    if (!username) Promise.resolve();
+    if (!username) {
+      Promise.resolve();
+      return;
+    }
     setForeignUserPets(username, id).catch(() => history.push(`/${ownUsername}`));
   }
 
