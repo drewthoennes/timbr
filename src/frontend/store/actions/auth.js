@@ -69,7 +69,15 @@ export function reauthenticateUser(password) {
 
 /* This method uses firebase auth to sign in a user. */
 export function loginWithTimbr(credentials) {
-  return firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password);
+  return firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password)
+    .then(() => {
+      if (firebase.auth().currentUser && !firebase.auth().currentUser.emailVerified) {
+        firebase.auth().currentUser.sendEmailVerification();
+        const error = new Error(constants.UNVERIFIED_ERROR_MESSAGE);
+        error.code = constants.UNVERIFIED_ERROR_CODE;
+        throw error;
+      }
+    });
 }
 
 /* This function uses Firebase auth to sign in a user using Facebook. */

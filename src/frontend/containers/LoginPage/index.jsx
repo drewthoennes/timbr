@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import map from '../../store/map';
 import './styles.scss';
 import { loginWithTimbr, loginWithGoogle, loginWithFacebook } from '../../store/actions/auth';
+import { isEmailVerified } from '../../store/actions/account';
 import constants from '../../store/const';
 import googleLogo from '../../assets/images/google_logo.png';
 import facebookLogo from '../../assets/images/facebook_logo.png';
@@ -29,7 +30,7 @@ class LoginPage extends React.Component {
 
   componentDidUpdate() {
     const { store: { account: { uid, username } }, history } = this.props;
-    if (uid) {
+    if (uid && isEmailVerified()) {
       history.push(`/${username}`);
     }
   }
