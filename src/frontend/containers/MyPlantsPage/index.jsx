@@ -13,8 +13,11 @@ import { logout } from '../../store/actions/auth';
 import { getPetProfilePicture } from '../../store/actions/pets';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import tuto1 from '../../assets/images/tut1.png';
-import tuto2 from '../../assets/images/tut2.png';
+import createplant from '../../assets/images/createplant.gif';
 import careforplants from '../../assets/images/careforplants.gif';
+import deadplant from '../../assets/images/deadplant.gif';
+import getnotified from '../../assets/images/getnotified.gif';
+import viewstats from '../../assets/images/viewstats.gif';
 
 import FilterMenu from './FilterMenu';
 
@@ -261,10 +264,19 @@ class MyPlantsPage extends React.Component {
                           <img alt="" src={tuto1} />
                         </div>
                         <div>
-                          <img alt="" src={tuto2} />
+                          <img src={createplant} alt="care" />
                         </div>
                         <div>
                           <img src={careforplants} alt="care" />
+                        </div>
+                        <div>
+                          <img src={deadplant} alt="care" />
+                        </div>
+                        <div>
+                          <img src={getnotified} alt="care" />
+                        </div>
+                        <div>
+                          <img src={viewstats} alt="care" />
                         </div>
                       </Carousel>
                       <Button type="button" className="btn btn-primary mt-0" onClick={this.changeNewAcc}>
