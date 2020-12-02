@@ -21,10 +21,8 @@ const PlantGenealogyPage = (props) => {
   const genealogy = constructGenealogy(id, pets);
   const petFamily = [];
   Object.keys(genealogy).forEach((key) => {
-    if (key === 'root') {
-      // petFamily.root = pets[genealogy[key]].name;
-      return;
-    }
+    if (key === 'root') return;
+
     const children = [];
     for (const i in genealogy[key]) children.push({ id: genealogy[key][i] });
 
