@@ -19,7 +19,6 @@ import deadplant from '../../assets/images/deadplant.gif';
 import getnotified from '../../assets/images/getnotified.gif';
 import viewstats from '../../assets/images/viewstats.gif';
 
-
 import FilterMenu from './FilterMenu';
 
 const uppercaseFirst = (str) => str[0].toUpperCase() + str.substr(1).toLowerCase();
