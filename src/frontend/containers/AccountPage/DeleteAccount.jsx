@@ -8,7 +8,7 @@ import { deleteAccount } from '../../store/actions/account';
 import { getProviderId } from '../../store/actions/auth';
 import constants from '../../store/const';
 
-class DeleteAccount extends React.Component {
+class DeleteAccount extends React.PureComponent {
   constructor() {
     super();
     this.deleteAccount = this.deleteAccount.bind(this);
