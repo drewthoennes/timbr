@@ -5,7 +5,7 @@ import { IFamilyExtNode } from 'relatives-tree/lib/types';
 export default function FamilyNode({ node, isRoot, onSubClick, style }) {
   return (
     <div className="leaf" style={style}>
-      <div className="leaf-body">
+      <div className={node.isSubject ? 'leaf-subject' : 'leaf-body'}>
         <p className="leaf-title">{node.name}</p>
       </div>
       {node.hasSubTree && (

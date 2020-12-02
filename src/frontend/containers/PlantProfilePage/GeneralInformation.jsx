@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Container, Row, Col } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import map from '../../store/map';
 
 class GeneralInformation extends React.PureComponent {
@@ -11,7 +11,8 @@ class GeneralInformation extends React.PureComponent {
       speciesName, scientificName, description,
       birth, ownedSince, dead, death, plantLocation,
       name, parent, petChildren,
-      store: { pets },
+      store: { pets, account: { username } },
+      match: { params: { id } },
     } = this.props;
 
     let childrenNames;
@@ -64,6 +65,11 @@ class GeneralInformation extends React.PureComponent {
           {petChildren.length === 1 ? '' : 's'}: {childrenNames}.
         </h6>
         ) }
+        { (parent || petChildren.length > 0) && (
+          <p className="text-center">
+            <Link to={`/${username}/genealogy/${id}`}>See family tree</Link>
+          </p>
+        )}
       </div>
     );
   }
@@ -83,6 +89,15 @@ GeneralInformation.propTypes = {
   plantLocation: PropTypes.string.isRequired,
   store: PropTypes.shape({
     pets: PropTypes.object.isRequired,
+    account: PropTypes.shape({
+      username: PropTypes.string,
+    }).isRequired,
+  }).isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      username: PropTypes.string,
+      id: PropTypes.string,
+    }),
   }).isRequired,
 };
 

@@ -10,6 +10,7 @@ import { getPetProfilePicture, constructGenealogy } from '../../store/actions/pe
 import map from '../../store/map';
 import ReactFamilyTree from 'react-family-tree';
 import FamilyNode from './FamilyNode';
+import { Row, Col } from 'react-bootstrap';
 import './styles.scss';
 
 class PlantGenealogyPage extends React.Component {
@@ -79,10 +80,10 @@ class PlantGenealogyPage extends React.Component {
         parents: pets[key].parent ? [{ id: pets[key].parent }] : [],
         spouses: [],
         children,
-        siblings
+        siblings,
+        isSubject: key === id,
       });
     });
-    console.log(petFamily);
 
     const WIDTH = 180;
     const HEIGHT = 120;
@@ -91,25 +92,30 @@ class PlantGenealogyPage extends React.Component {
       <div>
         <Navbar />
         <div id="plant-genealogy-page" className="container">
-          <ReactFamilyTree
-            nodes={petFamily}
-            rootId={genealogy.root}
-            width={WIDTH}
-            height={HEIGHT}
-            renderNode={(node) => (
-              <Link to={`/${username}/${node.id}`}>
-                <FamilyNode
-                  key={node.id}
-                  node={node}
-                  style={{
-                    width: WIDTH,
-                    height: HEIGHT,
-                    transform: `translate(${node.left * (WIDTH / 2)}px, ${node.top * (HEIGHT / 2)}px)`,
-                  }}
-                />
-              </Link>
-            )}
-          />
+          <h2 className="text-center">{pets[id].name}'s Family Tree</h2>
+          <br />
+            <Col md={{ span: 8, offset: 2 }}>
+              <ReactFamilyTree
+                className="tree"
+                nodes={petFamily}
+                rootId={genealogy.root}
+                width={WIDTH}
+                height={HEIGHT}
+                renderNode={(node) => (
+                  <Link to={`/${username}/${node.id}`}>
+                    <FamilyNode
+                      key={node.id}
+                      node={node}
+                      style={{
+                        width: WIDTH,
+                        height: HEIGHT,
+                        transform: `translate(${node.left * (WIDTH / 2)}px, ${node.top * (HEIGHT / 2)}px)`,
+                      }}
+                    />
+                  </Link>
+                )}
+              />
+            </Col>
         </div>
       </div>
     );
