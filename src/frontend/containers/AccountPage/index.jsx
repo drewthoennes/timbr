@@ -12,7 +12,7 @@ import { Modal } from 'react-bootstrap';
 import { Container, Row, Col } from 'reactstrap';
 import map from '../../store/map';
 import './styles.scss';
-import { getUsername, getPhoneNumber, getProfilePicture, getTextsOn, getEmailsOn, changeUsername, changePhoneNumber, changeEmailsOn, changeTextsOn, changeProfilePicture, deleteAccount } from '../../store/actions/account';
+import { deleteAccount } from '../../store/actions/account';
 import { getProviderId } from '../../store/actions/auth';
 import Navbar from '../../components/Navbar';
 import constants from '../../store/const';
@@ -47,7 +47,7 @@ class AccountPage extends React.Component {
     this.canChangePassword();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     const { store: { account: { uid } }, history } = this.props;
 
     if (!uid) {
