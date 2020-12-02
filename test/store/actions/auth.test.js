@@ -45,6 +45,8 @@ describe('Redux account actions should work', () => {
   });
 
   it('Logging in with Timbr should work as expected', async () => {
+    mockCurrentUser.onCall(0).returns(123456789);
+    mockCurrentUser.onCall(1).returns(true);
     mockSignInUserStub.resolves();
 
     const funcPromise = await expect(loginWithTimbr({ email: 'test@purdue.edu', password: 'password' }))

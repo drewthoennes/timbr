@@ -11,12 +11,11 @@ import {
   Row,
   Col,
 } from 'reactstrap';
-import { Button, ButtonGroup, Form, FormControl, Modal, ToggleButton } from 'react-bootstrap';
+import { Button, ButtonGroup, Form, FormControl, ToggleButton } from 'react-bootstrap';
 import ProfilePicture from '../../assets/images/pet_profile_picture.png';
 import Navbar from '../../components/Navbar';
 import map from '../../store/map';
 import { createNewPet, setParent, getPetProfilePicture, setPetProfilePicture, removePetProfilePicture } from '../../store/actions/pets';
-import { sendVerificationEmail, isEmailVerified } from '../../store/actions/account';
 import './styles.scss';
 
 class NewPlantProfilePage extends React.Component {
@@ -38,7 +37,6 @@ class NewPlantProfilePage extends React.Component {
       profilePictureFeedback: '',
       profilePictureValidationState: 'default',
       resetProfilePicInput: 0,
-      verifyEmailFeedback: '',
       errors: {
         isBirthInvalid: false,
         birthErrorMessage: '',
@@ -57,7 +55,6 @@ class NewPlantProfilePage extends React.Component {
     this.handleChangeParent = this.handleChangeParent.bind(this);
     this.toggleTypeDropdown = this.toggleTypeDropdown.bind(this);
     this.toggleParentDropdown = this.toggleParentDropdown.bind(this);
-    this.sendVerificationEmail = this.sendVerificationEmail.bind(this);
 
     this.mounted = false;
   }
@@ -237,30 +234,12 @@ class NewPlantProfilePage extends React.Component {
     this.setState({ parent });
   }
 
-  sendVerificationEmail() {
-    sendVerificationEmail()
-      .then(() => {
-        if (this.mounted) {
-          this.setState({
-            verifyEmailFeedback: 'Verification Email sent!',
-          });
-        }
-      })
-      .catch((error) => {
-        if (this.mounted) {
-          this.setState({
-            verifyEmailFeedback: error.message,
-          });
-        }
-      });
-  }
-
   render() {
     const { store: { pets, plants } } = this.props;
     const {
       name, birth, ownedSince, location,
       profilePic, profilePictureFeedback,
-      profilePictureValidationState, resetProfilePicInput, verifyEmailFeedback,
+      profilePictureValidationState, resetProfilePicInput,
       typeDropdownOpen, parentDropdownOpen, type, isOffshoot, parent,
       errors,
     } = this.state;
@@ -283,22 +262,6 @@ class NewPlantProfilePage extends React.Component {
       <div id="new-plant-page">
         <Navbar />
         <h1 className="text-center mt-4 mb-3">Create New Plant</h1>
-        <Modal id="verify-email" show={!isEmailVerified()} backdrop="static" onHide={() => { }}>
-          <Modal.Header>
-            <Modal.Title>Your account is not verified.</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <p>You must verify your account before adding plants.</p>
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={() => { this.sendVerificationEmail(); }}
-            >
-              Resend Verification Email
-            </button>
-            <p id="feedback">{verifyEmailFeedback}</p>
-          </Modal.Body>
-        </Modal>
         <Form onSubmit={this.handleSubmit}>
           <Container className="mt-3">
             <Row className="align-items-center mt-2">

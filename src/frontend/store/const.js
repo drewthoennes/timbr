@@ -20,4 +20,6 @@ export default {
   LOGIN_WITH_FACEBOOK: 'Login with Facebook',
   LOGOUT: 'Logout',
   USERNAME_PREFIX: 'timbr-user-',
+  UNVERIFIED_ERROR_CODE: 'UNVERIFIED',
+  UNVERIFIED_ERROR_MESSAGE: 'This account has not been verified. Please check your inbox for a verification email.',
 };
