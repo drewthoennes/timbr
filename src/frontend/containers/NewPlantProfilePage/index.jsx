@@ -264,7 +264,7 @@ class NewPlantProfilePage extends React.Component {
                     name="name"
                     value={name}
                     onChange={this.handleChange}
-                    maxLength="40"
+                    maxLength="20"
                     placeholder="Name"
                   />
                 </Form.Group>
@@ -275,7 +275,7 @@ class NewPlantProfilePage extends React.Component {
                     name="location"
                     value={location}
                     onChange={this.handleChange}
-                    maxLength="40"
+                    maxLength="20"
                     placeholder="eg:living room"
                   />
                 </Form.Group>

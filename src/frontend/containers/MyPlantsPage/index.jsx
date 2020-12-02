@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
-import { Button, Card, Dropdown, DropdownButton, FormControl, InputGroup } from 'react-bootstrap';
+import { Button, Card, Container, Dropdown, DropdownButton, FormControl, InputGroup, Row, Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { Carousel } from 'react-responsive-carousel';
 import ProfilePicture from '../../assets/images/pet_profile_picture.png';
@@ -126,6 +126,10 @@ class MyPlantsPage extends React.Component {
           this.setState({ actionItems });
         }
       }
+      if (actionItems[id] === '') {
+        actionItems[id] = 'No Actions Needed!';
+        this.setState({ actionItems });
+      }
     });
   }
 
@@ -236,11 +240,11 @@ class MyPlantsPage extends React.Component {
       <span className="plant-link" key={id}>
         <Link to={`/${username}/${id}`}>
           <Card className="plant-card">
-            <Card.Img className="card-img" variant="top" src={profilePics[id]} />
+            <Card.Img className="card-img mt-2" variant="top" src={profilePics[id]} />
             <Card.Body>
-              <Card.Title>{pet.name}</Card.Title>
-              <Card.Text>{plants[pet.type].name}</Card.Text>
-              <Card.Text>{actionItems[id]}</Card.Text>
+              <Card.Title><h6><b>{pet.name}</b></h6></Card.Title>
+              <Card.Text><h6><small><i>{plants[pet.type].name}</i></small></h6></Card.Text>
+              <Card.Text className="action-items">{actionItems[id]}</Card.Text>
             </Card.Body>
           </Card>
         </Link>
@@ -295,6 +299,7 @@ class MyPlantsPage extends React.Component {
       return (
         <div>
           <Navbar />
+          <br />
           <div className="container">
             <span id="top-row">
               <InputGroup>
@@ -326,7 +331,11 @@ class MyPlantsPage extends React.Component {
                 <Button>New Plant</Button>
               </Link>
             </span>
-            {plantCards}
+            <Container id="plant-content" className="mt-3">
+              <Row className="align-items-center mt-2">
+                <Col className="text-center">{plantCards}</Col>
+              </Row>
+            </Container>
           </div>
         </div>
       );
