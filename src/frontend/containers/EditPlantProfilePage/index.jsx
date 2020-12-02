@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Button, Card, Form, FormControl } from 'react-bootstrap';
+import { Button, ButtonGroup, Card, Form, FormControl, ToggleButton } from 'react-bootstrap';
 import {
   Container, Row, Col,
   Dropdown,
@@ -16,9 +16,9 @@ import ProfilePicture from '../../assets/images/pet_profile_picture.png';
 import Navbar from '../../components/Navbar';
 import map from '../../store/map';
 import {
-  editPet, getPetProfilePicture, getPetGrowthPictures,
-  addPetGrowthPicture, setPetProfilePicture,
-  removePetProfilePicture, removePetGrowthPicture,
+  editPet, getPotentialParents,
+  getPetProfilePicture, setPetProfilePicture, removePetProfilePicture,
+  getPetGrowthPictures, addPetGrowthPicture, removePetGrowthPicture,
 } from '../../store/actions/pets';
 import './styles.scss';
 
@@ -35,7 +35,9 @@ class EditPlantProfilePage extends React.Component {
     this.state = {
       currPet: { ...pet },
       pet: { ...pet },
-      dropdownOpen: false,
+      isOffshoot: (!!pet?.parent).toString(),
+      typeDropdownOpen: false,
+      parentDropdownOpen: false,
       profilePic: ProfilePicture,
       profilePictureFeedback: '',
       profilePictureValidationState: 'default',
@@ -44,8 +46,19 @@ class EditPlantProfilePage extends React.Component {
       growthPictureFeedback: '',
       growthPictureValidationState: 'default',
       resetGrowthPicInput: 0,
+      errors: {
+        isBirthInvalid: false,
+        birthErrorMessage: '',
+        typeErrorMessage: '',
+        parentErrorMessage: '',
+      },
     };
 
+    this.setIsOffshoot = this.setIsOffshoot.bind(this);
+    this.handleChangeType = this.handleChangeType.bind(this);
+    this.toggleTypeDropdown = this.toggleTypeDropdown.bind(this);
+    this.handleChangeParent = this.handleChangeParent.bind(this);
+    this.toggleParentDropdown = this.toggleParentDropdown.bind(this);
     this.getProfilePicture = this.getProfilePicture.bind(this);
     this.getGrowthPictures = this.getGrowthPictures.bind(this);
     this.setProfilePicture = this.setProfilePicture.bind(this);
@@ -54,8 +67,6 @@ class EditPlantProfilePage extends React.Component {
     this.removeGrowthPicture = this.removeGrowthPicture.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.toggleDropdown = this.toggleDropdown.bind(this);
-    this.handleDropdown = this.handleDropdown.bind(this);
   }
 
   componentDidMount() {
@@ -204,9 +215,39 @@ class EditPlantProfilePage extends React.Component {
     const {
       match: { params: { id } },
       history,
-      store: { account: { username } },
+      store: { pets, plants, account: { username } },
     } = this.props;
-    const { pet, profilePic, growthPics } = this.state;
+    const { pet, isOffshoot, profilePic, growthPics, errors } = this.state;
+
+    if (isOffshoot === 'true') {
+      if (!pet.parent) {
+        errors.parentErrorMessage = `If ${pet.name} is an offshoot, please select a parent plant.`;
+        this.setState({ errors });
+        return;
+      } errors.parentErrorMessage = '';
+      let isError = false;
+
+      if (pet.type !== pets[pet.parent].type) {
+        const parentType = plants[pets[pet.parent].type].name;
+        errors.typeErrorMessage = `Plant must be same species as parent (${parentType})`;
+        isError = true;
+      } else {
+        errors.typeErrorMessage = '';
+      }
+
+      if (new Date(pet.birth) < new Date(pets[pet.parent].birth)) {
+        errors.isBirthInvalid = true;
+        const birthDate = pets[pet.parent].birth.split('-');
+        errors.birthErrorMessage = `Plant cannot be older than parent (${birthDate[1]}/${birthDate[2]}/${birthDate[0]})`;
+        isError = true;
+      } else {
+        errors.isBirthInvalid = false;
+        errors.birthErrorMessage = '';
+      }
+      this.setState({ errors });
+      if (isError) return;
+    } else pet.parent = null;
+
     pet.profilePic = profilePic !== ProfilePicture;
     pet.growthPics = Object.keys(growthPics);
     editPet(id, pet).then(() => {
@@ -214,24 +255,57 @@ class EditPlantProfilePage extends React.Component {
     });
   }
 
-  handleDropdown(type) {
+  toggleTypeDropdown() {
+    this.setState((prevState) => ({
+      typeDropdownOpen: !prevState.typeDropdownOpen,
+    }));
+  }
+
+  handleChangeType(type) {
     const { pet } = this.state;
     this.setState({ pet: { ...pet, type } });
   }
 
-  toggleDropdown() {
+  toggleParentDropdown() {
     this.setState((prevState) => ({
-      dropdownOpen: !prevState.dropdownOpen,
+      parentDropdownOpen: !prevState.parentDropdownOpen,
     }));
   }
 
+  setIsOffshoot(isOffshoot) {
+    this.setState({ isOffshoot });
+  }
+
+  handleChangeParent(parent) {
+    const { pet } = this.state;
+    this.setState({ pet: { ...pet, parent } });
+  }
+
   render() {
-    const { pet, currPet, profilePic, growthPics,
+    const {
+      pet, currPet, profilePic, growthPics,
       profilePictureFeedback, profilePictureValidationState, resetProfilePicInput,
-      growthPictureFeedback, growthPictureValidationState, resetGrowthPicInput } = this.state;
-    const { store: { plants } } = this.props;
+      growthPictureFeedback, growthPictureValidationState, resetGrowthPicInput,
+      typeDropdownOpen, parentDropdownOpen, isOffshoot, errors,
+    } = this.state;
+    const {
+      store: { pets, plants },
+      match: { params: { id: petId } },
+    } = this.props;
     const today = (new Date()).toISOString().split('T')[0];
     const past = new Date((new Date().getFullYear() - 50)).toISOString().split('T')[0];
+
+    const potentialParents = getPotentialParents(petId)
+      .map((parent) => ({ id: parent, ...(pets[parent]) }))
+      .sort((a, b) => (a.name < b.name ? -1 : 1))
+      .map((parent) => (
+        <DropdownItem
+          key={parent.id}
+          onClick={() => this.handleChangeParent(parent.id)}
+        >
+          {parent.name}
+        </DropdownItem>
+      ));
 
     const growthPicCards = Object.entries(growthPics || [])
       .sort(([i], [j]) => {
@@ -320,7 +394,7 @@ class EditPlantProfilePage extends React.Component {
                     />
                   </Form.Group>
                   <Form.Group controlId="birth">
-                    <Form.Label>Plant's Birthday</Form.Label>
+                    <Form.Label>Plant's birthday:</Form.Label>
                     <Form.Control
                       name="birth"
                       type="date"
@@ -328,10 +402,12 @@ class EditPlantProfilePage extends React.Component {
                       max={today}
                       value={pet.birth}
                       onChange={this.handleChange}
+                      isInvalid={errors.isBirthInvalid}
                     />
+                    <Form.Control.Feedback type="invalid">{errors.birthErrorMessage}</Form.Control.Feedback>
                   </Form.Group>
                   <Form.Group controlId="ownedSince">
-                    <Form.Label>Owned Since</Form.Label>
+                    <Form.Label>I've owned this plant since:</Form.Label>
                     <Form.Control
                       name="ownedSince"
                       type="date"
@@ -342,39 +418,82 @@ class EditPlantProfilePage extends React.Component {
                     />
                   </Form.Group>
                   <Form.Group controlId="type">
-                    <Form.Label>Plant's Type</Form.Label>
-                    { /* eslint-disable-next-line react/destructuring-assignment */}
-                    <Dropdown color="primary" name="type" isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
-                      <DropdownToggle color="primary" caret id="size-dropdown">
-                        { /* eslint-disable-next-line react/destructuring-assignment */}
-                        {plants[this.state.pet.type]?.name}
+                    <Form.Label>Plant's Type:</Form.Label>
+                    <Dropdown name="type" isOpen={typeDropdownOpen} toggle={this.toggleTypeDropdown}>
+                      <DropdownToggle caret id="size-dropdown">
+                        {plants[pet.type]?.name}
                       </DropdownToggle>
-                      <DropdownMenu className="dropdown-menu" color="primary" required>
+                      <DropdownMenu required>
                         {Object.entries(plants)
                           // eslint-disable-next-line
                           .sort(([_, p1], [__, p2]) => p1.name < p2.name ? -1 : 1)
                           .map(([key, plant]) => (
                             <DropdownItem
-                              color="primary"
                               key={key}
-                              onClick={() => this.handleDropdown(key)}
+                              onClick={() => this.handleChangeType(key)}
                             >
                               {plant.name}
                             </DropdownItem>
                           ))}
                       </DropdownMenu>
                     </Dropdown>
+                    <p className="error-message">{errors.typeErrorMessage}</p>
                   </Form.Group>
+
+                  <Form.Group>
+                    <Form.Label>Is this plant an offshoot of another plant?</Form.Label>
+                    <br />
+                    <ButtonGroup toggle>
+                      <ToggleButton
+                        type="radio"
+                        name="is-not-offshoot"
+                        value={false}
+                        checked={isOffshoot === 'false'}
+                        onChange={(e) => this.setIsOffshoot(e.currentTarget.value)}
+                      >No
+                      </ToggleButton>
+                      <ToggleButton
+                        type="radio"
+                        name="is-offshoot"
+                        value
+                        checked={isOffshoot === 'true'}
+                        onChange={(e) => this.setIsOffshoot(e.currentTarget.value)}
+                      >Yes
+                      </ToggleButton>
+                    </ButtonGroup>
+                  </Form.Group>
+
+                  { (isOffshoot === 'true') && (
+                    <Form.Group controlId="parent">
+                      <Form.Label>Parent Plant:</Form.Label>
+                      { potentialParents.length > 0 ? (
+                        <Dropdown name="type" isOpen={parentDropdownOpen} toggle={this.toggleParentDropdown}>
+                          <DropdownToggle caret id="size-dropdown">
+                            {pets[pet.parent]?.name}
+                          </DropdownToggle>
+                          <DropdownMenu required>
+                            {potentialParents}
+                          </DropdownMenu>
+                        </Dropdown>
+                      ) : (
+                        <Dropdown name="type" isOpen={parentDropdownOpen} toggle={this.toggleParentDropdown} disabled>
+                          <DropdownToggle caret id="size-dropdown">
+                            No Valid Parents
+                          </DropdownToggle>
+                        </Dropdown>
+                      )}
+                      <p className="error-message">{errors.parentErrorMessage}</p>
+                    </Form.Group>
+                  )}
                 </Col>
               </Row>
               <Row className="align-items-center mt-2">
                 <Col className="text-center">
                   <Form.Group>
-                    {/* <Form.Label>Growth Pictures</Form.Label> */}
-                    <h4 className="text-center mt-2">Growth Pictures</h4>
+                    <Form.Label>Growth Pictures</Form.Label>
                     <br />
                     {growthPicCards}
-                    {Object.keys(growthPics).length < 5 && (
+                    { Object.keys(growthPics).length < 5 && (
                       <Card className="growth-pic-card">
                         <input
                           key={`growth-${resetGrowthPicInput}`}
@@ -388,7 +507,6 @@ class EditPlantProfilePage extends React.Component {
                         </Card.Body>
                       </Card>
                     )}
-
                     <br />
                     <FormControl.Feedback />
                     <Form.Label className={`text-${growthPictureValidationState === 'error' ? 'danger' : growthPictureValidationState}`}>

@@ -8,7 +8,10 @@ const initialState = {
 const pets = (state = initialState, action) => {
   switch (action.type) {
     case constants.SET_PETS:
-      return { ...state, pets: action.pets || {} };
+      return {
+        ...state,
+        pets: action.pets || {},
+      };
 
     default:
       return state;

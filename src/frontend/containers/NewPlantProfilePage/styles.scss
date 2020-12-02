@@ -6,11 +6,18 @@
   form {
     padding: 0px 20px;
   }
-  
+
   #profile-picture {
       border-radius: 75%
   }
 
+  .error-message {
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 80%;
+    color: #ff7851;
+  }
+  
   .dropdown-menu {
     height: 200px;
     overflow-y: scroll;
