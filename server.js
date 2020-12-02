@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 const express = require('express');
-const bodyParser = require('body-parser');
 const chalk = require('chalk');
 const { Server } = require('http');
 const admin = require('firebase-admin');
@@ -45,10 +44,6 @@ if (!NODE_ENV || NODE_ENV === 'production') {
 } else {
   console.log('Running application for development');
 }
-
-// Set up Express.js
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
 
 /*
 app.get('/favicon.(ico|png)', (req, res) => {

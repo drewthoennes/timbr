@@ -12,7 +12,7 @@ import { Modal } from 'react-bootstrap';
 import { Container, Row, Col } from 'reactstrap';
 import map from '../../store/map';
 import './styles.scss';
-import { isEmailVerified, sendVerificationEmail, deleteAccount } from '../../store/actions/account';
+import { getUsername, getPhoneNumber, getProfilePicture, getTextsOn, getEmailsOn, changeUsername, changePhoneNumber, changeEmailsOn, changeTextsOn, changeProfilePicture, deleteAccount } from '../../store/actions/account';
 import { getProviderId } from '../../store/actions/auth';
 import Navbar from '../../components/Navbar';
 import constants from '../../store/const';
@@ -153,23 +153,6 @@ class AccountPage extends React.Component {
           <Notifications
             uid={uid}
           />
-          { isEmailVerified() ? ''
-            : (
-              <Row className="align-items-center mt-2">
-                <Col sm={3}><h5 className="text-right">Resend Verification Email</h5></Col>
-                <Col sm={1} />
-                <Col sm={8}>
-                  <button
-                    id="resend-email"
-                    type="button"
-                    className="btn btn-outline-primary"
-                    onClick={() => { sendVerificationEmail(); }}
-                  >
-                    Send
-                  </button>
-                </Col>
-              </Row>
-            )}
           <Row className="align-items-center mt-2">
             <Col sm={3}><h5 className="text-right">Delete Account</h5></Col>
             <Col sm={1} />

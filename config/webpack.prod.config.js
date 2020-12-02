@@ -13,7 +13,7 @@ module.exports = merge(base, {
       __host__: `'${config.host}'`,
       __name__: `'${config.name}'`,
     }),
-    // new BundleAnalyzerPlugin()
+    // new BundleAnalyzerPlugin(),
   ],
   optimization: {
     minimizer: [

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
-import { Button, Card, Dropdown, DropdownButton, FormControl, InputGroup } from 'react-bootstrap';
+import { Button, Card, Container, Dropdown, DropdownButton, FormControl, InputGroup, Row, Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { Carousel } from 'react-responsive-carousel';
 import ProfilePicture from '../../assets/images/pet_profile_picture.png';
@@ -13,8 +13,11 @@ import { logout } from '../../store/actions/auth';
 import { getPetProfilePicture } from '../../store/actions/pets';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import tuto1 from '../../assets/images/tut1.png';
-import tuto2 from '../../assets/images/tut2.png';
+import createplant from '../../assets/images/createplant.gif';
 import careforplants from '../../assets/images/careforplants.gif';
+import deadplant from '../../assets/images/deadplant.gif';
+import getnotified from '../../assets/images/getnotified.gif';
+import viewstats from '../../assets/images/viewstats.gif';
 
 import FilterMenu from './FilterMenu';
 
@@ -98,30 +101,34 @@ class MyPlantsPage extends React.Component {
       // water
       const diffWTime = Math.abs(new Date() - (new Date(pets[id].watered.last)));
       const diffWDays = Math.ceil(diffWTime / (1000 * 60 * 60 * 24));
-      if (diffWDays >= plants[type].waterFreq) {
+      if (diffWDays > plants[type].waterFreq) {
         actionItems[id] = `${actionItems[id]}\n💦\n`;
         this.setState({ actionItems });
       }
 
       const diffFTime = Math.abs(new Date() - (new Date(pets[id].fertilized.last)));
       const diffFDays = Math.ceil(diffFTime / (1000 * 60 * 60 * 24));
-      if (diffFDays >= plants[type].fertFreq) {
+      if (diffFDays > plants[type].fertFreq) {
         actionItems[id] = `${actionItems[id]}\n🌱\n`;
         this.setState({ actionItems });
       }
       const diffRTime = Math.abs(new Date() - (new Date(pets[id].turned.last)));
       const diffRDays = Math.ceil(diffRTime / (1000 * 60 * 60 * 24));
-      if (diffRDays >= plants[type].rotateFreq) {
+      if (diffRDays > plants[type].rotateFreq) {
         actionItems[id] = `${actionItems[id]}\n💃\n`;
         this.setState({ actionItems });
       }
       if (plants[type].carnivorous === true) {
         const diffTimeFeed = Math.abs(new Date() - (new Date(pets[id].fed.last)));
         const diffDaysFeed = Math.ceil(diffTimeFeed / (1000 * 60 * 60 * 24));
-        if (diffDaysFeed >= plants[type].feedFreq) {
+        if (diffDaysFeed > plants[type].feedFreq) {
           actionItems[id] = `${actionItems[id]}\n🍽️\n`;
           this.setState({ actionItems });
         }
+      }
+      if (actionItems[id] === '') {
+        actionItems[id] = 'No Actions Needed!';
+        this.setState({ actionItems });
       }
     });
   }
@@ -233,11 +240,11 @@ class MyPlantsPage extends React.Component {
       <span className="plant-link" key={id}>
         <Link to={`/${username}/${id}`}>
           <Card className="plant-card">
-            <Card.Img className="card-img" variant="top" src={profilePics[id]} />
+            <Card.Img className="card-img mt-2" variant="top" src={profilePics[id]} />
             <Card.Body>
-              <Card.Title>{pet.name}</Card.Title>
-              <Card.Text>{plants[pet.type].name}</Card.Text>
-              <Card.Text>{actionItems[id]}</Card.Text>
+              <Card.Title><h6><b>{pet.name}</b></h6></Card.Title>
+              <Card.Text><h6><small><i>{plants[pet.type].name}</i></small></h6></Card.Text>
+              <Card.Text className="action-items">{actionItems[id]}</Card.Text>
             </Card.Body>
           </Card>
         </Link>
@@ -261,10 +268,19 @@ class MyPlantsPage extends React.Component {
                           <img alt="" src={tuto1} />
                         </div>
                         <div>
-                          <img alt="" src={tuto2} />
+                          <img src={createplant} alt="care" />
                         </div>
                         <div>
                           <img src={careforplants} alt="care" />
+                        </div>
+                        <div>
+                          <img src={deadplant} alt="care" />
+                        </div>
+                        <div>
+                          <img src={getnotified} alt="care" />
+                        </div>
+                        <div>
+                          <img src={viewstats} alt="care" />
                         </div>
                       </Carousel>
                       <Button type="button" className="btn btn-primary mt-0" onClick={this.changeNewAcc}>
@@ -283,6 +299,7 @@ class MyPlantsPage extends React.Component {
       return (
         <div>
           <Navbar />
+          <br />
           <div className="container">
             <span id="top-row">
               <InputGroup>
@@ -314,7 +331,11 @@ class MyPlantsPage extends React.Component {
                 <Button>New Plant</Button>
               </Link>
             </span>
-            {plantCards}
+            <Container id="plant-content" className="mt-3">
+              <Row className="align-items-center mt-2">
+                <Col className="text-center">{plantCards}</Col>
+              </Row>
+            </Container>
           </div>
         </div>
       );

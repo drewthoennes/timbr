@@ -2,6 +2,72 @@ import { firebase } from '../../firebase/firebase';
 import store from '../index';
 import constants from '../const';
 
+function buildTree(tree, root, pets) {
+  const children = pets[root].children ?? [];
+
+  // eslint-disable-next-line no-param-reassign
+  tree[root] = children;
+  for (let i = 0; i < children.length; i++) buildTree(tree, children[i], pets);
+}
+
+export function constructGenealogy(petId, pets) {
+  // Find root ancestor
+  let root = petId;
+  while (pets[root].parent) {
+    root = pets[root].parent;
+  }
+
+  // Recursively build tree
+  const tree = { root };
+  buildTree(tree, root, pets);
+
+  // console.log(tree);
+  return tree;
+}
+
+export function getPotentialParents(id) {
+  const { pets: { pets } } = store.getState();
+
+  if (!pets[id]) return [];
+
+  const { type, birth } = pets[id];
+  const tree = { root: id };
+  buildTree(tree, id, pets);
+  const descendants = Object.keys(tree).slice(1);
+
+  return Object.entries(pets).filter(([petId, parent]) => {
+    const isDescendant = descendants.indexOf(petId) !== -1;
+    const isSameType = parent.type === type;
+    const isYounger = new Date(birth) > new Date(parent.birth);
+    return !isDescendant && isSameType && isYounger;
+  }).map(([petId]) => petId);
+}
+
+export function setParent(petId, parentId) {
+  const { pets: { pets } } = store.getState();
+  const uid = firebase.auth().currentUser?.uid;
+
+  if (!petId) return Promise.resolve();
+  if (pets[parentId] && !getPotentialParents(petId).includes(parentId)) return Promise.reject();
+
+  // Remove pet from previous parent's children
+  if (pets[petId].parent) {
+    const children = pets[pets[petId].parent].children?.filter((child) => child !== petId) ?? [];
+    firebase.database().ref(`/users/${uid}/pets/${pets[petId].parent}`).update({ children });
+  }
+
+  // Add pet to new parent's children
+  if (pets[parentId]) {
+    let { children } = pets[parentId];
+    if (children && children.length) children.push(petId);
+    else children = [petId];
+
+    firebase.database().ref(`/users/${uid}/pets/${parentId}`).update({ children });
+  }
+
+  return firebase.database().ref(`/users/${uid}/pets/${petId}`).update({ parent: parentId });
+}
+
 export function setPets(pets) {
   return store.dispatch({
     type: constants.SET_PETS,
@@ -14,7 +80,6 @@ export function createNewPet({ parent = '', type = '', name, ownedSince, birth, 
   const uid = firebase.auth().currentUser?.uid;
 
   return firebase.database().ref(`/users/${uid}/pets`).push({
-    parent,
     type,
     name,
     ownedSince,
@@ -22,17 +87,20 @@ export function createNewPet({ parent = '', type = '', name, ownedSince, birth, 
     death,
     dead,
     location,
+    parent,
+    children: [],
     profilePic: false,
-    watered: { last: '0', streak: '0' },
-    fertilized: { last: '0', streak: '0' },
-    turned: { last: '0', streak: '0' },
-    fed: { last: '0', streak: '0' },
+    watered: { last: '0', streak: 0, streakUpdated: '' },
+    fertilized: { last: '0', streak: 0, streakUpdated: '' },
+    turned: { last: '0', streak: 0, streakUpdated: '' },
+    fed: { last: '0', streak: 0, streakUpdated: '' },
   });
 }
 
 export function editPet(petId, newData) {
   const uid = firebase.auth().currentUser?.uid;
 
+  setParent(petId, newData.parent);
   return firebase.database().ref(`/users/${uid}/pets`).child(petId).update(newData);
 }
 
@@ -84,6 +152,16 @@ export function addDate(petId, action, currDate) {
   return Promise.all([
     firebase.database().ref(`users/${uid}/pets/${petId}/${action}/history/`).child(currDate).set(true),
     firebase.database().ref(`users/${uid}/pets/${petId}/${action}/last/`).set(currDate),
+  ]);
+}
+export function updateStreak(petId, action, newStreak, lastUpdated) {
+  const uid = firebase.auth().currentUser?.uid;
+  if (!uid) {
+    return Promise.resolve();
+  }
+  return Promise.all([
+    firebase.database().ref(`users/${uid}/pets/${petId}/${action}/streak/`).set(newStreak),
+    firebase.database().ref(`users/${uid}/pets/${petId}/${action}/streakUpdated/`).set(lastUpdated),
   ]);
 }
 
