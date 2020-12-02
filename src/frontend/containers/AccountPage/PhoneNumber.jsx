@@ -40,7 +40,7 @@ class PhoneNumber extends React.PureComponent {
     // Get the phone number from the database, hard coded for now
     getPhoneNumber(
       (phoneNumber) => {
-        if (this.mounted) {
+        if (this.mounted && phoneNumber.val()) {
           this.setState({
             phoneNumber: phoneNumber.val().substring(2),
           });

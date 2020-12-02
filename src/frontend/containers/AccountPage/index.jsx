@@ -53,14 +53,6 @@ class AccountPage extends React.Component {
     if (!uid) {
       history.push('/login');
     }
-
-    /* Changes text notifications status,
-    and email notifications status when uid changes. */
-    if (prevProps.store && this.props.store
-      && this.props.store.account.uid !== prevProps.store.account.uid) {
-      this.getTextsOn();
-      this.getEmailsOn();
-    }
   }
 
   componentWillUnmount() {
