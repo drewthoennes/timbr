@@ -16,7 +16,7 @@ class ChangePassword extends React.PureComponent {
   }
 
   componentDidMount() {
-    // this function will set the canChangePassword and providerId in the state
+    // this function will set the canChangePassword in the state
     this.canChangePassword();
   }
 

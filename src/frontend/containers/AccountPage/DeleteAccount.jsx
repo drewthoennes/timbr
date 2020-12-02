@@ -115,7 +115,7 @@ class DeleteAccount extends React.PureComponent {
 
         <Modal id="email-reauth" show={isModalOpen} onHide={this.closeModal}>
           <Modal.Header closeButton>
-            <Modal.Title>Confirm Account Deletion</Modal.Title>
+            <Modal.Title>Are you sure you want to delete your account?</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <input
@@ -154,7 +154,7 @@ class DeleteAccount extends React.PureComponent {
               className="btn btn-primary"
               onClick={this.deleteAccount}
             >
-              Confirm Delete Account
+              Confirm
             </button>
           </Modal.Body>
           <Modal.Footer>
