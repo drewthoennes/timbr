@@ -14,6 +14,7 @@ import RegisterPage from '../containers/RegisterPage';
 import MyPlantsPage from '../containers/MyPlantsPage';
 import NewPlantProfilePage from '../containers/NewPlantProfilePage';
 import EditPlantProfilePage from '../containers/EditPlantProfilePage';
+import PlantGenealogyPage from '../containers/PlantGenealogyPage';
 import PlantProfilePage from '../containers/PlantProfilePage';
 import AccountPage from '../containers/AccountPage';
 import MyStatsPage from '../containers/MyStatsPage';
@@ -30,6 +31,7 @@ const router = (props) => (
       <Route exact path={`/${props.store.account.username}`} render={() => <MyPlantsPage />} />
       <Route exact path={`/${props.store.account.username}/new`} render={() => <NewPlantProfilePage />} />
       <Route exact path={`/${props.store.account.username}/:id`} render={() => <PlantProfilePage own />} />
+      <Route exact path={`/${props.store.account.username}/genealogy/:id`} render={() => <PlantGenealogyPage />} />
       <Route exact path={`/${props.store.account.username}/edit/:id`} render={() => <EditPlantProfilePage />} />
       <Route path="/:username/:id" render={() => <PlantProfilePage own={false} />} />
       <Route path="/login" render={() => <LoginPage />} />

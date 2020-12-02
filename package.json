@@ -73,6 +73,7 @@
     "react": "^16.13.1",
     "react-bootstrap": "^1.4.0",
     "react-dom": "^16.13.1",
+    "react-family-tree": "^2.0.2",
     "react-images-upload": "^1.2.8",
     "react-modal": "^3.11.2",
     "react-phone-number-input": "^3.1.0",
