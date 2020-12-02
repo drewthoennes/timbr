@@ -95,7 +95,6 @@ GeneralInformation.propTypes = {
   }).isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
-      username: PropTypes.string,
       id: PropTypes.string,
     }),
   }).isRequired,
