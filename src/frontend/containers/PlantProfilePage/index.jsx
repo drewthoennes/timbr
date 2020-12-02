@@ -63,8 +63,11 @@ class PlantProfilePage extends React.Component {
 
   componentDidMount() {
     const { match: { params: { username, id } } } = this.props;
-    const { history, store: { account: { username: ownUsername } } } = this.props;
-
+    const { history, store: { pets, account: { username: ownUsername } } } = this.props;
+    if (!pets[id]) {
+      history.push('/notfound');
+      return;
+    }
     this.getPlantDetails();
     this.fetchEventList();
     this.getProfilePicture();
@@ -73,8 +76,11 @@ class PlantProfilePage extends React.Component {
     this.getNextCycle();
     this.getStreaks();
 
-    if (!username) return Promise.resolve();
-    return setForeignUserPets(username, id).catch(() => history.push(`/${ownUsername}`));
+    if (!username) {
+      Promise.resolve();
+      return;
+    }
+    setForeignUserPets(username, id).catch(() => history.push(`/${ownUsername}`));
   }
 
   componentDidUpdate(prevProps) {

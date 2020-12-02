@@ -15,7 +15,7 @@ import { Button, ButtonGroup, Form, FormControl, ToggleButton } from 'react-boot
 import ProfilePicture from '../../assets/images/pet_profile_picture.png';
 import Navbar from '../../components/Navbar';
 import map from '../../store/map';
-import { createNewPet, getPetProfilePicture, setPetProfilePicture, removePetProfilePicture } from '../../store/actions/pets';
+import { createNewPet, setParent, getPetProfilePicture, setPetProfilePicture, removePetProfilePicture } from '../../store/actions/pets';
 import './styles.scss';
 
 class NewPlantProfilePage extends React.Component {
@@ -195,6 +195,8 @@ class NewPlantProfilePage extends React.Component {
       profilePic: profilePicSub,
     }).then((snap) => {
       const { history } = this.props;
+
+      if (isOffshoot === 'true') setParent(snap.key, parent);
 
       if (profilePic !== ProfilePicture) {
         this.removeProfilePicture(`temp-${uid}`);
