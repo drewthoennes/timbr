@@ -9,7 +9,7 @@ class CareCalendar extends React.PureComponent {
 
     return (
       <div>
-        <h2>Care Calendar</h2>
+        <h2 className="text-center">Care Calendar</h2>
 
         <div id="calendar">
           <FullCalendar

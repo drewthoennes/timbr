@@ -8,6 +8,7 @@
   },
   "moduleNameMapper": {
     "^@fullcalendar\/": "identity-obj-proxy",
-    ".+\\.(png|jpg|jpeg)$": "identity-obj-proxy"
+    "^react-responsive-carousel/lib/styles/carousel.min.css": "identity-obj-proxy",
+    ".+\\.(css|png|jpg|jpeg|gif)$": "identity-obj-proxy"
   }
 }
