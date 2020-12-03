@@ -17,15 +17,15 @@
   .plant-card {
     width: 14rem;
     flex: 1;
-    padding: 16px;
-    background-color: #D3D3D3;
-    // border-radius: 100%;
-    border-top-right-radius: 47%;
-    border-top-left-radius: 47%;
+    padding: 1.5rem 16px 0px 16px;
+    border-top-right-radius: 7rem;
+    border-top-left-radius: 7rem;
     margin-top: 19px;
     display: inline-block;
+    background-color: #D3D3D3;
     box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.05);
     transition: all 0.15s ease-in-out;
+    font-family: Cambria;
 
     &:hover {
       transform: scale(1.02);
@@ -33,7 +33,21 @@
   }
 
   .dead-body-color{
-    color: black;
+    color: #746060;
+  }
+
+  .card-title {
+    font-size: 1.54rem;
+    margin-bottom: 0;
+  }
+
+  .plant-dates {
+    font-size: 0.76rem;
+  }
+
+  .epitaph {
+    display: block;
+    margin-top: 10px;
   }
 
   .plant-link {
@@ -42,8 +56,8 @@
   }
 
   .card-img {
-    width: 10rem;
-    height: 10rem;
+    width: 11rem;
+    height: 11rem;
     object-fit: cover;
     border: 1px solid rgba(0, 0, 0, 0.125);
     border-radius: 75%;
