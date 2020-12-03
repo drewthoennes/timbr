@@ -42,6 +42,7 @@ const router = (props) => (
       <Route path="/notfound" render={() => <NotFoundPage />} />
       <Route path="/graveyard" render={() => <GraveyardPage />} />
       <Route exact path="/:username" render={() => <MyPlantsPage own={false} />} />
+      <Route exact path="/:username/new" render={() => <Redirect to={`/${props.store.account.username || 'login'}`} />} />
       <Route exact path="/:username/:id" render={() => <PlantProfilePage own={false} />} />
       <Route path="*" render={() => <Redirect to={`/${props.store.account.username || 'login'}`} />} />
     </Switch>

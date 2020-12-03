@@ -130,11 +130,13 @@ export function setForeignUserPets(username) {
       }
 
       const { pets = {} } = Object.values(user.val())[0];
-      return store.dispatch({
+      store.dispatch({
         type: constants.SET_FOREIGN_USER_PETS,
         username,
         pets,
       });
+
+      return pets;
     });
 }
 
@@ -161,10 +163,14 @@ export function updateStreak(petId, action, newStreak, lastUpdated) {
   ]);
 }
 
-export function getPetProfilePicture(petId) {
+export function getPetProfilePicture(petId, foreign = false) {
   const uid = firebase.auth().currentUser?.uid;
   if (!uid) {
     return Promise.resolve();
+  }
+
+  if (foreign) {
+    return firebase.storage().ref().child(`pets/profile-pictures/${petId}`).getDownloadURL();
   }
 
   return firebase.database().ref(`users/${uid}/pets/${petId}`).once('value').then((pet) => {

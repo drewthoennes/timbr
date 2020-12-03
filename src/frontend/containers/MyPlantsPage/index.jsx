@@ -10,7 +10,7 @@ import map from '../../store/map';
 import './styles.scss';
 import { getNewAcc, changeNewAcc } from '../../store/actions/account';
 import { logout } from '../../store/actions/auth';
-import { getPetProfilePicture } from '../../store/actions/pets';
+import { getPetProfilePicture, setForeignUserPets } from '../../store/actions/pets';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import tuto1 from '../../assets/images/tut1.png';
 import createplant from '../../assets/images/createplant.gif';
@@ -56,6 +56,11 @@ class MyPlantsPage extends React.Component {
     this.getProfilePictures();
     this.getCriticalActions();
     this.getNewAcc();
+
+    if (!username) return Promise.resolve();
+    return setForeignUserPets(username)
+      .then(this.getProfilePictures)
+      .catch(() => history.push(`/${ownUsername}`));
   }
 
   componentDidUpdate(prevProps) {
@@ -79,17 +84,19 @@ class MyPlantsPage extends React.Component {
   }
 
   getProfilePictures() {
+    const { own } = this.props;
     const { profilePics } = this.state;
+
     Object.keys(this.pets()).forEach((id) => {
       profilePics[id] = ProfilePicture;
       this.setState({ profilePics });
 
-      getPetProfilePicture(id).then((picture) => {
+      getPetProfilePicture(id, !own).then((picture) => {
         if (picture) {
           profilePics[id] = picture;
           this.setState({ profilePics });
         }
-      });
+      }).catch(() => {});
     });
   }
 
@@ -206,7 +213,8 @@ class MyPlantsPage extends React.Component {
   }
 
   render() {
-    const { match: { params: { username } }, store: { plants } } = this.props;
+    const { match: { params: { username } },
+      store: { plants, account: { username: ownUsername } } } = this.props;
     const {
       profilePics, search, sort, asc, newAcc,
       filters, actionItems,
@@ -241,12 +249,12 @@ class MyPlantsPage extends React.Component {
 
     const plantCards = filteredAndSortedPets.length ? filteredAndSortedPets.map(([id, pet]) => (
       <span className="plant-link" key={id}>
-        <Link to={`/${username}/${id}`}>
+        <Link to={`/${username || ownUsername}/${id}`}>
           <Card className="plant-card">
             <Card.Img className="card-img mt-2" variant="top" src={profilePics[id]} />
             <Card.Body>
               <Card.Title><h6><b>{pet.name}</b></h6></Card.Title>
-              <Card.Text><h6><small><i>{plants[pet.type].name}</i></small></h6></Card.Text>
+              <Card.Text><small><i>{plants[pet.type].name}</i></small></Card.Text>
               <Card.Text className="action-items">{actionItems[id]}</Card.Text>
             </Card.Body>
           </Card>
@@ -330,7 +338,7 @@ class MyPlantsPage extends React.Component {
                 </DropdownButton>
               </InputGroup>
 
-              <Link className="nav-link" to={`/${username}/new`}>
+              <Link className="nav-link" to={`/${username || ownUsername}/new`}>
                 <Button>New Plant</Button>
               </Link>
             </span>
@@ -353,7 +361,13 @@ class MyPlantsPage extends React.Component {
 }
 
 MyPlantsPage.propTypes = {
+  own: PropTypes.bool.isRequired,
   history: PropTypes.object.isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      username: PropTypes.string,
+    }),
+  }).isRequired,
   store: PropTypes.shape({
     account: PropTypes.shape({
       uid: PropTypes.string,
@@ -361,6 +375,7 @@ MyPlantsPage.propTypes = {
     }).isRequired,
     pets: PropTypes.object.isRequired,
     plants: PropTypes.object.isRequired,
+    users: PropTypes.any.isRequired,
   }).isRequired,
 };
 export default connect(map)(withRouter(MyPlantsPage));

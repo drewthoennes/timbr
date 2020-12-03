@@ -82,7 +82,7 @@ GeneralInformation.propTypes = {
   description: PropTypes.string.isRequired,
   birth: PropTypes.string.isRequired,
   ownedSince: PropTypes.string.isRequired,
-  dead: PropTypes.number,
+  dead: PropTypes.bool,
   death: PropTypes.string,
   parent: PropTypes.string,
   petChildren: PropTypes.array,

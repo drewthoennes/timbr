@@ -8,7 +8,10 @@
   }
 
   #profile-picture {
-      border-radius: 75%
+    height: 150px;
+    width: 150px;
+    object-fit: cover;
+    border-radius: 75%
   }
 
   .error-message {
@@ -17,7 +20,7 @@
     font-size: 80%;
     color: #ff7851;
   }
-  
+
   .dropdown-menu {
     height: 200px;
     overflow-y: scroll;

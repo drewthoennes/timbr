@@ -64,12 +64,7 @@ class PlantProfilePage extends React.Component {
 
   componentDidMount() {
     const { match: { params: { username, id } } } = this.props;
-    const { history, store: { pets, account: { username: ownUsername } } } = this.props;
-
-    if (!pets[id]) {
-      history.push('/notfound');
-      return Promise.resolve();
-    }
+    const { history, store: { account: { username: ownUsername } } } = this.props;
 
     this.getPlantDetails();
     this.fetchEventList();
@@ -81,6 +76,11 @@ class PlantProfilePage extends React.Component {
 
     if (!username) return Promise.resolve();
     return setForeignUserPets(username)
+      .then((pets) => {
+        if (!pets[id]) {
+          history.push('/notfound');
+        }
+      })
       .catch(() => history.push(`/${ownUsername}`));
   }
 
@@ -98,10 +98,10 @@ class PlantProfilePage extends React.Component {
   }
 
   getProfilePicture() {
-    const { match: { params: { id } } } = this.props;
+    const { own, match: { params: { id } } } = this.props;
     this.setState({ profilePic: ProfilePicture });
 
-    getPetProfilePicture(id).then((profilePic) => {
+    getPetProfilePicture(id, !own).then((profilePic) => {
       if (profilePic) {
         this.setState({ profilePic });
       }
@@ -164,89 +164,91 @@ class PlantProfilePage extends React.Component {
 
   getStreaks() {
     const { match: { params: { id } } } = this.props;
-    const { store: { pets } = {} } = this.props;
+    const pets = this.pets();
     const today = getToday();
     const yesterday = getYesterday();
-    const waterHistory = Object.keys(pets[id].watered.history || {});
-    const waterstreakUpdated = pets[id].watered.streakUpdated;
+    const waterHistory = Object.keys(pets[id]?.watered.history || {});
+    const waterstreakUpdated = pets[id]?.watered.streakUpdated;
+
+    if (!pets[id]) return;
 
     // case:water
     if (waterHistory.includes(yesterday) && waterHistory.includes(today)
     && waterstreakUpdated !== today) {
       // user has watered today and did so yesterday (ongoing streak) -- increment streak
-      const newStreak = pets[id].watered.streak + 1;
+      const newStreak = pets[id]?.watered.streak + 1;
       updateStreak(id, 'watered', newStreak, today);
       this.setState({ waterStreak: newStreak });
     } else {
       // reset streak to 0
-      if (pets[id].watered.streak > 0 && waterHistory.includes(yesterday) === false) {
+      if (pets[id]?.watered.streak > 0 && waterHistory.includes(yesterday) === false) {
         updateStreak(id, 'watered', 0, today);
         this.setState({ waterStreak: 0 });
       }
       if (waterHistory.includes(yesterday) && waterHistory.includes(today) === false) {
         // case when the user watered yesterday but hasn't yet watered today (checking)
-        this.setState({ waterStreak: pets[id].watered.streak });
+        this.setState({ waterStreak: pets[id]?.watered.streak });
       }
     }// end of case water
 
     // case:fertilize
-    const fertHistory = Object.keys(pets[id].fertilized.history || {});
-    const fertstreakUpdated = pets[id].fertilized.streakUpdated;
+    const fertHistory = Object.keys(pets[id]?.fertilized.history || {});
+    const fertstreakUpdated = pets[id]?.fertilized.streakUpdated;
     if (fertHistory.includes(yesterday) && fertHistory.includes(today)
     && fertstreakUpdated !== today) {
       // user has watered today and did so yesterday (ongoing streak) -- increment streak
-      const newStreak = pets[id].fertilized.streak + 1;
+      const newStreak = pets[id]?.fertilized.streak + 1;
       updateStreak(id, 'fertilized', newStreak, today);
       this.setState({ fertStreak: newStreak });
     } else {
       // reset streak to 0
-      if (pets[id].fertilized.streak > 0 && fertHistory.includes(yesterday) === false) {
+      if (pets[id]?.fertilized.streak > 0 && fertHistory.includes(yesterday) === false) {
         updateStreak(id, 'fertilized', 0, today);
         this.setState({ fertStreak: 0 });
       }
       if (fertHistory.includes(yesterday) && fertHistory.includes(today) === false) {
-        this.setState({ fertStreak: pets[id].fertilized.streak });
+        this.setState({ fertStreak: pets[id]?.fertilized.streak });
       }
     }// end of case fertilize
 
     // case:rotate
-    const turnHistory = Object.keys(pets[id].turned.history || {});
-    const turnstreakUpdated = pets[id].turned.streakUpdated;
+    const turnHistory = Object.keys(pets[id]?.turned.history || {});
+    const turnstreakUpdated = pets[id]?.turned.streakUpdated;
     if (turnHistory.includes(yesterday) && turnHistory.includes(today)
     && turnstreakUpdated !== today) {
       // user has watered today and did so yesterday (ongoing streak) -- increment streak
-      const newStreak = pets[id].turned.streak + 1;
+      const newStreak = pets[id]?.turned.streak + 1;
       updateStreak(id, 'turned', newStreak, today);
       this.setState({ turnStreak: newStreak });
     } else {
       // reset streak to 0
-      if (pets[id].turned.streak > 0 && turnHistory.includes(yesterday) === false) {
+      if (pets[id]?.turned.streak > 0 && turnHistory.includes(yesterday) === false) {
         updateStreak(id, 'turned', 0, today);
         this.setState({ turnStreak: 0 });
       }
       if (turnHistory.includes(yesterday) && turnHistory.includes(today) === false) {
-        this.setState({ turnStreak: pets[id].turned.streak });
+        this.setState({ turnStreak: pets[id]?.turned.streak });
       }
     }// end of case turn
 
     // case: feed -- for carnivorous plants
     const { store: { plants } } = this.props;
-    if (plants[pets[id].type] === 'carnivorous') {
-      const feedHistory = Object.keys(pets[id].fed.history || {});
-      const feedstreakUpdated = pets[id].fed.streakUpdated;
+    if (plants[pets[id]?.type] === 'carnivorous') {
+      const feedHistory = Object.keys(pets[id]?.fed.history || {});
+      const feedstreakUpdated = pets[id]?.fed.streakUpdated;
       if (feedHistory.includes(yesterday)
       && feedHistory.includes(today) && feedstreakUpdated !== today) {
-        const newStreak = pets[id].fed.streak + 1;
+        const newStreak = pets[id]?.fed.streak + 1;
         updateStreak(id, 'fed', newStreak, today);
         this.setState({ feedStreak: newStreak });
       } else {
       // reset streak to 0
-        if (pets[id].fed.streak > 0 && feedHistory.includes(yesterday) === false) {
+        if (pets[id]?.fed.streak > 0 && feedHistory.includes(yesterday) === false) {
           updateStreak(id, 'fed', 0, today);
           this.setState({ feedStreak: 0 });
         }
         if (feedHistory.includes(yesterday) && feedHistory.includes(today) === false) {
-          this.setState({ feedStreak: pets[id].fed.streak });
+          this.setState({ feedStreak: pets[id]?.fed.streak });
         }
       }// end of case turn
     }
@@ -259,10 +261,10 @@ class PlantProfilePage extends React.Component {
     const { match: { params: { id } } } = this.props;
     const pets = this.pets();
 
-    this.setState({ waterStreak: pets[id].watered.streak });
-    this.setState({ fertStreak: pets[id].fertilized.streak });
-    this.setState({ turnStreak: pets[id].turned.streak });
-    this.setState({ feedStreak: pets[id].fed.streak });
+    this.setState({ waterStreak: pets[id]?.watered.streak });
+    this.setState({ fertStreak: pets[id]?.fertilized.streak });
+    this.setState({ turnStreak: pets[id]?.turned.streak });
+    this.setState({ feedStreak: pets[id]?.fed.streak });
 
     const wateredDates = Object.keys(pets[id]?.watered.history || {});
     const fertilizedDates = Object.keys(pets[id]?.fertilized.history || {});
@@ -323,12 +325,12 @@ class PlantProfilePage extends React.Component {
               plantLocation={location ?? ''}
               parent={pet.parent ?? null}
               petChildren={pet.children ?? []}
-              dead={pet.dead}
+              dead={pet.dead === 1}
               death={pet.death}
             />
           </section>
 
-          {(!own || dead) ? '' : (
+          {(!own || pet.dead) ? '' : (
             <section id="manage-plant">
               <ManagePlant id={id} pet={pet} username={ownUsername} />
             </section>
@@ -339,7 +341,7 @@ class PlantProfilePage extends React.Component {
               <CareFrequency
                 id={id}
                 pet={pet}
-                dead={pet.dead ? pet.dead : 0}
+                dead={pet.dead === 1}
                 waterFreq={waterFreq}
                 fertFreq={fertFreq}
                 rotateFreq={rotateFreq}

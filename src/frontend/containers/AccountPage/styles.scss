@@ -1,9 +1,10 @@
 @import "~@theme";
 
 #account-page {
-    
-}
-
-#profile-picture {
+  #profile-picture {
+    height: 150px;
+    width: 150px;
+    object-fit: cover;
     border-radius: 75%
+  }
 }
