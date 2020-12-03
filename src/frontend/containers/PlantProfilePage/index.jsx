@@ -345,9 +345,9 @@ class PlantProfilePage extends React.Component {
             />
           </section>
 
-          {(!own || dead) ? '' : (
+          {(!own) ? '' : (
             <section id="manage-plant">
-              <ManagePlant id={id} pet={pet} username={ownUsername} />
+              <ManagePlant id={id} pet={pet} username={ownUsername} dead={dead} />
             </section>
           )}
 
