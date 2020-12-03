@@ -5,6 +5,7 @@ export default {
   DEFAULT_PHONE_NUMBER: '+11111111111',
   SET_TEXTS_ON: 'SET_TEXTS_ON',
   SET_EMAILS_ON: 'SET_EMAILS_ON',
+  SET_NEW_ACC: 'SET_NEW_ACC',
   SET_ACCOUNT_LOADED: 'SET_ACCOUNT_LOADED',
   SET_PETS: 'SET_PETS',
   SET_FOREIGN_USER_PETS: 'SET_FOREIGN_USER_PETS',
@@ -19,4 +20,6 @@ export default {
   LOGIN_WITH_FACEBOOK: 'Login with Facebook',
   LOGOUT: 'Logout',
   USERNAME_PREFIX: 'timbr-user-',
+  UNVERIFIED_ERROR_CODE: 'UNVERIFIED',
+  UNVERIFIED_ERROR_MESSAGE: 'This account has not been verified. Please check your inbox for a verification email.',
 };

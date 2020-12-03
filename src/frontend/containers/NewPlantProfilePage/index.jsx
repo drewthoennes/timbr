@@ -7,13 +7,15 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
+  Container,
+  Row,
+  Col,
 } from 'reactstrap';
-import { Button, Form, FormControl, Modal } from 'react-bootstrap';
+import { Button, ButtonGroup, Form, FormControl, ToggleButton } from 'react-bootstrap';
 import ProfilePicture from '../../assets/images/pet_profile_picture.png';
 import Navbar from '../../components/Navbar';
 import map from '../../store/map';
-import { createNewPet, getPetProfilePicture, setPetProfilePicture, removePetProfilePicture } from '../../store/actions/pets';
-import { sendVerificationEmail, isEmailVerified } from '../../store/actions/account';
+import { createNewPet, setParent, getPetProfilePicture, setPetProfilePicture, removePetProfilePicture } from '../../store/actions/pets';
 import './styles.scss';
 
 class NewPlantProfilePage extends React.Component {
@@ -26,13 +28,21 @@ class NewPlantProfilePage extends React.Component {
       ownedSince: '',
       location: '',
       type: 'alocasia-amazonica',
-      dropdownOpen: false,
+      isOffshoot: 'false',
+      parent: null,
+      typeDropdownOpen: false,
+      parentDropdownOpen: false,
       profilePic: ProfilePicture,
       profilePicSub: null,
       profilePictureFeedback: '',
       profilePictureValidationState: 'default',
       resetProfilePicInput: 0,
-      verifyEmailFeedback: '',
+      errors: {
+        isBirthInvalid: false,
+        birthErrorMessage: '',
+        typeErrorMessage: '',
+        parentErrorMessage: '',
+      },
     };
 
     this.getProfilePicture = this.getProfilePicture.bind(this);
@@ -40,9 +50,11 @@ class NewPlantProfilePage extends React.Component {
     this.removeProfilePicture = this.removeProfilePicture.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleDropdown = this.handleDropdown.bind(this);
-    this.toggleDropdown = this.toggleDropdown.bind(this);
-    this.sendVerificationEmail = this.sendVerificationEmail.bind(this);
+    this.handleChangeType = this.handleChangeType.bind(this);
+    this.setIsOffshoot = this.setIsOffshoot.bind(this);
+    this.handleChangeParent = this.handleChangeParent.bind(this);
+    this.toggleTypeDropdown = this.toggleTypeDropdown.bind(this);
+    this.toggleParentDropdown = this.toggleParentDropdown.bind(this);
 
     this.mounted = false;
   }
@@ -136,8 +148,42 @@ class NewPlantProfilePage extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     e.stopPropagation();
-    const { store: { account: { uid, username } } } = this.props;
-    const { name, birth, ownedSince, type, profilePic, profilePicSub, location } = this.state;
+    const { store: { pets, plants, account: { uid, username } } } = this.props;
+    const {
+      name, birth, ownedSince, location,
+      profilePic, profilePicSub,
+      type, isOffshoot, parent, errors,
+    } = this.state;
+
+    // Check parent
+    if (isOffshoot === 'true') {
+      if (!parent) {
+        errors.parentErrorMessage = `If ${name} is an offshoot, please select a parent plant.`;
+        this.setState({ errors });
+        return;
+      } errors.parentErrorMessage = '';
+      let isError = false;
+
+      if (type !== pets[parent].type) {
+        const parentType = plants[pets[parent].type].name;
+        errors.typeErrorMessage = `Plant must be same species as parent (${parentType})`;
+        isError = true;
+      } else {
+        errors.typeErrorMessage = '';
+      }
+
+      if (new Date(birth) < new Date(pets[parent].birth)) {
+        errors.isBirthInvalid = true;
+        const birthDate = pets[parent].birth.split('-');
+        errors.birthErrorMessage = `Plant cannot be older than parent (${birthDate[1]}/${birthDate[2]}/${birthDate[0]})`;
+        isError = true;
+      } else {
+        errors.isBirthInvalid = false;
+        errors.birthErrorMessage = '';
+      }
+      this.setState(errors);
+      if (isError) return;
+    }
 
     createNewPet({
       name,
@@ -145,9 +191,12 @@ class NewPlantProfilePage extends React.Component {
       ownedSince: ownedSince.length ? ownedSince : (new Date()).toISOString().split('T')[0],
       type,
       location,
+      parent: isOffshoot === 'true' ? parent : null,
       profilePic: profilePicSub,
     }).then((snap) => {
       const { history } = this.props;
+
+      if (isOffshoot === 'true') setParent(snap.key, parent);
 
       if (profilePic !== ProfilePicture) {
         this.removeProfilePicture(`temp-${uid}`);
@@ -161,169 +210,216 @@ class NewPlantProfilePage extends React.Component {
     });
   }
 
-  handleDropdown(type) {
-    this.setState({ type });
-  }
-
-  toggleDropdown() {
+  toggleTypeDropdown() {
     this.setState((prevState) => ({
-      dropdownOpen: !prevState.dropdownOpen,
+      typeDropdownOpen: !prevState.typeDropdownOpen,
     }));
   }
 
-  sendVerificationEmail() {
-    sendVerificationEmail()
-      .then(() => {
-        if (this.mounted) {
-          this.setState({
-            verifyEmailFeedback: 'Verification Email sent!',
-          });
-        }
-      })
-      .catch((error) => {
-        if (this.mounted) {
-          this.setState({
-            verifyEmailFeedback: error.message,
-          });
-        }
-      });
+  handleChangeType(type) {
+    this.setState({ type });
+  }
+
+  toggleParentDropdown() {
+    this.setState((prevState) => ({
+      parentDropdownOpen: !prevState.parentDropdownOpen,
+    }));
+  }
+
+  setIsOffshoot(isOffshoot) {
+    this.setState({ isOffshoot });
+  }
+
+  handleChangeParent(parent) {
+    this.setState({ parent });
   }
 
   render() {
-    const { store: { plants } } = this.props;
-    const { name, birth, ownedSince, location,
+    const { store: { pets, plants } } = this.props;
+    const {
+      name, birth, ownedSince, location,
       profilePic, profilePictureFeedback,
-      profilePictureValidationState, resetProfilePicInput, verifyEmailFeedback } = this.state;
+      profilePictureValidationState, resetProfilePicInput,
+      typeDropdownOpen, parentDropdownOpen, type, isOffshoot, parent,
+      errors,
+    } = this.state;
     const today = (new Date()).toISOString().split('T')[0];
     const past = new Date((new Date().getFullYear() - 50)).toISOString().split('T')[0];
+
+    const potentialParents = Object.entries(pets)
+      // eslint-disable-next-line no-unused-vars
+      .sort(([_, p1], [__, p2]) => (p1.name < p2.name ? -1 : 1))
+      .map(([key, pet]) => (
+        <DropdownItem
+          key={key}
+          onClick={() => this.handleChangeParent(key)}
+        >
+          {pet.name}
+        </DropdownItem>
+      ));
 
     return (
       <div id="new-plant-page">
         <Navbar />
-        <h1>Create New Plant</h1>
-        <Modal id="verify-email" show={!isEmailVerified()} backdrop="static" onHide={() => {}}>
-          <Modal.Header>
-            <Modal.Title>Your account is not verified.</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <p>You must verify your account before adding plants.</p>
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={() => { this.sendVerificationEmail(); }}
-            >
-              Resend Verification Email
-            </button>
-            <p id="feedback">{ verifyEmailFeedback }</p>
-          </Modal.Body>
-        </Modal>
+        <h1 className="text-center mt-4 mb-3">Create New Plant</h1>
         <Form onSubmit={this.handleSubmit}>
-          <Form.Group
-            controlId="profilePic"
-            validationstate={profilePictureValidationState}
-          >
-            <Form.Label>{profilePic === ProfilePicture ? 'Add' : 'Set'} Profile Picture:</Form.Label>
-            <br />
-            <img style={{ width: '150px' }} id="profile-picture" src={profilePic} alt="Profile" />
-            <Form.Control
-              key={`profile-${resetProfilePicInput}`}
-              name="profilePic"
-              type="file"
-              accept="image/jpg,image/jpeg,image/png"
-              onChange={(event) => { this.setProfilePicture(event.target.files[0]); }}
-            />
-            { profilePic !== ProfilePicture && (
-              <>
-                <Button
-                  className="btn btn-danger"
-                  style={{ marginTop: '10px', marginBottom: '10px' }}
-                  onClick={() => { this.removeProfilePicture(); }}
+          <Container className="mt-3">
+            <Row className="align-items-center mt-2">
+              <Col sm={3} className="d-flex justify-content-around">
+                <Form.Group
+                  controlId="profilePic"
+                  validationstate={profilePictureValidationState}
                 >
-                  Remove Picture
+                  <Form.Label>{profilePic === ProfilePicture ? 'Add' : 'Set'} Profile Picture:</Form.Label>
+                  <br />
+                  <img style={{ width: '150px' }} id="profile-picture" src={profilePic} alt="Profile" />
+                  <Form.Control
+                    key={`profile-${resetProfilePicInput}`}
+                    name="profilePic"
+                    type="file"
+                    accept="image/jpg,image/jpeg,image/png"
+                    onChange={(event) => { this.setProfilePicture(event.target.files[0]); }}
+                  />
+                  {profilePic !== ProfilePicture && (
+                    <>
+                      <Button
+                        className="btn btn-danger"
+                        style={{ marginTop: '10px', marginBottom: '10px' }}
+                        onClick={() => { this.removeProfilePicture(); }}
+                      >
+                        Remove Picture
+                      </Button>
+                      <br />
+                    </>
+                  )}
+                  <FormControl.Feedback />
+                  <Form.Label className={`text-${profilePictureValidationState === 'error' ? 'danger' : profilePictureValidationState}`}>
+                    {profilePictureFeedback}
+                  </Form.Label>
+                </Form.Group>
+              </Col>
+              <Col sm={9}>
+                <Form.Group controlId="name">
+                  <Form.Label>Plant's Name*</Form.Label>
+                  <Form.Control
+                    required
+                    name="name"
+                    value={name}
+                    onChange={this.handleChange}
+                    maxLength="20"
+                    placeholder="Name"
+                  />
+                </Form.Group>
+                <Form.Group controlId="location">
+                  <Form.Label>Plant's Location</Form.Label>
+                  <Form.Control
+
+                    name="location"
+                    value={location}
+                    onChange={this.handleChange}
+                    maxLength="20"
+                    placeholder="eg:living room"
+                  />
+                </Form.Group>
+
+                <Form.Group controlId="birth">
+                  <Form.Label>Plant's birthday:</Form.Label>
+                  <Form.Control
+                    required
+                    name="birth"
+                    type="date"
+                    min={past}
+                    max={today}
+                    value={birth}
+                    onChange={this.handleChange}
+                    isInvalid={errors.isBirthInvalid}
+                  />
+                  <Form.Control.Feedback type="invalid">{errors.birthErrorMessage}</Form.Control.Feedback>
+                </Form.Group>
+
+                <Form.Group controlId="ownedSince">
+                  <Form.Label>Owned Since</Form.Label>
+                  <Form.Control
+                    name="ownedSince"
+                    type="date"
+                    min={birth.length ? birth : past}
+                    max={today}
+                    value={ownedSince}
+                    onChange={this.handleChange}
+                  />
+                </Form.Group>
+
+                <Form.Group controlId="type">
+                  <Form.Label>Plant's Type:</Form.Label>
+                  <Dropdown name="type" isOpen={typeDropdownOpen} toggle={this.toggleTypeDropdown}>
+                    <DropdownToggle caret id="size-dropdown">
+                      {plants[type]?.name}
+                    </DropdownToggle>
+                    <DropdownMenu required>
+                      {Object.entries(plants)
+                        // eslint-disable-next-line
+                        .sort(([_, p1], [__, p2]) => p1.name < p2.name ? -1 : 1)
+                        .map(([key, plant]) => (
+                          <DropdownItem
+                            key={key}
+                            onClick={() => this.handleChangeType(key)}
+                          >
+                            {plant.name}
+                          </DropdownItem>
+                        ))}
+                    </DropdownMenu>
+                  </Dropdown>
+                  <p className="error-message">{errors.typeErrorMessage}</p>
+                </Form.Group>
+
+                <Form.Group>
+                  <Form.Label>Is this plant an offshoot of another plant?</Form.Label>
+                  <br />
+                  <ButtonGroup toggle>
+                    <ToggleButton
+                      type="radio"
+                      name="is-not-offshoot"
+                      value={false}
+                      checked={isOffshoot === 'false'}
+                      onChange={(e) => this.setIsOffshoot(e.currentTarget.value)}
+                    >No
+                    </ToggleButton>
+                    <ToggleButton
+                      type="radio"
+                      name="is-offshoot"
+                      value
+                      checked={isOffshoot === 'true'}
+                      onChange={(e) => this.setIsOffshoot(e.currentTarget.value)}
+                    >Yes
+                    </ToggleButton>
+                  </ButtonGroup>
+                </Form.Group>
+
+                { (isOffshoot === 'true') && (
+                  <Form.Group controlId="parent">
+                    <Form.Label>Parent Plant:</Form.Label>
+                    <Dropdown name="type" isOpen={parentDropdownOpen} toggle={this.toggleParentDropdown}>
+                      <DropdownToggle caret id="size-dropdown">
+                        {pets[parent]?.name ?? 'Select Parent'}
+                      </DropdownToggle>
+                      <DropdownMenu required>
+                        {potentialParents}
+                      </DropdownMenu>
+                    </Dropdown>
+                    <p className="error-message">{errors.parentErrorMessage}</p>
+                  </Form.Group>
+                )}
+              </Col>
+            </Row>
+
+            <Row className="align-items-center mt-2">
+              <Col className="d-flex justify-content-around">
+                <Button variant="primary" type="submit">
+                  Submit
                 </Button>
-                <br />
-              </>
-            )}
-            <FormControl.Feedback />
-            <Form.Label className={`text-${profilePictureValidationState === 'error' ? 'danger' : profilePictureValidationState}`}>
-              {profilePictureFeedback}
-            </Form.Label>
-          </Form.Group>
-
-          <Form.Group controlId="name">
-            <Form.Label>Plant's Name:</Form.Label>
-            <Form.Control
-              required
-              name="name"
-              value={name}
-              onChange={this.handleChange}
-              maxLength="40"
-              placeholder="Name"
-            />
-          </Form.Group>
-          <Form.Group controlId="location">
-            <Form.Label>Plant's Location:</Form.Label>
-            <Form.Control
-
-              name="location"
-              value={location}
-              onChange={this.handleChange}
-              maxLength="40"
-              placeholder="eg:living room"
-            />
-          </Form.Group>
-
-          <Form.Group controlId="birth">
-            <Form.Label>Plant's birthday:</Form.Label>
-            <Form.Control
-              name="birth"
-              type="date"
-              min={past}
-              max={today}
-              value={birth}
-              onChange={this.handleChange}
-            />
-          </Form.Group>
-
-          <Form.Group controlId="ownedSince">
-            <Form.Label>I've owned this plant since:</Form.Label>
-            <Form.Control
-              name="ownedSince"
-              type="date"
-              min={birth.length ? birth : past}
-              max={today}
-              value={ownedSince}
-              onChange={this.handleChange}
-            />
-          </Form.Group>
-
-          <Form.Group controlId="type">
-            <Form.Label>Plant's Type:</Form.Label>
-            { /* eslint-disable-next-line react/destructuring-assignment */}
-            <Dropdown name="type" isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
-              <DropdownToggle caret id="size-dropdown">
-                { /* eslint-disable-next-line react/destructuring-assignment */}
-                {plants[this.state.type]?.name}
-              </DropdownToggle>
-              <DropdownMenu required>
-                {Object.entries(plants)
-                  // eslint-disable-next-line
-                  .sort(([_, p1], [__, p2]) => p1.name < p2.name ? -1 : 1)
-                  .map(([key, plant]) => (
-                    <DropdownItem
-                      key={key}
-                      onClick={() => this.handleDropdown(key)}
-                    >
-                      {plant.name}
-                    </DropdownItem>
-                  ))}
-              </DropdownMenu>
-            </Dropdown>
-          </Form.Group>
-
-          <Button variant="primary" type="submit">
-            Submit
-          </Button>
+              </Col>
+            </Row>
+          </Container>
         </Form>
       </div>
     );

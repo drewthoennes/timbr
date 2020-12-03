@@ -7,6 +7,7 @@ import Navbar from '../../components/Navbar';
 import map from '../../store/map';
 import ProfilePicture from '../../assets/images/pet_profile_picture.png';
 import { getPetProfilePicture } from '../../store/actions/pets';
+import './styles.scss';
 
 class GraveyardPage extends React.Component {
   constructor() {
@@ -56,15 +57,25 @@ class GraveyardPage extends React.Component {
     const { profilePics } = this.state;
     const plantCards = Object.entries(pets).map(([id, pet]) => {
       if (pet.dead) {
+        const noEpitaph = () => {
+          if (pet.epitaph === '') {
+            return (
+              <Card.Text><p className="dead-body-color"><i>{pet.name} was very loved and will be missed.</i></p></Card.Text>
+            );
+          }
+          return (
+            <Card.Text><p className="dead-body-color"><i>{pet.epitaph}</i></p></Card.Text>
+          );
+        };
         return (
-          <span className="plant-link" key={id}>
+          <span className="plant-link mt-4" key={id}>
             <Link to={`/${username}/${id}`}>
-              <Card className="plant-card">
+              <Card className="plant-card h-100">
                 <Card.Img className="card-img" variant="top" src={profilePics[id]} />
                 <Card.Body>
-                  <Card.Title>{pet.name}</Card.Title>
-                  <Card.Text>{pet.birth} to {pet.death}</Card.Text>
-                  <Card.Text>{pet.epitaph}</Card.Text>
+                  <Card.Title><h6 className="dead-body-color"><b>{pet.name}</b></h6></Card.Title>
+                  <Card.Text><p className="dead-body-color"><b>{pet.birth} - {pet.death}</b></p></Card.Text>
+                  {noEpitaph()}
                 </Card.Body>
               </Card>
             </Link>
@@ -73,14 +84,18 @@ class GraveyardPage extends React.Component {
       }
       return null;
     });
+
     return (
 
-      <div id="my-plants-page">
+      <div id="my-graveyard-page">
         <Navbar />
-        <h2>My Graveyard</h2>
-        <div className="container">
-          {plantCards}
+        <br />
+        <div className="container text-center">
+          <div className="row justify-content-center">
+            {plantCards}
+          </div>
         </div>
+        <br />
       </div>
     );
   }

@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import Modal from 'react-modal';
 import 'popper.js';
 import 'bootswatch/dist/minty/bootstrap.min.css';
 import 'bootstrap/js/dist/button';
@@ -13,8 +12,6 @@ import './store/listeners';
 
 import App from './components/App';
 import store from './store';
-
-Modal.setAppElement('#app');
 
 ReactDOM.render((
   <Provider store={store}>

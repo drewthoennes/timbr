@@ -22,6 +22,7 @@ export function addToDatabase() {
   let username = constants.USERNAME_PREFIX;
   const textsOn = false;
   const emailsOn = false;
+  const newAcc = true;
   const phoneNumber = constants.DEFAULT_PHONE_NUMBER;
   const profilePic = false;
 
@@ -40,6 +41,7 @@ export function addToDatabase() {
           phoneNumber,
           textsOn, // Stores a boolean value if the user has text notifications on or off
           emailsOn, // Stores a boolean value if the user has email notifications on or off
+          newAcc,
           profilePic,
         });
       });
@@ -67,7 +69,15 @@ export function reauthenticateUser(password) {
 
 /* This method uses firebase auth to sign in a user. */
 export function loginWithTimbr(credentials) {
-  return firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password);
+  return firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password)
+    .then(() => {
+      if (firebase.auth().currentUser && !firebase.auth().currentUser.emailVerified) {
+        firebase.auth().currentUser.sendEmailVerification();
+        const error = new Error(constants.UNVERIFIED_ERROR_MESSAGE);
+        error.code = constants.UNVERIFIED_ERROR_CODE;
+        throw error;
+      }
+    });
 }
 
 /* This function uses Firebase auth to sign in a user using Facebook. */
