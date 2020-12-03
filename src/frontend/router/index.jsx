@@ -31,7 +31,7 @@ const router = (props) => (
       <Route exact path={`/${props.store.account.username}`} render={() => <MyPlantsPage own />} />
       <Route exact path={`/${props.store.account.username}/new`} render={() => <NewPlantProfilePage />} />
       <Route exact path={`/${props.store.account.username}/:id`} render={() => <PlantProfilePage own />} />
-      <Route exact path={`/${props.store.account.username}/genealogy/:id`} render={() => <PlantGenealogyPage />} />
+      <Route exact path={`/${props.store.account.username}/genealogy/:id`} render={() => <PlantGenealogyPage own />} />
       <Route exact path={`/${props.store.account.username}/edit/:id`} render={() => <EditPlantProfilePage />} />
       <Route path="/login" render={() => <LoginPage />} />
       <Route path="/register" render={() => <RegisterPage />} />
@@ -44,6 +44,7 @@ const router = (props) => (
       <Route exact path="/:username" render={() => <MyPlantsPage own={false} />} />
       <Route exact path="/:username/new" render={() => <Redirect to={`/${props.store.account.username || 'login'}`} />} />
       <Route exact path="/:username/:id" render={() => <PlantProfilePage own={false} />} />
+      <Route exact path="/:username/genealogy/:id" render={() => <PlantGenealogyPage own={false} />} />
       <Route path="*" render={() => <Redirect to={`/${props.store.account.username || 'login'}`} />} />
     </Switch>
   </Router>

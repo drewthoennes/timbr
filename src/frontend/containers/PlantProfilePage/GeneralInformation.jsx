@@ -8,11 +8,11 @@ import map from '../../store/map';
 class GeneralInformation extends React.PureComponent {
   render() {
     const {
-      speciesName, scientificName, description,
+      own, pets, speciesName, scientificName, description,
       birth, ownedSince, dead, death, plantLocation,
       name, parent, petChildren,
-      store: { pets, account: { username } },
-      match: { params: { id } },
+      store: { account: { username: ownUsername } },
+      match: { params: { username, id } },
     } = this.props;
 
     let childrenNames;
@@ -67,7 +67,7 @@ class GeneralInformation extends React.PureComponent {
         ) }
         { (parent || petChildren.length > 0) && (
           <p className="text-center">
-            <Link to={`/${username}/genealogy/${id}`}>See family tree</Link>
+            <Link to={`/${own ? ownUsername : username}/genealogy/${id}`}>See family tree</Link>
           </p>
         )}
       </div>
@@ -76,6 +76,8 @@ class GeneralInformation extends React.PureComponent {
 }
 
 GeneralInformation.propTypes = {
+  own: PropTypes.bool.isRequired,
+  pets: PropTypes.any.isRequired,
   name: PropTypes.string.isRequired,
   speciesName: PropTypes.string.isRequired,
   scientificName: PropTypes.string.isRequired,
@@ -88,13 +90,13 @@ GeneralInformation.propTypes = {
   petChildren: PropTypes.array,
   plantLocation: PropTypes.string.isRequired,
   store: PropTypes.shape({
-    pets: PropTypes.object.isRequired,
     account: PropTypes.shape({
       username: PropTypes.string,
     }).isRequired,
   }).isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
+      username: PropTypes.string,
       id: PropTypes.string,
     }),
   }).isRequired,

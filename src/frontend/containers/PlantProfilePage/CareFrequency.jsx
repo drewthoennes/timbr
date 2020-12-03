@@ -51,7 +51,7 @@ class CareFrequency extends React.PureComponent {
     let feedButtonJSX;
     if (carnivorous) {
       feedButtonJSX = (
-        <div>
+        <>
           {feedStreak === 0 || feedStreak === '0' ? (<p>Feed Streak: {0}</p>) : (<p> Feed Streak: {feedStreak + 1}</p>) }
 
           <Button
@@ -61,7 +61,7 @@ class CareFrequency extends React.PureComponent {
           >
             { hasFedToday ? 'Fed' : 'Feed' }
           </Button>
-        </div>
+        </>
       );
     }
 

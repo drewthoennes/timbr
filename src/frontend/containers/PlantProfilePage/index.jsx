@@ -64,7 +64,7 @@ class PlantProfilePage extends React.Component {
 
   componentDidMount() {
     const { match: { params: { username, id } } } = this.props;
-    const { history, store: { account: { username: ownUsername } } } = this.props;
+    const { history, store: { pets: ownPets, account: { username: ownUsername } } } = this.props;
 
     this.getPlantDetails();
     this.fetchEventList();
@@ -74,7 +74,11 @@ class PlantProfilePage extends React.Component {
     this.getNextCycle();
     this.getStreaks();
 
-    if (!username) return Promise.resolve();
+    if (!username) {
+      if (!ownPets[id]) history.push('/notfound');
+      return Promise.resolve();
+    }
+
     return setForeignUserPets(username)
       .then((pets) => {
         if (!pets[id]) {
@@ -316,6 +320,8 @@ class PlantProfilePage extends React.Component {
             </div>
 
             <GeneralInformation
+              own={own}
+              pets={pets}
               speciesName={speciesName}
               scientificName={scientificName}
               description={description}
