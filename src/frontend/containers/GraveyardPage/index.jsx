@@ -55,27 +55,35 @@ class GraveyardPage extends React.Component {
   render() {
     const { store: { pets, account: { username } } } = this.props;
     const { profilePics } = this.state;
+
+    const dateString = (d) => {
+      if (!d) return '';
+      const arr = d.split('-');
+      return `${arr[1]}/${arr[2]}/${arr[0]}`;
+    };
+
     const plantCards = Object.entries(pets).map(([id, pet]) => {
+      const defaultEpitaph = `${pet.name} was loved and he will be very missed.`;
+
       if (pet.dead) {
-        const noEpitaph = () => {
-          if (pet.epitaph === '') {
-            return (
-              <Card.Text><p className="dead-body-color"><i>{pet.name} was very loved and will be missed.</i></p></Card.Text>
-            );
-          }
-          return (
-            <Card.Text><p className="dead-body-color"><i>{pet.epitaph}</i></p></Card.Text>
-          );
-        };
         return (
           <span className="plant-link mt-4" key={id}>
             <Link to={`/${username}/${id}`}>
               <Card className="plant-card h-100">
                 <Card.Img className="card-img" variant="top" src={profilePics[id]} />
                 <Card.Body>
-                  <Card.Title><h6 className="dead-body-color"><b>{pet.name}</b></h6></Card.Title>
-                  <Card.Text><p className="dead-body-color"><b>{pet.birth} - {pet.death}</b></p></Card.Text>
-                  {noEpitaph()}
+                  <Card.Title className="dead-body-color"><b>{pet.name}</b></Card.Title>
+                  <Card.Text>
+                    <span className="plant-dates dead-body-color">
+                      { (pet.birth && pet.death) ? (
+                        <b>{dateString(pet.birth)} - {dateString(pet.death)}</b>
+                      ) : (<b>Died {dateString(pet.death)}</b>)}
+                    </span>
+                    <br />
+                    <span className="epitaph dead-body-color">
+                      <i>{ pet.epitaph ? pet.epitaph : defaultEpitaph }</i>
+                    </span>
+                  </Card.Text>
                 </Card.Body>
               </Card>
             </Link>

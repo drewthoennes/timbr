@@ -330,9 +330,9 @@ class PlantProfilePage extends React.Component {
             />
           </section>
 
-          {(!own || pet.dead) ? '' : (
+          {(!own) ? '' : (
             <section id="manage-plant">
-              <ManagePlant id={id} pet={pet} username={ownUsername} />
+              <ManagePlant id={id} pet={pet} username={ownUsername} dead={pet?.dead === 1} />
             </section>
           )}
 

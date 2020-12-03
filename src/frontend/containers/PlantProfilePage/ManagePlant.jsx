@@ -66,15 +66,15 @@ class ManagePlant extends React.PureComponent {
   }
 
   render() {
-    const { pet } = this.props;
+    const { pet, dead } = this.props;
     const { showDelete, showDead } = this.state;
 
     return (
       <div>
         <div className="d-flex justify-content-around">
-          <Button type="button" variant="link" onClick={this.edit}>Edit Plant</Button>
+          {dead ? '' : <Button type="button" variant="link" onClick={this.edit}>Edit Plant</Button> }
           <Button type="button" variant="link" onClick={this.toggleDeleteModal}>Delete Plant</Button>
-          <Button type="button" variant="link" onClick={this.toggleDeadModal}>Mark As Dead</Button>
+          {dead ? '' : <Button type="button" variant="link" onClick={this.toggleDeadModal}>Mark As Dead</Button>}
         </div>
 
         <Modal show={showDelete} onHide={this.toggleDeleteModal}>
@@ -116,6 +116,7 @@ ManagePlant.propTypes = {
   id: PropTypes.string.isRequired,
   pet: PropTypes.object.isRequired,
   username: PropTypes.string.isRequired,
+  dead: PropTypes.bool.isRequired,
 };
 
 export default withRouter(ManagePlant);
