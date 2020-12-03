@@ -106,7 +106,33 @@ export function editPet(petId, newData) {
 
 /* eslint-disable-next-line object-curly-newline */
 export function deletePet(petId) {
+  const { pets: { pets } } = store.getState();
   const uid = firebase.auth().currentUser?.uid;
+  const storageRef = firebase.storage().ref();
+  const pet = pets[petId];
+
+  if (!pet) return Promise.reject();
+
+  // Remove parent's child reference to pet
+  if (pet.parent) {
+    const children = pets[pet.parent].children?.filter((child) => child !== petId) ?? [];
+    firebase.database().ref(`/users/${uid}/pets/${pet.parent}`).update({ children });
+  }
+
+  // Remove children's parent references to pet
+  if (pet.children) {
+    for (const i in pet.children) {
+      firebase.database().ref(`/users/${uid}/pets/${pet.children[i]}`).update({ parent: null });
+    }
+  }
+
+  // Delete profile picture
+  firebase.storage().ref().child(`pets/profile-pictures/${petId}`).delete();
+
+  // Delete growth pictures
+  for (const i in pet.growthPics) {
+    storageRef.child(`pets/growth-pictures/${petId}@${pet.growthPics[i]}`).delete().catch();
+  }
 
   return firebase.database().ref(`/users/${uid}/pets`).child(petId).remove();
 }
