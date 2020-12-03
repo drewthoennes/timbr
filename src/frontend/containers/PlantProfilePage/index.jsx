@@ -143,8 +143,9 @@ class PlantProfilePage extends React.Component {
     const diffTime = Math.abs(date - new Date());
     let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     if (diffDays > daysToAdd) {
-      diffDays = 0;
+      diffDays = daysToAdd;
     }
+
     return [date, diffDays];
   }
 
