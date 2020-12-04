@@ -116,7 +116,7 @@ ManagePlant.propTypes = {
   id: PropTypes.string.isRequired,
   pet: PropTypes.object.isRequired,
   username: PropTypes.string.isRequired,
-  dead: PropTypes.string.isRequired,
+  dead: PropTypes.bool.isRequired,
 };
 
 export default withRouter(ManagePlant);

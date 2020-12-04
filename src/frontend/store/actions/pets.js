@@ -147,7 +147,7 @@ export function deadPet(petId, epitaph, death) {
   return firebase.database().ref().update(updates);
 }
 
-export function setForeignUserPets(username, petId) {
+export function setForeignUserPets(username) {
   return firebase.database().ref('/users').orderByChild('username').equalTo(username)
     .once('value')
     .then((user) => {
@@ -155,16 +155,14 @@ export function setForeignUserPets(username, petId) {
         throw new Error('No user with this username exists');
       }
 
-      const data = Object.values(user.val())[0];
-      if (!data.pets?.[petId]) {
-        throw new Error('No pet with this ID exists for this user');
-      }
-
-      return store.dispatch({
+      const { pets = {} } = Object.values(user.val())[0];
+      store.dispatch({
         type: constants.SET_FOREIGN_USER_PETS,
         username,
-        pets: data.pets,
+        pets,
       });
+
+      return pets;
     });
 }
 
@@ -191,10 +189,14 @@ export function updateStreak(petId, action, newStreak, lastUpdated) {
   ]);
 }
 
-export function getPetProfilePicture(petId) {
+export function getPetProfilePicture(petId, foreign = false) {
   const uid = firebase.auth().currentUser?.uid;
   if (!uid) {
     return Promise.resolve();
+  }
+
+  if (foreign) {
+    return firebase.storage().ref().child(`pets/profile-pictures/${petId}`).getDownloadURL();
   }
 
   return firebase.database().ref(`users/${uid}/pets/${petId}`).once('value').then((pet) => {

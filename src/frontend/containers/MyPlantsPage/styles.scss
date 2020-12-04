@@ -59,4 +59,9 @@
     background-repeat: no-repeat;
     background-size: cover;
   }
+
+  .dropdown-menu:not(#filter-dropdown-menu) {
+    max-height: 200px;
+    overflow-y: scroll;
+  }
 }

@@ -51,7 +51,7 @@ class CareFrequency extends React.PureComponent {
     let feedButtonJSX;
     if (carnivorous) {
       feedButtonJSX = (
-        <div>
+        <>
           {feedStreak === 0 || feedStreak === '0' ? (<p>Feed Streak: {0}</p>) : (<p> Feed Streak: {feedStreak + 1}</p>) }
 
           <Button
@@ -61,7 +61,7 @@ class CareFrequency extends React.PureComponent {
           >
             { hasFedToday ? 'Fed' : 'Feed' }
           </Button>
-        </div>
+        </>
       );
     }
 
@@ -73,11 +73,11 @@ class CareFrequency extends React.PureComponent {
               <Row className="align-items-center mt-2">
                 <Col sm={3}>
                   {dead
-                    ? (<h6 className="text-center">{`Required water every ${waterFreq} days`}</h6>)
+                    ? (<h6 className="text-center">{`Required water every ${waterFreq} ${waterFreq === 1 ? 'day' : 'days'}`}</h6>)
                     : (
                       <div id="care-buttons">
                         <h6 className="text-center">Water in</h6>
-                        <h4 className="text-center">{nextCycleDates[0]} days</h4>
+                        <h4 className="text-center">{`${nextCycleDates[0]} ${nextCycleDates[0] === 1 ? 'day' : 'days'}`}</h4>
                         {waterStreak === 0 || waterStreak === '0' ? (<p>Water Streak: {0}</p>) : (<p> Water Streak: {waterStreak + 1}</p>) }
                         <Button
                           type="button"
@@ -86,17 +86,17 @@ class CareFrequency extends React.PureComponent {
                         >
                           {hasWateredToday ? 'Watered' : 'Water'}
                         </Button>
-                        <p className="text-center"><i>{`Cycle lasts ${waterFreq} days`}</i></p>
+                        <p className="text-center"><i>{`Cycle lasts ${waterFreq} ${waterFreq === 1 ? 'day' : 'days'}`}</i></p>
                       </div>
                     )}
                 </Col>
                 <Col sm={3}>
                   {dead
-                    ? (<h6 className="text-center">{`Required fertilization every ${fertFreq} days`}</h6>)
+                    ? (<h6 className="text-center">{`Required fertilization every ${fertFreq} ${fertFreq === 1 ? 'day' : 'days'}`}</h6>)
                     : (
                       <div id="care-buttons">
                         <h6 className="text-center">Fertilize in</h6>
-                        <h4 className="text-center">{nextCycleDates[1]} days</h4>
+                        <h4 className="text-center">{`${nextCycleDates[1]} ${nextCycleDates[1] === 1 ? 'day' : 'days'}`}</h4>
                         {fertStreak === 0 || fertStreak === '0' ? (<p>Fert Streak: {0}</p>) : (<p> Fert Streak: {fertStreak + 1}</p>) }
 
                         <Button
@@ -106,17 +106,17 @@ class CareFrequency extends React.PureComponent {
                         >
                           {hasFertilizedToday ? 'Fertilized' : 'Fertilize'}
                         </Button>
-                        <p className="text-center"><i>{`Cycle lasts ${fertFreq} days`}</i></p>
+                        <p className="text-center"><i>{`Cycle lasts ${fertFreq} ${fertFreq === 1 ? 'day' : 'days'}`}</i></p>
                       </div>
                     )}
                 </Col>
                 <Col sm={3}>
                   {dead
-                    ? (<h6 className="text-center">{`Required rotation every ${rotateFreq} days`}</h6>)
+                    ? (<h6 className="text-center">{`Required rotation every ${rotateFreq} ${rotateFreq === 1 ? 'day' : 'days'}`}</h6>)
                     : (
                       <div id="care-buttons">
                         <h6 className="text-center">Rotate in</h6>
-                        <h4 className="text-center">{nextCycleDates[2]} days</h4>
+                        <h4 className="text-center">{`${nextCycleDates[2]} ${nextCycleDates[2] === 1 ? 'day' : 'days'}`}</h4>
                         {turnStreak === 0 || turnStreak === '0' ? (<p>Turn Streak: {0}</p>) : (<p> Turn Streak: {turnStreak + 1}</p>) }
 
                         <Button
@@ -126,19 +126,19 @@ class CareFrequency extends React.PureComponent {
                         >
                           {hasTurnedToday ? 'Turned' : 'Turn'}
                         </Button>
-                        <p className="text-center"><i>{`Cycle lasts ${rotateFreq} days`}</i></p>
+                        <p className="text-center"><i>{`Cycle lasts ${rotateFreq} ${rotateFreq === 1 ? 'day' : 'days'}`}</i></p>
                       </div>
                     )}
                 </Col>
                 <Col sm={3}>
                   {dead
-                    ? (<h6 className="text-center">{`Required water every ${feedFreq} days`}</h6>)
+                    ? (<h6 className="text-center">{`Required water every ${feedFreq} ${feedFreq === 1 ? 'day' : 'days'}`}</h6>)
                     : (
                       <div id="care-buttons">
                         <h6 className="text-center">Feed in</h6>
-                        <h4 className="text-center">{nextCycleDates[3]} days</h4>
+                        <h4 className="text-center">{`${nextCycleDates[3]} ${nextCycleDates[3] === 1 ? 'day' : 'days'}`}</h4>
                         {feedButtonJSX}
-                        <p className="text-center"><i>{`Cycle lasts ${waterFreq} days`}</i></p>
+                        <p className="text-center"><i>{`Cycle lasts ${feedFreq} ${feedFreq === 1 ? 'day' : 'days'}`}</i></p>
                       </div>
                     )}
                 </Col>
@@ -153,11 +153,11 @@ class CareFrequency extends React.PureComponent {
             <Row className="align-items-center mt-2">
               <Col sm={4}>
                 {dead
-                  ? (<h6 className="text-center">{`Required water every ${waterFreq} days`}</h6>)
+                  ? (<h6 className="text-center">{`Required water every ${waterFreq} ${waterFreq === 1 ? 'day' : 'days'}`}</h6>)
                   : (
                     <div id="care-buttons">
                       <h6 className="text-center">Water in</h6>
-                      <h4 className="text-center">{nextCycleDates[0]} days</h4>
+                      <h4 className="text-center">{nextCycleDates[0]} {nextCycleDates[0] === 1 ? 'day' : 'days'}</h4>
                       {waterStreak === 0 || waterStreak === '0' ? (<p>Water Streak: {0}</p>) : (<p> Water Streak: {waterStreak + 1}</p>) }
                       <Button
                         type="button"
@@ -166,17 +166,17 @@ class CareFrequency extends React.PureComponent {
                       >
                         {hasWateredToday ? 'Watered' : 'Water'}
                       </Button>
-                      <p className="text-center"><i>{`Cycle lasts ${waterFreq} days`}</i></p>
+                      <p className="text-center"><i>{`Cycle lasts ${waterFreq} ${waterFreq === 1 ? 'day' : 'days'}`}</i></p>
                     </div>
                   )}
               </Col>
               <Col sm={4}>
                 {dead
-                  ? (<h6 className="text-center">{`Required fertilization every ${fertFreq} days`}</h6>)
+                  ? (<h6 className="text-center">{`Required fertilization every ${fertFreq} ${fertFreq === 1 ? 'day' : 'days'}`}</h6>)
                   : (
                     <div id="care-buttons">
                       <h6 className="text-center">Fertilize in</h6>
-                      <h4 className="text-center">{nextCycleDates[1]} days</h4>
+                      <h4 className="text-center">{nextCycleDates[1]} {nextCycleDates[1] === 1 ? 'day' : 'days'}</h4>
                       {fertStreak === 0 || fertStreak === '0' ? (<p>Fert Streak: {0}</p>) : (<p> Fert Streak: {fertStreak + 1}</p>) }
                       <Button
                         type="button"
@@ -185,17 +185,17 @@ class CareFrequency extends React.PureComponent {
                       >
                         {hasFertilizedToday ? 'Fertilized' : 'Fertilize'}
                       </Button>
-                      <p className="text-center"><i>{`Cycle lasts ${fertFreq} days`}</i></p>
+                      <p className="text-center"><i>{`Cycle lasts ${fertFreq} ${fertFreq === 1 ? 'day' : 'days'}`}</i></p>
                     </div>
                   )}
               </Col>
               <Col sm={4}>
                 {dead
-                  ? (<h6 className="text-center">{`Required rotation every ${rotateFreq} days`}</h6>)
+                  ? (<h6 className="text-center">{`Required rotation every ${rotateFreq} ${rotateFreq === 1 ? 'day' : 'days'}`}</h6>)
                   : (
                     <div id="care-buttons">
                       <h6 className="text-center">Rotate in</h6>
-                      <h4 className="text-center">{nextCycleDates[2]} days</h4>
+                      <h4 className="text-center">{nextCycleDates[2]} {nextCycleDates[2] === 1 ? 'day' : 'days'}</h4>
                       {turnStreak === 0 || turnStreak === '0' ? (<p>Turn Streak: {0}</p>) : (<p> Turn Streak: {turnStreak + 1}</p>) }
                       <Button
                         type="button"
@@ -204,7 +204,7 @@ class CareFrequency extends React.PureComponent {
                       >
                         {hasTurnedToday ? 'Turned' : 'Turn'}
                       </Button>
-                      <p className="text-center"><i>{`Cycle lasts ${rotateFreq} days`}</i></p>
+                      <p className="text-center"><i>{`Cycle lasts ${rotateFreq} ${rotateFreq === 1 ? 'day' : 'days'}`}</i></p>
                     </div>
                   )}
               </Col>
@@ -244,7 +244,7 @@ CareFrequency.propTypes = {
     }).isRequired,
   }).isRequired,
   waterFreq: PropTypes.number.isRequired,
-  dead: PropTypes.number.isRequired,
+  dead: PropTypes.bool.isRequired,
   fertFreq: PropTypes.number.isRequired,
   feedFreq: PropTypes.any.isRequired,
   rotateFreq: PropTypes.number.isRequired,

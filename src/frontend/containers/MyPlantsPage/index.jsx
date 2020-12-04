@@ -10,7 +10,7 @@ import map from '../../store/map';
 import './styles.scss';
 import { getNewAcc, changeNewAcc } from '../../store/actions/account';
 import { logout } from '../../store/actions/auth';
-import { getPetProfilePicture } from '../../store/actions/pets';
+import { getPetProfilePicture, setForeignUserPets } from '../../store/actions/pets';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import tuto1 from '../../assets/images/tut1.png';
 import createplant from '../../assets/images/createplant.gif';
@@ -37,6 +37,7 @@ class MyPlantsPage extends React.Component {
       actionItems: [],
     };
 
+    this.pets = this.pets.bind(this);
     this.getProfilePictures = this.getProfilePictures.bind(this);
     this.getCriticalActions = this.getCriticalActions.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
@@ -49,15 +50,17 @@ class MyPlantsPage extends React.Component {
   }
 
   componentDidMount() {
-    const { store: { account: { uid } }, history } = this.props;
-
-    if (!uid) {
-      history.push('/login');
-    }
+    const { match: { params: { username } }, history } = this.props;
+    const { store: { account: { username: ownUsername } } } = this.props;
 
     this.getProfilePictures();
     this.getCriticalActions();
     this.getNewAcc();
+
+    if (!username) return Promise.resolve();
+    return setForeignUserPets(username)
+      .then(this.getProfilePictures)
+      .catch(() => history.push(`/${ownUsername}`));
   }
 
   componentDidUpdate(prevProps) {
@@ -73,53 +76,60 @@ class MyPlantsPage extends React.Component {
     }
   }
 
+  pets() {
+    const { own, match: { params: { username } }, store: { pets, users } } = this.props;
+
+    if (own) return pets;
+    return users[username]?.pets || {};
+  }
+
   getProfilePictures() {
-    const { store: { pets } } = this.props;
+    const { own } = this.props;
     const { profilePics } = this.state;
-    Object.keys(pets).forEach((id) => {
+
+    Object.keys(this.pets()).forEach((id) => {
       profilePics[id] = ProfilePicture;
       this.setState({ profilePics });
 
-      getPetProfilePicture(id).then((picture) => {
+      getPetProfilePicture(id, !own).then((picture) => {
         if (picture) {
           profilePics[id] = picture;
           this.setState({ profilePics });
         }
-      });
+      }).catch(() => {});
     });
   }
 
   getCriticalActions() {
-    const { store: { pets } } = this.props;
     const { store: { plants } } = this.props;
     const { actionItems } = this.state;
-    Object.keys(pets).forEach((id) => {
-      const { type } = pets[id];
+    Object.entries(this.pets()).forEach(([id, pet]) => {
+      const { type } = pet;
       if (actionItems[id] === undefined) {
         actionItems[id] = '';
       }
       // water
-      const diffWTime = Math.abs(new Date() - (new Date(pets[id].watered.last)));
+      const diffWTime = Math.abs(new Date() - (new Date(pet.watered.last)));
       const diffWDays = Math.ceil(diffWTime / (1000 * 60 * 60 * 24));
       if (diffWDays > plants[type].waterFreq) {
         actionItems[id] = `${actionItems[id]}\n💦\n`;
         this.setState({ actionItems });
       }
 
-      const diffFTime = Math.abs(new Date() - (new Date(pets[id].fertilized.last)));
+      const diffFTime = Math.abs(new Date() - (new Date(pet.fertilized.last)));
       const diffFDays = Math.ceil(diffFTime / (1000 * 60 * 60 * 24));
       if (diffFDays > plants[type].fertFreq) {
         actionItems[id] = `${actionItems[id]}\n🌱\n`;
         this.setState({ actionItems });
       }
-      const diffRTime = Math.abs(new Date() - (new Date(pets[id].turned.last)));
+      const diffRTime = Math.abs(new Date() - (new Date(pet.turned.last)));
       const diffRDays = Math.ceil(diffRTime / (1000 * 60 * 60 * 24));
       if (diffRDays > plants[type].rotateFreq) {
         actionItems[id] = `${actionItems[id]}\n💃\n`;
         this.setState({ actionItems });
       }
       if (plants[type].carnivorous === true) {
-        const diffTimeFeed = Math.abs(new Date() - (new Date(pets[id].fed.last)));
+        const diffTimeFeed = Math.abs(new Date() - (new Date(pet.fed.last)));
         const diffDaysFeed = Math.ceil(diffTimeFeed / (1000 * 60 * 60 * 24));
         if (diffDaysFeed > plants[type].feedFreq) {
           actionItems[id] = `${actionItems[id]}\n🍽️\n`;
@@ -203,7 +213,8 @@ class MyPlantsPage extends React.Component {
   }
 
   render() {
-    const { store: { pets, plants, account: { username } } } = this.props;
+    const { match: { params: { username } },
+      store: { plants, account: { username: ownUsername } } } = this.props;
     const {
       profilePics, search, sort, asc, newAcc,
       filters, actionItems,
@@ -214,7 +225,7 @@ class MyPlantsPage extends React.Component {
       ? <div className="text-center"><br /><br /><h6>No plants match the given query</h6></div>
       : <div className="text-center"><br /><br /><h6>Add a plant to get started</h6></div>;
 
-    const alivePlants = Object.entries(pets).filter(([, pet]) => !pet.dead);
+    const alivePlants = Object.entries(this.pets()).filter(([, pet]) => !pet.dead);
     let filteredAndSortedPets = search || filters.length
       ? alivePlants.filter(([, pet]) => {
         const name = pet.name.toLowerCase().indexOf(lowerCaseSearch) !== -1;
@@ -238,12 +249,12 @@ class MyPlantsPage extends React.Component {
 
     const plantCards = filteredAndSortedPets.length ? filteredAndSortedPets.map(([id, pet]) => (
       <span className="plant-link" key={id}>
-        <Link to={`/${username}/${id}`}>
+        <Link to={`/${username || ownUsername}/${id}`}>
           <Card className="plant-card">
             <Card.Img className="card-img mt-2" variant="top" src={profilePics[id]} />
             <Card.Body>
               <Card.Title><h6><b>{pet.name}</b></h6></Card.Title>
-              <Card.Text><h6><small><i>{plants[pet.type].name}</i></small></h6></Card.Text>
+              <Card.Text><small><i>{plants[pet.type].name}</i></small></Card.Text>
               <Card.Text className="action-items">{actionItems[id]}</Card.Text>
             </Card.Body>
           </Card>
@@ -327,7 +338,7 @@ class MyPlantsPage extends React.Component {
                 </DropdownButton>
               </InputGroup>
 
-              <Link className="nav-link" to={`/${username}/new`}>
+              <Link className="nav-link" to={`/${username || ownUsername}/new`}>
                 <Button>New Plant</Button>
               </Link>
             </span>
@@ -350,7 +361,13 @@ class MyPlantsPage extends React.Component {
 }
 
 MyPlantsPage.propTypes = {
+  own: PropTypes.bool.isRequired,
   history: PropTypes.object.isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      username: PropTypes.string,
+    }),
+  }).isRequired,
   store: PropTypes.shape({
     account: PropTypes.shape({
       uid: PropTypes.string,
@@ -358,6 +375,7 @@ MyPlantsPage.propTypes = {
     }).isRequired,
     pets: PropTypes.object.isRequired,
     plants: PropTypes.object.isRequired,
+    users: PropTypes.any.isRequired,
   }).isRequired,
 };
 export default connect(map)(withRouter(MyPlantsPage));
